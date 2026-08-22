@@ -1,28 +1,119 @@
-name: NAPAMS Monitor
+const { chromium } = require("playwright");
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "*/15 * * * *"
+const BASE_URL = "https://registration.nafdac.gov.ng/";
 
-jobs:
-  monitor:
-    runs-on: ubuntu-latest
+async function main() {
+  const tin = process.env.NAPAMS_TIN;
+  const password = process.env.NAPAMS_PASSWORD;
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  if (!tin || !password) {
+    throw new Error("Missing NAPAMS_TIN or NAPAMS_PASSWORD GitHub secret.");
+  }
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+  console.log("Starting NAPAMS monitor...");
 
-      - name: Install dependencies
-        run: npm install
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage();
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+  try {
+    await page.goto(BASE_URL, {
+      waitUntil: "domcontentloaded",
+      timeout: 60000
+    });
 
-      - name: Run NAPAMS monitor
-        run: npm run monitor
+    // Open Login
+    await page.getByRole("link", { name: /^Login$/i }).click();
+
+    await page.waitForTimeout(1500);
+
+    // ALWAYS use ADMIN
+    const admin = page.getByText("ADMIN", { exact: true });
+    if (await admin.count()) {
+      await admin.first().click();
+    }
+
+    // TIN
+    const tinField = page.getByPlaceholder(/Tax ID\/TIN/i);
+    await tinField.waitFor({ state: "visible", timeout: 30000 });
+    await tinField.fill(tin);
+
+    // Password
+    const passwordField = page.getByPlaceholder(/Password/i);
+    await passwordField.fill(password);
+
+    // Login
+    await page.getByRole("button", { name: /^LOG IN$/i }).click();
+
+    await page.waitForTimeout(4000);
+
+    console.log("Logged in.");
+
+    // Applications
+    await page.getByText("Applications", { exact: true })
+      .first()
+      .click();
+
+    await page.waitForTimeout(1000);
+
+    // Submitted Applications
+    await page.getByText("Submitted Applications", { exact: true })
+      .first()
+      .click();
+
+    await page.waitForTimeout(3000);
+
+    console.log("Opened Submitted Applications.");
+
+    // Check Status
+    const checkStatus = page.getByText("Check Status", {
+      exact: true
+    });
+
+    await checkStatus.first().waitFor({
+      state: "visible",
+      timeout: 30000
+    });
+
+    await checkStatus.first().click();
+
+    await page.waitForTimeout(2000);
+
+    // Read the resulting page/modal
+    const text = await page.locator("body").innerText();
+
+    console.log("================================");
+    console.log("NAPAMS APPLICATION STATUS");
+    console.log("================================");
+    console.log(text);
+    console.log("================================");
+
+    // GitHub Actions summary
+    if (process.env.GITHUB_STEP_SUMMARY) {
+      const fs = require("fs");
+
+      fs.appendFileSync(
+        process.env.GITHUB_STEP_SUMMARY,
+        `## NAPAMS Application Status\n\n\`\`\`\n${text}\n\`\`\`\n`
+      );
+    }
+
+  } catch (error) {
+    console.error("NAPAMS monitor failed:");
+    console.error(error);
+
+    await page.screenshot({
+      path: "napams-error.png",
+      fullPage: true
+    }).catch(() => {});
+
+    throw error;
+
+  } finally {
+    await browser.close();
+  }
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
