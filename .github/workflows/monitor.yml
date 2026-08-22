@@ -1,4 +1,4 @@
-name: NAPAMS Monitor
+name: Test
 
 on:
   workflow_dispatch:
