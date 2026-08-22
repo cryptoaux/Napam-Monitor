@@ -1,22 +1,43 @@
 const { chromium } = require("playwright");
 
 async function main() {
-  console.log("NAPAMS monitor starting...");
-
-  const browser = await chromium.launch({
-    headless: true
-  });
-
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
-  await page.goto("https://registration.nafdac.gov.ng/", {
-    waitUntil: "domcontentloaded"
-  });
+  try {
+    await page.goto("https://registration.nafdac.gov.ng/", {
+      waitUntil: "domcontentloaded",
+      timeout: 60000
+    });
 
-  console.log("NAPAMS opened:");
-  console.log(await page.title());
+    console.log("URL:", page.url());
+    console.log("TITLE:", await page.title());
 
-  await browser.close();
+    console.log("\n--- INPUTS ---");
+    const inputs = await page.locator("input").evaluateAll(elements =>
+      elements.map(e => ({
+        type: e.type,
+        name: e.name,
+        id: e.id,
+        placeholder: e.placeholder
+      }))
+    );
+    console.log(JSON.stringify(inputs, null, 2));
+
+    console.log("\n--- BUTTONS ---");
+    const buttons = await page.locator("button").allTextContents();
+    console.log(buttons);
+
+    console.log("\n--- LINKS ---");
+    const links = await page.locator("a").allTextContents();
+    console.log(links);
+
+    console.log("\n--- PAGE TEXT ---");
+    console.log((await page.locator("body").innerText()).slice(0, 10000));
+
+  } finally {
+    await browser.close();
+  }
 }
 
 main().catch(error => {
