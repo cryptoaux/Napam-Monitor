@@ -70,12 +70,87 @@ function cleanText(value) {
     .trim();
 }
 
+function extractHiddenValue(html, id) {
+  const regex = new RegExp(
+    `<input[^>]+id=["']${id}["'][^>]+value=["']([^"']+)["']`,
+    "i"
+  );
+
+  const match = html.match(regex);
+
+  return match ? match[1] : null;
+}
+
+function extractApplicationRows(html) {
+  const applications = [];
+
+  const rowRegex =
+    /<tr[\s\S]*?<\/tr>/gi;
+
+  const rows = html.match(rowRegex) || [];
+
+  for (const row of rows) {
+    const appMatch = row.match(
+      /((?:NF-FD|PEX-FD)-\d+)/i
+    );
+
+    if (!appMatch) continue;
+
+    const applicationNumber =
+      appMatch[1].toUpperCase();
+
+    const productMatch = row.match(
+      /<td[^>]*>\s*([^<]+)\s*<\/td>/gi
+    );
+
+    const statusMatch =
+      row.match(/View Status/i);
+
+    if (!statusMatch) continue;
+
+    applications.push({
+      applicationNumber,
+      row
+    });
+  }
+
+  return applications;
+}
+
+async function checkApplicationStatus(
+  appID,
+  cookies,
+  userAgent
+) {
+  const path =
+    `/Application/SubmittedApplication/CheckApplicationStatus?appID=${encodeURIComponent(
+      appID
+    )}`;
+
+  const response = await request(
+    "POST",
+    path,
+    {
+      "User-Agent": userAgent,
+      "Cookie": cookies,
+      "Accept": "application/json, text/plain, */*",
+      "Referer":
+        "https://registration.nafdac.gov.ng/Application/FormApplication/Applications",
+      "X-Requested-With": "XMLHttpRequest"
+    }
+  );
+
+  return response;
+}
+
 async function main() {
   const tin = process.env.NAPAMS_TIN;
   const password = process.env.NAPAMS_PASSWORD;
 
   if (!tin || !password) {
-    throw new Error("NAPAMS_TIN or NAPAMS_PASSWORD is missing.");
+    throw new Error(
+      "NAPAMS_TIN or NAPAMS_PASSWORD is missing."
+    );
   }
 
   const userAgent =
@@ -84,29 +159,43 @@ async function main() {
     "Chrome/131.0.0.0 Safari/537.36";
 
   // ==================================================
-  // 1. GET LOGIN PAGE
+  // 1. LOGIN PAGE
   // ==================================================
 
   console.log("Fetching NAPAMS login page...");
 
-  const loginPage = await request("GET", LOGIN_PATH, {
-    "User-Agent": userAgent,
-    "Accept": "text/html"
-  });
+  const loginPage = await request(
+    "GET",
+    LOGIN_PATH,
+    {
+      "User-Agent": userAgent,
+      "Accept": "text/html"
+    }
+  );
 
-  console.log("LOGIN PAGE STATUS:", loginPage.status);
+  console.log(
+    "LOGIN PAGE STATUS:",
+    loginPage.status
+  );
 
-  const token = getAntiforgeryToken(loginPage.body);
-  const initialCookies = getCookies(loginPage.headers["set-cookie"]);
+  const token = getAntiforgeryToken(
+    loginPage.body
+  );
+
+  const initialCookies = getCookies(
+    loginPage.headers["set-cookie"]
+  );
 
   if (!token) {
-    throw new Error("Antiforgery token was not found.");
+    throw new Error(
+      "Antiforgery token was not found."
+    );
   }
 
   console.log("Antiforgery token found.");
 
   // ==================================================
-  // 2. LOGIN AS ADMIN
+  // 2. ADMIN LOGIN
   // ==================================================
 
   console.log("Submitting Admin login...");
@@ -117,48 +206,69 @@ async function main() {
   form.append("Username", tin);
   form.append("Password", password);
   form.append("buttonFunc", "admin");
-  form.append("__RequestVerificationToken", token);
+  form.append(
+    "__RequestVerificationToken",
+    token
+  );
 
   const loginResponse = await request(
     "POST",
     LOGIN_PATH,
     {
       "User-Agent": userAgent,
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Content-Length": Buffer.byteLength(form.toString()),
+      "Content-Type":
+        "application/x-www-form-urlencoded",
+      "Content-Length":
+        Buffer.byteLength(form.toString()),
       "Cookie": initialCookies,
-      "Referer": "https://registration.nafdac.gov.ng/Applicant/Login",
-      "Origin": "https://registration.nafdac.gov.ng",
+      "Referer":
+        "https://registration.nafdac.gov.ng/Applicant/Login",
+      "Origin":
+        "https://registration.nafdac.gov.ng",
       "Accept":
         "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
     },
     form.toString()
   );
 
-  console.log("LOGIN STATUS:", loginResponse.status);
-  console.log("LOGIN LOCATION:", loginResponse.headers.location);
+  console.log(
+    "LOGIN STATUS:",
+    loginResponse.status
+  );
+
+  console.log(
+    "LOGIN LOCATION:",
+    loginResponse.headers.location
+  );
 
   if (loginResponse.status !== 302) {
-    console.log("\n--- LOGIN RESPONSE ---");
-    console.log(cleanText(loginResponse.body).slice(0, 5000));
     throw new Error("NAPAMS login failed.");
   }
 
-  const authCookies = getCookies(loginResponse.headers["set-cookie"]);
+  const authCookies = getCookies(
+    loginResponse.headers["set-cookie"]
+  );
 
-  const cookies = [initialCookies, authCookies]
+  const cookies = [
+    initialCookies,
+    authCookies
+  ]
     .filter(Boolean)
     .join("; ");
 
-  console.log("Authenticated session established.");
+  console.log(
+    "Authenticated session established."
+  );
 
   // ==================================================
   // 3. OPEN APPLICATIONS
   // ==================================================
 
-  console.log("\nOpening Applications...");
+  console.log(
+    "\nOpening Applications..."
+  );
 
-  const applications = await request(
+  const applicationsPage = await request(
     "GET",
     APPLICATIONS_PATH,
     {
@@ -168,171 +278,299 @@ async function main() {
     }
   );
 
-  console.log("APPLICATIONS STATUS:", applications.status);
+  console.log(
+    "APPLICATIONS STATUS:",
+    applicationsPage.status
+  );
+
   console.log(
     "APPLICATIONS HTML LENGTH:",
-    applications.body.length
+    applicationsPage.body.length
   );
 
-  if (applications.status !== 200) {
-    throw new Error("Could not open Applications page.");
-  }
-
-  // ==================================================
-  // 4. CONFIRM SUBMITTED APPLICATIONS
-  // ==================================================
-
-  const pageText = cleanText(applications.body);
-
-  console.log("\n--- SUBMITTED APPLICATIONS SUMMARY ---");
-
-  const submittedMatch = pageText.match(
-    /Submitted Applications\s+(\d+)/i
-  );
-
-  if (submittedMatch) {
-    console.log(
-      "Submitted Applications:",
-      submittedMatch[1]
-    );
-  } else {
-    console.log(
-      "Could not determine submitted application count."
+  if (applicationsPage.status !== 200) {
+    throw new Error(
+      "Could not open Applications page."
     );
   }
 
+  const html = applicationsPage.body;
+
   // ==================================================
-  // 5. FIND APPLICATION NUMBERS
+  // 4. FIND SUBMITTED APPLICATION COUNT
   // ==================================================
 
-  console.log("\n--- APPLICATION NUMBERS ---");
+  const pageText = cleanText(html);
+
+  const countMatch =
+    pageText.match(
+      /Submitted Applications\s+(\d+)/i
+    );
+
+  const submittedCount = countMatch
+    ? Number(countMatch[1])
+    : null;
+
+  console.log(
+    "\nSUBMITTED APPLICATIONS:",
+    submittedCount ?? "Unknown"
+  );
+
+  // ==================================================
+  // 5. FIND APPLICATION IDs
+  // ==================================================
+
+  console.log(
+    "\nFinding application IDs..."
+  );
+
+  const appIDs = [];
+
+  for (
+    let index = 0;
+    index < 20;
+    index++
+  ) {
+    const id =
+      extractHiddenValue(
+        html,
+        `appID_${index}`
+      );
+
+    if (!id) break;
+
+    appIDs.push(id);
+  }
+
+  console.log(
+    "Application IDs found:",
+    appIDs.length
+  );
+
+  if (appIDs.length === 0) {
+    throw new Error(
+      "No appID values were found."
+    );
+  }
+
+  // ==================================================
+  // 6. FIND SUBMITTED APPLICATION NUMBERS
+  // ==================================================
 
   const applicationNumbers = [
     ...new Set(
       (
-        applications.body.match(
+        html.match(
           /(?:NF-FD|PEX-FD)-\d+/gi
         ) || []
-      ).map((x) => x.toUpperCase())
+      ).map((value) =>
+        value.toUpperCase()
+      )
     )
   ];
 
   console.log(
-    "Found:",
-    applicationNumbers.length
+    "\nApplication numbers found on page:"
   );
 
-  applicationNumbers.forEach((number, index) => {
-    console.log(`${index + 1}. ${number}`);
-  });
-
-  // ==================================================
-  // 6. FIND VIEW STATUS ELEMENTS
-  // ==================================================
-
-  console.log("\n--- VIEW STATUS ELEMENTS ---");
-
-  const statusElements =
-    applications.body.match(
-      /<[^>]*(?:View Status|view status)[^>]*>[\s\S]{0,1500}/gi
-    ) || [];
-
-  console.log(
-    "View Status references found:",
-    statusElements.length
-  );
-
-  statusElements.forEach((item, index) => {
-    console.log(`\n--- VIEW STATUS ${index + 1} ---`);
-    console.log(item.slice(0, 2000));
-  });
-
-  // ==================================================
-  // 7. FIND LINKS / BUTTONS ASSOCIATED WITH STATUS
-  // ==================================================
-
-  console.log("\n--- STATUS LINKS AND BUTTONS ---");
-
-  const allTags =
-    applications.body.match(
-      /<(?:a|button)[^>]*>[\s\S]{0,1000}?(?:View Status|view status)[\s\S]{0,1000}?(?:<\/a>|<\/button>)/gi
-    ) || [];
-
-  console.log(
-    "Status link/button references:",
-    allTags.length
-  );
-
-  allTags.forEach((item, index) => {
-    console.log(`\n--- STATUS CONTROL ${index + 1} ---`);
-    console.log(item.slice(0, 3000));
-  });
-
-  // ==================================================
-  // 8. FIND STATUS-RELATED JAVASCRIPT
-  // ==================================================
-
-  console.log("\n--- STATUS JAVASCRIPT ---");
-
-  const scripts =
-    applications.body.match(
-      /<script[\s\S]*?<\/script>/gi
-    ) || [];
-
-  let statusScriptFound = false;
-
-  scripts.forEach((script, index) => {
-    if (
-      /statusProductName|trackingAppStageVMs|trackingStageName|fetch\s*\(|ajax\s*\(|View Status|viewStatus/i.test(
-        script
-      )
-    ) {
-      statusScriptFound = true;
-
+  applicationNumbers.forEach(
+    (number, index) => {
       console.log(
-        `\n--- MATCHING SCRIPT ${index + 1} ---`
+        `${index + 1}. ${number}`
+      );
+    }
+  );
+
+  // ==================================================
+  // 7. CHECK EACH APPLICATION
+  // ==================================================
+
+  console.log(
+    "\n========================================"
+  );
+
+  console.log(
+    "CHECKING SUBMITTED APPLICATION STATUSES"
+  );
+
+  console.log(
+    "========================================"
+  );
+
+  const results = [];
+
+  for (
+    let index = 0;
+    index < appIDs.length;
+    index++
+  ) {
+    const appID = appIDs[index];
+
+    console.log(
+      `\nChecking application ${index + 1}...`
+    );
+
+    const response =
+      await checkApplicationStatus(
+        appID,
+        cookies,
+        userAgent
       );
 
-      console.log(script.slice(0, 12000));
+    console.log(
+      "STATUS ENDPOINT HTTP:",
+      response.status
+    );
+
+    if (
+      response.status < 200 ||
+      response.status >= 300
+    ) {
+      console.log(
+        "Status request failed."
+      );
+
+      results.push({
+        index: index + 1,
+        appID,
+        success: false,
+        error:
+          `HTTP ${response.status}`
+      });
+
+      continue;
     }
-  });
 
-  if (!statusScriptFound) {
+    let data;
+
+    try {
+      data = JSON.parse(
+        response.body
+      );
+    } catch (error) {
+      console.log(
+        "Response was not valid JSON."
+      );
+
+      console.log(
+        response.body.slice(0, 2000)
+      );
+
+      results.push({
+        index: index + 1,
+        appID,
+        success: false,
+        error: "Invalid JSON"
+      });
+
+      continue;
+    }
+
     console.log(
-      "No status-related JavaScript block was identified."
+      "Product:",
+      data.statusProductName
     );
+
+    console.log(
+      "Tracking stages:"
+    );
+
+    const stages =
+      Array.isArray(
+        data.trackingAppStageVMs
+      )
+        ? data.trackingAppStageVMs
+        : [];
+
+    stages.forEach(
+      (stage, stageIndex) => {
+        console.log(
+          `  ${stageIndex + 1}. ${
+            stage.trackingStageName || "Unknown"
+          }`
+        );
+
+        if (stage.duration) {
+          console.log(
+            `     Duration: ${stage.duration}`
+          );
+        }
+      }
+    );
+
+    results.push({
+      index: index + 1,
+      appID,
+      success: true,
+      product:
+        data.statusProductName || null,
+      stages
+    });
   }
 
   // ==================================================
-  // 9. SHOW STATUS SECTION FROM PAGE
-  // ==================================================
-
-  console.log("\n--- APPLICATION STATUS TEXT ---");
-
-  const statusTextMatches =
-    pageText.match(
-      /APPLICATION STATUS[\s\S]{0,3000}/i
-    ) || [];
-
-  if (statusTextMatches.length) {
-    console.log(statusTextMatches[0]);
-  } else {
-    console.log(
-      "No visible APPLICATION STATUS section found in page text."
-    );
-  }
-
-  // ==================================================
-  // COMPLETE
+  // 8. FINAL SUMMARY
   // ==================================================
 
   console.log(
-    "\n--- STATUS DIAGNOSTIC COMPLETE ---"
+    "\n========================================"
+  );
+
+  console.log(
+    "FINAL APPLICATION STATUS SUMMARY"
+  );
+
+  console.log(
+    "========================================"
+  );
+
+  results.forEach(
+    (result) => {
+      console.log(
+        `\nApplication ${result.index}`
+      );
+
+      if (!result.success) {
+        console.log(
+          "ERROR:",
+          result.error
+        );
+        return;
+      }
+
+      console.log(
+        "Product:",
+        result.product
+      );
+
+      console.log(
+        "Stages:"
+      );
+
+      result.stages.forEach(
+        (stage, index) => {
+          console.log(
+            `  ${index + 1}. ${
+              stage.trackingStageName ||
+              "Unknown"
+            }`
+          );
+        }
+      );
+    }
+  );
+
+  console.log(
+    "\n--- MONITOR COMPLETE ---"
   );
 }
 
 main().catch((error) => {
-  console.error("\nNAPAMS monitor failed:");
+  console.error(
+    "\nNAPAMS monitor failed:"
+  );
+
   console.error(error);
+
   process.exit(1);
 });
