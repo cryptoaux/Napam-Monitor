@@ -14,12 +14,12 @@ function request(method, path, headers = {}, body = null) {
         headers,
         timeout: 60000
       },
-      res => {
+      (res) => {
         let data = "";
 
         res.setEncoding("utf8");
 
-        res.on("data", chunk => {
+        res.on("data", (chunk) => {
           data += chunk;
         });
 
@@ -51,7 +51,7 @@ function getCookies(setCookie) {
   if (!setCookie) return "";
 
   return setCookie
-    .map(cookie => cookie.split(";")[0])
+    .map((cookie) => cookie.split(";")[0])
     .join("; ");
 }
 
@@ -83,16 +83,18 @@ async function main() {
     "AppleWebKit/537.36 (KHTML, like Gecko) " +
     "Chrome/131.0.0.0 Safari/537.36";
 
-  // --------------------------------------------------
+  // ==================================================
   // 1. GET LOGIN PAGE
-  // --------------------------------------------------
+  // ==================================================
 
   console.log("Fetching NAPAMS login page...");
 
   const loginPage = await request("GET", LOGIN_PATH, {
     "User-Agent": userAgent,
-    Accept: "text/html"
+    "Accept": "text/html"
   });
+
+  console.log("LOGIN PAGE STATUS:", loginPage.status);
 
   const token = getAntiforgeryToken(loginPage.body);
   const initialCookies = getCookies(loginPage.headers["set-cookie"]);
@@ -101,9 +103,11 @@ async function main() {
     throw new Error("Antiforgery token was not found.");
   }
 
-  // --------------------------------------------------
+  console.log("Antiforgery token found.");
+
+  // ==================================================
   // 2. LOGIN AS ADMIN
-  // --------------------------------------------------
+  // ==================================================
 
   console.log("Submitting Admin login...");
 
@@ -135,6 +139,8 @@ async function main() {
   console.log("LOGIN LOCATION:", loginResponse.headers.location);
 
   if (loginResponse.status !== 302) {
+    console.log("\n--- LOGIN RESPONSE ---");
+    console.log(cleanText(loginResponse.body).slice(0, 5000));
     throw new Error("NAPAMS login failed.");
   }
 
@@ -146,11 +152,11 @@ async function main() {
 
   console.log("Authenticated session established.");
 
-  // --------------------------------------------------
+  // ==================================================
   // 3. OPEN APPLICATIONS
-  // --------------------------------------------------
+  // ==================================================
 
-  console.log("\nOpening submitted applications...");
+  console.log("\nOpening Applications...");
 
   const applications = await request(
     "GET",
@@ -168,32 +174,165 @@ async function main() {
     applications.body.length
   );
 
-  // --------------------------------------------------
-  // 4. SHOW RELEVANT APPLICATION INFORMATION
-  // --------------------------------------------------
-
-  console.log("\n--- APPLICATION PAGE TEXT ---");
-
-  const text = cleanText(applications.body);
-
-  console.log(text.slice(0, 15000));
-
-  console.log("\n--- STATUS/CHECK REFERENCES ---");
-
-  const statusMatches =
-    applications.body.match(
-      /.{0,300}(check status|status|submitted application).{0,500}/gi
-    ) || [];
-
-  for (const match of statusMatches.slice(0, 20)) {
-    console.log(cleanText(match));
+  if (applications.status !== 200) {
+    throw new Error("Could not open Applications page.");
   }
 
-  console.log("\n--- APPLICATION PAGE TEST COMPLETE ---");
+  // ==================================================
+  // 4. CONFIRM SUBMITTED APPLICATIONS
+  // ==================================================
+
+  const pageText = cleanText(applications.body);
+
+  console.log("\n--- SUBMITTED APPLICATIONS SUMMARY ---");
+
+  const submittedMatch = pageText.match(
+    /Submitted Applications\s+(\d+)/i
+  );
+
+  if (submittedMatch) {
+    console.log(
+      "Submitted Applications:",
+      submittedMatch[1]
+    );
+  } else {
+    console.log(
+      "Could not determine submitted application count."
+    );
+  }
+
+  // ==================================================
+  // 5. FIND APPLICATION NUMBERS
+  // ==================================================
+
+  console.log("\n--- APPLICATION NUMBERS ---");
+
+  const applicationNumbers = [
+    ...new Set(
+      (
+        applications.body.match(
+          /(?:NF-FD|PEX-FD)-\d+/gi
+        ) || []
+      ).map((x) => x.toUpperCase())
+    )
+  ];
+
+  console.log(
+    "Found:",
+    applicationNumbers.length
+  );
+
+  applicationNumbers.forEach((number, index) => {
+    console.log(`${index + 1}. ${number}`);
+  });
+
+  // ==================================================
+  // 6. FIND VIEW STATUS ELEMENTS
+  // ==================================================
+
+  console.log("\n--- VIEW STATUS ELEMENTS ---");
+
+  const statusElements =
+    applications.body.match(
+      /<[^>]*(?:View Status|view status)[^>]*>[\s\S]{0,1500}/gi
+    ) || [];
+
+  console.log(
+    "View Status references found:",
+    statusElements.length
+  );
+
+  statusElements.forEach((item, index) => {
+    console.log(`\n--- VIEW STATUS ${index + 1} ---`);
+    console.log(item.slice(0, 2000));
+  });
+
+  // ==================================================
+  // 7. FIND LINKS / BUTTONS ASSOCIATED WITH STATUS
+  // ==================================================
+
+  console.log("\n--- STATUS LINKS AND BUTTONS ---");
+
+  const allTags =
+    applications.body.match(
+      /<(?:a|button)[^>]*>[\s\S]{0,1000}?(?:View Status|view status)[\s\S]{0,1000}?(?:<\/a>|<\/button>)/gi
+    ) || [];
+
+  console.log(
+    "Status link/button references:",
+    allTags.length
+  );
+
+  allTags.forEach((item, index) => {
+    console.log(`\n--- STATUS CONTROL ${index + 1} ---`);
+    console.log(item.slice(0, 3000));
+  });
+
+  // ==================================================
+  // 8. FIND STATUS-RELATED JAVASCRIPT
+  // ==================================================
+
+  console.log("\n--- STATUS JAVASCRIPT ---");
+
+  const scripts =
+    applications.body.match(
+      /<script[\s\S]*?<\/script>/gi
+    ) || [];
+
+  let statusScriptFound = false;
+
+  scripts.forEach((script, index) => {
+    if (
+      /statusProductName|trackingAppStageVMs|trackingStageName|fetch\s*\(|ajax\s*\(|View Status|viewStatus/i.test(
+        script
+      )
+    ) {
+      statusScriptFound = true;
+
+      console.log(
+        `\n--- MATCHING SCRIPT ${index + 1} ---`
+      );
+
+      console.log(script.slice(0, 12000));
+    }
+  });
+
+  if (!statusScriptFound) {
+    console.log(
+      "No status-related JavaScript block was identified."
+    );
+  }
+
+  // ==================================================
+  // 9. SHOW STATUS SECTION FROM PAGE
+  // ==================================================
+
+  console.log("\n--- APPLICATION STATUS TEXT ---");
+
+  const statusTextMatches =
+    pageText.match(
+      /APPLICATION STATUS[\s\S]{0,3000}/i
+    ) || [];
+
+  if (statusTextMatches.length) {
+    console.log(statusTextMatches[0]);
+  } else {
+    console.log(
+      "No visible APPLICATION STATUS section found in page text."
+    );
+  }
+
+  // ==================================================
+  // COMPLETE
+  // ==================================================
+
+  console.log(
+    "\n--- STATUS DIAGNOSTIC COMPLETE ---"
+  );
 }
 
-main().catch(error => {
-  console.error("NAPAMS monitor failed:");
+main().catch((error) => {
+  console.error("\nNAPAMS monitor failed:");
   console.error(error);
   process.exit(1);
 });
