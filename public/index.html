@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAPAMS Monitor</title>
+</head>
+
+<body>
+  <h1>NAPAMS Application Monitor</h1>
+
+  <div id="applications">
+    Loading applications...
+  </div>
+
+  <script>
+    async function loadApplications() {
+      const response = await fetch("./data/applications.json");
+      const applications = await response.json();
+
+      const container = document.getElementById("applications");
+
+      container.innerHTML = applications.map(app => `
+        <div>
+          <h2>${app.name}</h2>
+          <p><strong>Application Number:</strong> ${app.applicationNumber}</p>
+          <p><strong>Current Status:</strong> ${app.currentStatus}</p>
+        </div>
+        <hr>
+      `).join("");
+    }
+
+    loadApplications();
+  </script>
+</body>
+</html>
