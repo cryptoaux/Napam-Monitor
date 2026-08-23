@@ -55,13 +55,48 @@
       font-size: 48px;
       font-weight: 800;
     }
+    /*
+     * ==========================================================
+     * COMPANY GROUP
+     * ==========================================================
+     */
+    .company-group {
+      margin-bottom: 35px;
+    }
+    .company-header {
+      background: white;
+      border: 1px solid #e1e5eb;
+      border-radius: 22px 22px 0 0;
+      padding: 24px 30px;
+      border-bottom: 3px solid #eef1f5;
+    }
+    .company-name {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #1f2937;
+    }
+    .company-count {
+      margin-top: 7px;
+      color: #6b7280;
+      font-size: 15px;
+    }
+    .company-applications {
+      background: #eef1f5;
+      padding: 18px;
+      border-radius: 0 0 22px 22px;
+    }
     .application-card {
       background: white;
       border: 1px solid #e1e5eb;
       border-radius: 24px;
       padding: 30px;
-      margin-bottom: 25px;
+      margin-bottom: 18px;
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+    }
+    .application-card:last-child {
+      margin-bottom: 0;
     }
     .application-name {
       font-size: 27px;
@@ -111,11 +146,9 @@
       margin-bottom: 16px;
     }
     /*
-     * RESPONSIVE STATUS TIMELINE
-     *
-     * The stages are allowed to wrap naturally.
-     * This prevents the entire card from becoming
-     * horizontally scrollable on small screens.
+     * ==========================================================
+     * STATUS TIMELINE
+     * ==========================================================
      */
     .stage-container {
       display: flex;
@@ -190,6 +223,11 @@
       padding: 20px;
       margin-bottom: 25px;
     }
+    /*
+     * ==========================================================
+     * MOBILE
+     * ==========================================================
+     */
     @media (max-width: 700px) {
       .header {
         padding: 25px 6%;
@@ -213,6 +251,15 @@
       }
       .summary-number {
         font-size: 40px;
+      }
+      .company-header {
+        padding: 22px;
+      }
+      .company-name {
+        font-size: 22px;
+      }
+      .company-applications {
+        padding: 12px;
       }
       .application-card {
         padding: 22px;
@@ -250,6 +297,9 @@
       }
     }
     @media (max-width: 430px) {
+      .company-name {
+        font-size: 20px;
+      }
       .stage-name {
         font-size: 8px;
       }
@@ -321,64 +371,99 @@
   <script>
     const DATA_URL = "./data.json";
     /*
-     * The website checks for new data every minute.
-     *
-     * This is only for refreshing the dashboard.
-     * The GitHub workflow is responsible for actually
-     * checking NAPAMS.
+     * The dashboard refreshes every minute.
      */
-    const REFRESH_INTERVAL = 60 * 1000;
+    const REFRESH_INTERVAL =
+      60 * 1000;
+    /*
+     * ==========================================================
+     * SECURITY
+     * ==========================================================
+     */
     function escapeHtml(value) {
       return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
     }
+    /*
+     * ==========================================================
+     * COLORS
+     * ==========================================================
+     */
     function colorClass(color) {
+      const normalized =
+        String(
+          color || ""
+        ).toUpperCase();
       if (
-        String(color).toUpperCase() === "GREEN"
+        normalized === "GREEN"
       ) {
         return "green";
       }
       if (
-        String(color).toUpperCase() === "YELLOW"
+        normalized === "YELLOW"
       ) {
         return "yellow";
       }
       return "red";
     }
     function currentStatusClass(color) {
+      const normalized =
+        String(
+          color || ""
+        ).toUpperCase();
       if (
-        String(color).toUpperCase() === "GREEN"
+        normalized === "GREEN"
       ) {
         return "current-status-green";
       }
       if (
-        String(color).toUpperCase() === "YELLOW"
+        normalized === "YELLOW"
       ) {
         return "current-status-yellow";
       }
       return "current-status-red";
     }
     /*
-     * Find the stage that corresponds to the
-     * current status.
-     *
-     * This means the current-status badge gets
-     * its color from the same stage instead of
-     * guessing the color.
+     * ==========================================================
+     * CURRENT STATUS COLOR
+     * ==========================================================
      */
     function getCurrentStatusColor(app) {
       const stages =
-        Array.isArray(app.stages)
+        Array.isArray(
+          app.stages
+        )
           ? app.stages
           : [];
       const currentStatus =
         String(
           app.currentStatus || ""
-        ).trim().toLowerCase();
+        )
+          .trim()
+          .toLowerCase();
+      /*
+       * First use the stage matching
+       * the current status.
+       */
       const matchingStage =
         stages.find(
           (stage) =>
@@ -391,29 +476,192 @@
               .toLowerCase() ===
             currentStatus
         );
-      if (matchingStage) {
+      if (
+        matchingStage
+      ) {
         return (
           matchingStage.color ||
           "YELLOW"
         );
       }
-      /*
-       * If a matching stage isn't found,
-       * use the explicitly supplied value.
-       */
       return (
         app.currentStatusColor ||
         "YELLOW"
       );
     }
-    function renderApplications(applications) {
+    /*
+     * ==========================================================
+     * GROUP APPLICATIONS BY COMPANY
+     * ==========================================================
+     */
+    function groupByCompany(
+      applications
+    ) {
+      const groups = {};
+      applications.forEach(
+        (app) => {
+          const company =
+            String(
+              app.companyName ||
+              "Unknown Company"
+            ).trim();
+          if (
+            !groups[company]
+          ) {
+            groups[company] = [];
+          }
+          groups[company].push(
+            app
+          );
+        }
+      );
+      return groups;
+    }
+    /*
+     * ==========================================================
+     * RENDER ONE APPLICATION
+     * ==========================================================
+     */
+    function renderApplication(
+      app
+    ) {
+      const stages =
+        Array.isArray(
+          app.stages
+        )
+          ? app.stages
+          : [];
+      const currentColor =
+        getCurrentStatusColor(
+          app
+        );
+      const card =
+        document.createElement(
+          "div"
+        );
+      card.className =
+        "application-card";
+      const stageHTML =
+        stages
+          .map(
+            (
+              stage,
+              index
+            ) => {
+              const stageColor =
+                stage.color ||
+                "RED";
+              const cssColor =
+                colorClass(
+                  stageColor
+                );
+              const stageName =
+                stage.name ||
+                stage.trackingStageName ||
+                "Unknown";
+              return `
+                <div class="stage-item">
+                  ${
+                    index > 0
+                      ? `
+                        <div
+                          class="stage-connector"
+                        ></div>
+                      `
+                      : ""
+                  }
+                  <div
+                    class="
+                      stage-dot
+                      ${cssColor}
+                    "
+                    title="${escapeHtml(
+                      stageName
+                    )}"
+                  >
+                    ${index + 1}
+                  </div>
+                  <div class="stage-name">
+                    ${escapeHtml(
+                      stageName
+                    )}
+                  </div>
+                </div>
+              `;
+            }
+          )
+          .join("");
+      const currentCss =
+        currentStatusClass(
+          currentColor
+        );
+      const currentDotClass =
+        colorClass(
+          currentColor
+        );
+      card.innerHTML = `
+        <div class="application-name">
+          ${escapeHtml(
+            app.product ||
+            app.name ||
+            "Unknown Product"
+          )}
+        </div>
+        <div class="application-number">
+          Application Number:
+          <strong>
+            ${escapeHtml(
+              app.applicationNumber ||
+              "Unknown"
+            )}
+          </strong>
+        </div>
+        <div
+          class="
+            current-status
+            ${currentCss}
+          "
+        >
+          <span
+            class="
+              current-status-dot
+              ${currentDotClass}
+            "
+          ></span>
+          Current Status:
+          <strong>
+            ${escapeHtml(
+              app.currentStatus ||
+              "Unknown"
+            )}
+          </strong>
+        </div>
+        <div class="status-title">
+          Status Stages
+        </div>
+        <div class="stage-container">
+          ${stageHTML}
+        </div>
+      `;
+      return card;
+    }
+    /*
+     * ==========================================================
+     * RENDER APPLICATIONS GROUPED BY COMPANY
+     * ==========================================================
+     */
+    function renderApplications(
+      applications
+    ) {
       const container =
         document.getElementById(
           "applications"
         );
       container.innerHTML = "";
       if (
-        !Array.isArray(applications) ||
+        !Array.isArray(
+          applications
+        ) ||
         applications.length === 0
       ) {
         container.innerHTML = `
@@ -423,118 +671,90 @@
         `;
         return;
       }
-      applications.forEach(
-        (app) => {
-          const stages =
-            Array.isArray(app.stages)
-              ? app.stages
-              : [];
+      const groups =
+        groupByCompany(
+          applications
+        );
+      Object.entries(
+        groups
+      ).forEach(
+        (
+          [
+            companyName,
+            companyApplications
+          ]
+        ) => {
           /*
-           * Dynamically determine the current
-           * status color from its stage.
+           * Company wrapper
            */
-          const currentColor =
-            getCurrentStatusColor(app);
-          const card =
+          const companyGroup =
             document.createElement(
               "div"
             );
-          card.className =
-            "application-card";
-          const stageHTML =
-            stages
-              .map(
-                (stage, index) => {
-                  const stageColor =
-                    stage.color ||
-                    "RED";
-                  const cssColor =
-                    colorClass(
-                      stageColor
-                    );
-                  const stageName =
-                    stage.name ||
-                    stage.trackingStageName ||
-                    "Unknown";
-                  return `
-                    <div class="stage-item">
-                      ${
-                        index > 0
-                          ? `<div class="stage-connector"></div>`
-                          : ""
-                      }
-                      <div
-                        class="stage-dot ${cssColor}"
-                        title="${escapeHtml(stageName)}"
-                      >
-                        ${index + 1}
-                      </div>
-                      <div class="stage-name">
-                        ${escapeHtml(stageName)}
-                      </div>
-                    </div>
-                  `;
-                }
-              )
-              .join("");
-          const currentCss =
-            currentStatusClass(
-              currentColor
+          companyGroup.className =
+            "company-group";
+          /*
+           * Company header
+           */
+          const companyHeader =
+            document.createElement(
+              "div"
             );
-          const currentDotClass =
-            colorClass(
-              currentColor
-            );
-          card.innerHTML = `
-            <div class="application-name">
+          companyHeader.className =
+            "company-header";
+          companyHeader.innerHTML = `
+            <h2 class="company-name">
               ${escapeHtml(
-                app.product ||
-                app.name ||
-                "Unknown Product"
+                companyName
               )}
-            </div>
-            <div class="application-number">
-              Application Number:
-              <strong>
-                ${escapeHtml(
-                  app.applicationNumber ||
-                  "Unknown"
-                )}
-              </strong>
-            </div>
-            <div
-              class="
-                current-status
-                ${currentCss}
-              "
-            >
-              <span
-                class="
-                  current-status-dot
-                  ${currentDotClass}
-                "
-              ></span>
-              Current Status:
-              <strong>
-                ${escapeHtml(
-                  app.currentStatus ||
-                  "Unknown"
-                )}
-              </strong>
-            </div>
-            <div class="status-title">
-              Status Stages
-            </div>
-            <div class="stage-container">
-              ${stageHTML}
+            </h2>
+            <div class="company-count">
+              ${
+                companyApplications.length
+              }
+              ${
+                companyApplications.length === 1
+                  ? "application"
+                  : "applications"
+              }
             </div>
           `;
+          /*
+           * Applications belonging
+           * to this company.
+           */
+          const applicationsWrapper =
+            document.createElement(
+              "div"
+            );
+          applicationsWrapper.className =
+            "company-applications";
+          companyApplications.forEach(
+            (app) => {
+              applicationsWrapper.appendChild(
+                renderApplication(
+                  app
+                )
+              );
+            }
+          );
+          companyGroup.appendChild(
+            companyHeader
+          );
+          companyGroup.appendChild(
+            applicationsWrapper
+          );
           container.appendChild(
-            card
+            companyGroup
           );
         }
       );
     }
+    /*
+     * ==========================================================
+     * SUMMARY
+     * ==========================================================
+     */
     function updateSummary(
       applications
     ) {
@@ -573,6 +793,11 @@
       ).textContent =
         approved;
     }
+    /*
+     * ==========================================================
+     * LOAD DATA
+     * ==========================================================
+     */
     async function loadData() {
       try {
         const response =
@@ -581,10 +806,13 @@
             "?t=" +
             Date.now(),
             {
-              cache: "no-store"
+              cache:
+                "no-store"
             }
           );
-        if (!response.ok) {
+        if (
+          !response.ok
+        ) {
           throw new Error(
             "Could not load data.json"
           );
@@ -592,9 +820,15 @@
         const data =
           await response.json();
         const applications =
-          Array.isArray(data)
+          Array.isArray(
+            data
+          )
             ? data
-            : data.applications || [];
+            : Array.isArray(
+                data.applications
+              )
+            ? data.applications
+            : [];
         updateSummary(
           applications
         );
@@ -602,8 +836,7 @@
           applications
         );
         /*
-         * Use the actual monitor update
-         * timestamp when available.
+         * Actual monitor timestamp.
          */
         if (
           data.updatedAt
@@ -624,8 +857,11 @@
         }
         document.getElementById(
           "error"
-        ).innerHTML = "";
-      } catch (error) {
+        ).innerHTML =
+          "";
+      } catch (
+        error
+      ) {
         console.error(
           "Dashboard error:",
           error
@@ -640,6 +876,11 @@
         `;
       }
     }
+    /*
+     * ==========================================================
+     * START
+     * ==========================================================
+     */
     loadData();
     setInterval(
       loadData,
