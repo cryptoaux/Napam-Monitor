@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Chromium
+      - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
       - name: Run NAPAMS monitor
