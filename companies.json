@@ -1,22 +1,22 @@
 {
   "companies": [
     {
-      "id": "company-1",
-      "name": "Company 1",
-      "tin": "",
-      "password": ""
+      "id": "company_01",
+      "name": "Company Name 1",
+      "tinSecret": "NAPAMS_TIN_01",
+      "passwordSecret": "NAPAMS_PASSWORD_01"
     },
     {
-      "id": "company-2",
-      "name": "Company 2",
-      "tin": "",
-      "password": ""
+      "id": "company_02",
+      "name": "Company Name 2",
+      "tinSecret": "NAPAMS_TIN_02",
+      "passwordSecret": "NAPAMS_PASSWORD_02"
     },
     {
-      "id": "company-3",
-      "name": "Company 3",
-      "tin": "",
-      "password": ""
+      "id": "company_03",
+      "name": "Company Name 3",
+      "tinSecret": "NAPAMS_TIN_03",
+      "passwordSecret": "NAPAMS_PASSWORD_03"
     }
   ]
 }
