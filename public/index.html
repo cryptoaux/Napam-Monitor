@@ -34,65 +34,104 @@
       max-width: 1200px;
       margin: 35px auto;
     }
+    /* =========================
+       SUMMARY
+       ========================= */
     .summary {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
       margin-bottom: 35px;
     }
     .summary-card {
       background: white;
       border: 1px solid #e1e5eb;
       border-radius: 22px;
-      padding: 30px;
+      padding: 25px;
     }
     .summary-title {
       color: #6b7280;
-      font-size: 18px;
-      margin-bottom: 18px;
+      font-size: 17px;
+      margin-bottom: 15px;
     }
     .summary-number {
-      font-size: 48px;
+      font-size: 42px;
       font-weight: 800;
     }
-    /*
-     * ==========================================================
-     * COMPANY GROUP
-     * ==========================================================
-     */
+    /* =========================
+       COMPANY DROPDOWN
+       ========================= */
     .company-group {
-      margin-bottom: 35px;
+      margin-bottom: 22px;
+      border-radius: 22px;
+      overflow: hidden;
     }
     .company-header {
-      background: white;
+      width: 100%;
       border: 1px solid #e1e5eb;
-      border-radius: 22px 22px 0 0;
-      padding: 24px 30px;
-      border-bottom: 3px solid #eef1f5;
+      background: white;
+      padding: 22px 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      transition: background 0.2s ease;
+    }
+    .company-header:hover {
+      background: #f9fafb;
+    }
+    .company-header-left {
+      min-width: 0;
     }
     .company-name {
       margin: 0;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       text-transform: uppercase;
       color: #1f2937;
     }
     .company-count {
-      margin-top: 7px;
+      margin-top: 6px;
       color: #6b7280;
-      font-size: 15px;
+      font-size: 14px;
+    }
+    .dropdown-arrow {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      border-radius: 50%;
+      background: #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #374151;
+      transition: transform 0.25s ease;
+    }
+    .company-group.open .dropdown-arrow {
+      transform: rotate(180deg);
     }
     .company-applications {
+      display: none;
       background: #eef1f5;
-      padding: 18px;
-      border-radius: 0 0 22px 22px;
+      padding: 15px;
+      border-left: 1px solid #e1e5eb;
+      border-right: 1px solid #e1e5eb;
+      border-bottom: 1px solid #e1e5eb;
     }
+    .company-group.open .company-applications {
+      display: block;
+    }
+    /* =========================
+       APPLICATION CARD
+       ========================= */
     .application-card {
       background: white;
       border: 1px solid #e1e5eb;
-      border-radius: 24px;
+      border-radius: 22px;
       padding: 30px;
-      margin-bottom: 18px;
+      margin-bottom: 15px;
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
     }
     .application-card:last-child {
@@ -112,6 +151,9 @@
     .application-number strong {
       color: #374151;
     }
+    /* =========================
+       CURRENT STATUS
+       ========================= */
     .current-status {
       display: inline-flex;
       align-items: center;
@@ -140,16 +182,14 @@
       background: #dff5df;
       color: #087508;
     }
+    /* =========================
+       STATUS STAGES
+       ========================= */
     .status-title {
       font-size: 20px;
       font-weight: 800;
       margin-bottom: 16px;
     }
-    /*
-     * ==========================================================
-     * STATUS TIMELINE
-     * ==========================================================
-     */
     .stage-container {
       display: flex;
       flex-wrap: wrap;
@@ -191,9 +231,7 @@
       color: #4b5563;
       white-space: nowrap;
     }
-    /*
-     * NAPAMS STATUS COLORS
-     */
+    /* NAPAMS COLORS */
     .green {
       background: #008000;
     }
@@ -203,6 +241,9 @@
     .red {
       background: #ff4d4d;
     }
+    /* =========================
+       OTHER
+       ========================= */
     .last-updated {
       text-align: center;
       color: #6b7280;
@@ -223,11 +264,14 @@
       padding: 20px;
       margin-bottom: 25px;
     }
-    /*
-     * ==========================================================
-     * MOBILE
-     * ==========================================================
-     */
+    /* =========================
+       MOBILE
+       ========================= */
+    @media (max-width: 850px) {
+      .summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
     @media (max-width: 700px) {
       .header {
         padding: 25px 6%;
@@ -243,23 +287,30 @@
         margin-top: 25px;
       }
       .summary {
-        grid-template-columns: 1fr;
-        gap: 15px;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
       }
       .summary-card {
-        padding: 23px;
+        padding: 20px;
+      }
+      .summary-title {
+        font-size: 14px;
       }
       .summary-number {
-        font-size: 40px;
+        font-size: 34px;
       }
       .company-header {
-        padding: 22px;
+        padding: 20px;
       }
       .company-name {
-        font-size: 22px;
+        font-size: 20px;
+        padding-right: 10px;
+      }
+      .company-count {
+        font-size: 13px;
       }
       .company-applications {
-        padding: 12px;
+        padding: 10px;
       }
       .application-card {
         padding: 22px;
@@ -297,8 +348,17 @@
       }
     }
     @media (max-width: 430px) {
+      .summary {
+        grid-template-columns: 1fr 1fr;
+      }
+      .summary-card {
+        padding: 17px;
+      }
+      .summary-number {
+        font-size: 30px;
+      }
       .company-name {
-        font-size: 20px;
+        font-size: 18px;
       }
       .stage-name {
         font-size: 8px;
@@ -321,7 +381,19 @@
   </div>
   <div class="container">
 <div id="error"></div>
+<!-- SUMMARY -->
 <div class="summary">
+  <div class="summary-card">
+    <div class="summary-title">
+      Total Companies
+    </div>
+    <div
+      class="summary-number"
+      id="totalCompanies"
+    >
+      0
+    </div>
+  </div>
   <div class="summary-card">
     <div class="summary-title">
       Total Applications
@@ -370,88 +442,52 @@
   </div>
   <script>
     const DATA_URL = "./data.json";
-    /*
-     * The dashboard refreshes every minute.
-     */
     const REFRESH_INTERVAL =
       60 * 1000;
-    /*
-     * ==========================================================
-     * SECURITY
-     * ==========================================================
-     */
+    /* =========================
+       SECURITY
+       ========================= */
     function escapeHtml(value) {
       return String(value ?? "")
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
-    /*
-     * ==========================================================
-     * COLORS
-     * ==========================================================
-     */
+    /* =========================
+       COLORS
+       ========================= */
     function colorClass(color) {
       const normalized =
-        String(
-          color || ""
-        ).toUpperCase();
-      if (
-        normalized === "GREEN"
-      ) {
+        String(color || "")
+          .toUpperCase();
+      if (normalized === "GREEN") {
         return "green";
       }
-      if (
-        normalized === "YELLOW"
-      ) {
+      if (normalized === "YELLOW") {
         return "yellow";
       }
       return "red";
     }
     function currentStatusClass(color) {
       const normalized =
-        String(
-          color || ""
-        ).toUpperCase();
-      if (
-        normalized === "GREEN"
-      ) {
+        String(color || "")
+          .toUpperCase();
+      if (normalized === "GREEN") {
         return "current-status-green";
       }
-      if (
-        normalized === "YELLOW"
-      ) {
+      if (normalized === "YELLOW") {
         return "current-status-yellow";
       }
       return "current-status-red";
     }
-    /*
-     * ==========================================================
-     * CURRENT STATUS COLOR
-     * ==========================================================
-     */
+    /* =========================
+       CURRENT STATUS COLOR
+       ========================= */
     function getCurrentStatusColor(app) {
       const stages =
-        Array.isArray(
-          app.stages
-        )
+        Array.isArray(app.stages)
           ? app.stages
           : [];
       const currentStatus =
@@ -460,10 +496,6 @@
         )
           .trim()
           .toLowerCase();
-      /*
-       * First use the stage matching
-       * the current status.
-       */
       const matchingStage =
         stages.find(
           (stage) =>
@@ -476,9 +508,7 @@
               .toLowerCase() ===
             currentStatus
         );
-      if (
-        matchingStage
-      ) {
+      if (matchingStage) {
         return (
           matchingStage.color ||
           "YELLOW"
@@ -489,72 +519,52 @@
         "YELLOW"
       );
     }
-    /*
-     * ==========================================================
-     * GROUP APPLICATIONS BY COMPANY
-     * ==========================================================
-     */
+    /* =========================
+       GROUP BY COMPANY
+       ========================= */
     function groupByCompany(
       applications
     ) {
       const groups = {};
       applications.forEach(
         (app) => {
-          const company =
+          const companyName =
             String(
               app.companyName ||
+              app.company ||
               "Unknown Company"
             ).trim();
-          if (
-            !groups[company]
-          ) {
-            groups[company] = [];
+          if (!groups[companyName]) {
+            groups[companyName] = [];
           }
-          groups[company].push(
-            app
-          );
+          groups[companyName].push(app);
         }
       );
       return groups;
     }
-    /*
-     * ==========================================================
-     * RENDER ONE APPLICATION
-     * ==========================================================
-     */
-    function renderApplication(
-      app
-    ) {
+    /* =========================
+       RENDER APPLICATION
+       ========================= */
+    function renderApplication(app) {
       const stages =
-        Array.isArray(
-          app.stages
-        )
+        Array.isArray(app.stages)
           ? app.stages
           : [];
       const currentColor =
-        getCurrentStatusColor(
-          app
-        );
+        getCurrentStatusColor(app);
       const card =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
       card.className =
         "application-card";
       const stageHTML =
         stages
           .map(
-            (
-              stage,
-              index
-            ) => {
+            (stage, index) => {
               const stageColor =
                 stage.color ||
                 "RED";
               const cssColor =
-                colorClass(
-                  stageColor
-                );
+                colorClass(stageColor);
               const stageName =
                 stage.name ||
                 stage.trackingStageName ||
@@ -571,20 +581,13 @@
                       : ""
                   }
                   <div
-                    class="
-                      stage-dot
-                      ${cssColor}
-                    "
-                    title="${escapeHtml(
-                      stageName
-                    )}"
+                    class="stage-dot ${cssColor}"
+                    title="${escapeHtml(stageName)}"
                   >
                     ${index + 1}
                   </div>
                   <div class="stage-name">
-                    ${escapeHtml(
-                      stageName
-                    )}
+                    ${escapeHtml(stageName)}
                   </div>
                 </div>
               `;
@@ -645,11 +648,9 @@
       `;
       return card;
     }
-    /*
-     * ==========================================================
-     * RENDER APPLICATIONS GROUPED BY COMPANY
-     * ==========================================================
-     */
+    /* =========================
+       RENDER GROUPED COMPANIES
+       ========================= */
     function renderApplications(
       applications
     ) {
@@ -659,9 +660,7 @@
         );
       container.innerHTML = "";
       if (
-        !Array.isArray(
-          applications
-        ) ||
+        !Array.isArray(applications) ||
         applications.length === 0
       ) {
         container.innerHTML = `
@@ -675,91 +674,105 @@
         groupByCompany(
           applications
         );
-      Object.entries(
-        groups
-      ).forEach(
-        (
-          [
-            companyName,
-            companyApplications
-          ]
-        ) => {
-          /*
-           * Company wrapper
-           */
-          const companyGroup =
-            document.createElement(
-              "div"
-            );
-          companyGroup.className =
-            "company-group";
-          /*
-           * Company header
-           */
-          const companyHeader =
-            document.createElement(
-              "div"
-            );
-          companyHeader.className =
-            "company-header";
-          companyHeader.innerHTML = `
-            <h2 class="company-name">
-              ${escapeHtml(
-                companyName
-              )}
-            </h2>
-            <div class="company-count">
-              ${
-                companyApplications.length
-              }
-              ${
-                companyApplications.length === 1
-                  ? "application"
-                  : "applications"
-              }
-            </div>
-          `;
-          /*
-           * Applications belonging
-           * to this company.
-           */
-          const applicationsWrapper =
-            document.createElement(
-              "div"
-            );
-          applicationsWrapper.className =
-            "company-applications";
-          companyApplications.forEach(
-            (app) => {
-              applicationsWrapper.appendChild(
-                renderApplication(
-                  app
-                )
+      Object.entries(groups)
+        .forEach(
+          (
+            [
+              companyName,
+              companyApplications
+            ]
+          ) => {
+            const companyGroup =
+              document.createElement(
+                "div"
               );
-            }
-          );
-          companyGroup.appendChild(
-            companyHeader
-          );
-          companyGroup.appendChild(
-            applicationsWrapper
-          );
-          container.appendChild(
-            companyGroup
-          );
-        }
-      );
+            companyGroup.className =
+              "company-group";
+            /*
+             * COMPANY HEADER
+             */
+            const companyHeader =
+              document.createElement(
+                "button"
+              );
+            companyHeader.type =
+              "button";
+            companyHeader.className =
+              "company-header";
+            companyHeader.innerHTML = `
+              <div class="company-header-left">
+                <h2 class="company-name">
+                  ${escapeHtml(
+                    companyName
+                  )}
+                </h2>
+                <div class="company-count">
+                  ${
+                    companyApplications.length
+                  }
+                  ${
+                    companyApplications.length === 1
+                      ? "application"
+                      : "applications"
+                  }
+                  · Tap to view
+                </div>
+              </div>
+              <div class="dropdown-arrow">
+                ▼
+              </div>
+            `;
+            /*
+             * APPLICATIONS CONTAINER
+             */
+            const applicationsWrapper =
+              document.createElement(
+                "div"
+              );
+            applicationsWrapper.className =
+              "company-applications";
+            companyApplications.forEach(
+              (app) => {
+                applicationsWrapper.appendChild(
+                  renderApplication(app)
+                );
+              }
+            );
+            /*
+             * DROPDOWN CLICK
+             */
+            companyHeader.addEventListener(
+              "click",
+              () => {
+                companyGroup.classList.toggle(
+                  "open"
+                );
+              }
+            );
+            companyGroup.appendChild(
+              companyHeader
+            );
+            companyGroup.appendChild(
+              applicationsWrapper
+            );
+            container.appendChild(
+              companyGroup
+            );
+          }
+        );
     }
-    /*
-     * ==========================================================
-     * SUMMARY
-     * ==========================================================
-     */
+    /* =========================
+       SUMMARY
+       ========================= */
     function updateSummary(
       applications
     ) {
-      const total =
-        applications.length;
+      const groups =
+        groupByCompany(
+          applications
+        );
+      const totalCompanies =
+        Object.keys(groups).length;
       let approved = 0;
       let inProgress = 0;
       applications.forEach(
@@ -770,9 +783,7 @@
               ""
             ).toLowerCase();
           if (
-            status.includes(
-              "approved"
-            )
+            status.includes("approved")
           ) {
             approved++;
           } else {
@@ -781,9 +792,13 @@
         }
       );
       document.getElementById(
+        "totalCompanies"
+      ).textContent =
+        totalCompanies;
+      document.getElementById(
         "totalApplications"
       ).textContent =
-        total;
+        applications.length;
       document.getElementById(
         "inProgress"
       ).textContent =
@@ -793,11 +808,9 @@
       ).textContent =
         approved;
     }
-    /*
-     * ==========================================================
-     * LOAD DATA
-     * ==========================================================
-     */
+    /* =========================
+       LOAD DATA
+       ========================= */
     async function loadData() {
       try {
         const response =
@@ -806,13 +819,10 @@
             "?t=" +
             Date.now(),
             {
-              cache:
-                "no-store"
+              cache: "no-store"
             }
           );
-        if (
-          !response.ok
-        ) {
+        if (!response.ok) {
           throw new Error(
             "Could not load data.json"
           );
@@ -820,27 +830,20 @@
         const data =
           await response.json();
         const applications =
-          Array.isArray(
-            data
-          )
+          Array.isArray(data)
             ? data
             : Array.isArray(
                 data.applications
               )
-            ? data.applications
-            : [];
+              ? data.applications
+              : [];
         updateSummary(
           applications
         );
         renderApplications(
           applications
         );
-        /*
-         * Actual monitor timestamp.
-         */
-        if (
-          data.updatedAt
-        ) {
+        if (data.updatedAt) {
           document.getElementById(
             "lastUpdated"
           ).textContent =
@@ -857,11 +860,8 @@
         }
         document.getElementById(
           "error"
-        ).innerHTML =
-          "";
-      } catch (
-        error
-      ) {
+        ).innerHTML = "";
+      } catch (error) {
         console.error(
           "Dashboard error:",
           error
@@ -876,11 +876,9 @@
         `;
       }
     }
-    /*
-     * ==========================================================
-     * START
-     * ==========================================================
-     */
+    /* =========================
+       START
+       ========================= */
     loadData();
     setInterval(
       loadData,
