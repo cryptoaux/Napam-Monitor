@@ -1,11 +1,22 @@
-[
-  {
-    "name": "Company A"
-  },
-  {
-    "name": "Company B"
-  },
-  {
-    "name": "Company C"
-  }
-]
+{
+  "companies": [
+    {
+      "id": "company-1",
+      "name": "Company 1",
+      "tin": "",
+      "password": ""
+    },
+    {
+      "id": "company-2",
+      "name": "Company 2",
+      "tin": "",
+      "password": ""
+    },
+    {
+      "id": "company-3",
+      "name": "Company 3",
+      "tin": "",
+      "password": ""
+    }
+  ]
+}
