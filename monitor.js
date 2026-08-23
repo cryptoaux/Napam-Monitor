@@ -5,34 +5,59 @@ async function main() {
     headless: true
   });
 
-  const page = await browser.newPage();
+  const context = await browser.newContext({
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+      "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  });
+
+  const page = await context.newPage();
 
   try {
-    await page.goto("https://registration.nafdac.gov.ng/Applicant/Login", {
-      waitUntil: "commit",
-      timeout: 60000
-    });
+    console.log("Opening NAPAMS in Chrome-compatible mode...");
+
+    await page.goto(
+      "https://registration.nafdac.gov.ng/Applicant/Login",
+      {
+        waitUntil: "commit",
+        timeout: 60000
+      }
+    );
+
+    await page.waitForTimeout(15000);
 
     console.log("URL:", page.url());
     console.log("TITLE:", await page.title());
 
-    await page.waitForTimeout(15000);
-
-    console.log("\n--- FINAL HTML ---");
-
     const html = await page.content();
 
     console.log("HTML LENGTH:", html.length);
-    console.log(html);
 
-    console.log("\n--- BODY ---");
+    console.log("\n--- BODY COUNT ---");
+    console.log(await page.locator("body").count());
 
-    const body = await page.locator("body").count();
-    console.log("Body count:", body);
+    console.log("\n--- PAGE TEXT ---");
 
-    if (body) {
-      console.log(await page.locator("body").innerText({ timeout: 5000 }));
+    if (await page.locator("body").count()) {
+      console.log(
+        (await page.locator("body").innerText()).slice(0, 12000)
+      );
+    } else {
+      console.log("NO BODY FOUND");
     }
+
+    console.log("\n--- INPUTS ---");
+
+    const inputs = await page.locator("input").evaluateAll(elements =>
+      elements.map(e => ({
+        type: e.type,
+        name: e.name,
+        id: e.id,
+        placeholder: e.placeholder
+      }))
+    );
+
+    console.log(JSON.stringify(inputs, null, 2));
 
   } finally {
     await browser.close();
