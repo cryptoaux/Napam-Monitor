@@ -5,33 +5,32 @@ const LOGIN_PATH = "/Applicant/Login";
 
 function request(method, path, headers = {}, body = null) {
   return new Promise((resolve, reject) => {
-    const options = {
-      hostname: HOST,
-      path,
-      method,
-      headers: {
-        ...headers
+    const req = https.request(
+      {
+        hostname: HOST,
+        path,
+        method,
+        headers,
+        timeout: 60000
       },
-      timeout: 60000
-    };
+      res => {
+        let data = "";
 
-    const req = https.request(options, res => {
-      let data = "";
+        res.setEncoding("utf8");
 
-      res.setEncoding("utf8");
-
-      res.on("data", chunk => {
-        data += chunk;
-      });
-
-      res.on("end", () => {
-        resolve({
-          status: res.statusCode,
-          headers: res.headers,
-          body: data
+        res.on("data", chunk => {
+          data += chunk;
         });
-      });
-    });
+
+        res.on("end", () => {
+          resolve({
+            status: res.statusCode,
+            headers: res.headers,
+            body: data
+          });
+        });
+      }
+    );
 
     req.on("error", reject);
 
@@ -63,6 +62,27 @@ function getAntiforgeryToken(html) {
   return match ? match[1] : null;
 }
 
+function extractLinks(html) {
+  const links = [];
+  const regex = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+
+  let match;
+
+  while ((match = regex.exec(html)) !== null) {
+    const text = match[2]
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    links.push({
+      text,
+      href: match[1]
+    });
+  }
+
+  return links;
+}
+
 async function main() {
   const tin = process.env.NAPAMS_TIN;
   const password = process.env.NAPAMS_PASSWORD;
@@ -71,33 +91,24 @@ async function main() {
     throw new Error("NAPAMS_TIN or NAPAMS_PASSWORD is missing.");
   }
 
-  console.log("Fetching NAPAMS Admin login page...");
+  const userAgent =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+    "AppleWebKit/537.36 (KHTML, like Gecko) " +
+    "Chrome/131.0.0.0 Safari/537.36";
+
+  console.log("Fetching NAPAMS login page...");
 
   const loginPage = await request("GET", LOGIN_PATH, {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
-      "AppleWebKit/537.36 (KHTML, like Gecko) " +
-      "Chrome/131.0.0.0 Safari/537.36",
+    "User-Agent": userAgent,
     Accept: "text/html"
   });
 
-  console.log("LOGIN PAGE STATUS:", loginPage.status);
-
-  if (loginPage.status !== 200) {
-    throw new Error(
-      `Could not load NAPAMS login page. HTTP ${loginPage.status}`
-    );
-  }
-
   const token = getAntiforgeryToken(loginPage.body);
-  const cookies = getCookies(loginPage.headers["set-cookie"]);
+  const initialCookies = getCookies(loginPage.headers["set-cookie"]);
 
   if (!token) {
     throw new Error("Antiforgery token was not found.");
   }
-
-  console.log("Antiforgery token found.");
-  console.log("Session cookie received.");
 
   const form = new URLSearchParams();
 
@@ -113,67 +124,69 @@ async function main() {
     "POST",
     LOGIN_PATH,
     {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
-        "AppleWebKit/537.36 (KHTML, like Gecko) " +
-        "Chrome/131.0.0.0 Safari/537.36",
-
-      "Content-Type":
-        "application/x-www-form-urlencoded",
-
-      "Content-Length":
-        Buffer.byteLength(form.toString()),
-
-      "Cookie": cookies,
-
-      "Referer":
-        "https://registration.nafdac.gov.ng/Applicant/Login",
-
-      "Origin":
-        "https://registration.nafdac.gov.ng",
-
+      "User-Agent": userAgent,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Length": Buffer.byteLength(form.toString()),
+      "Cookie": initialCookies,
+      "Referer": "https://registration.nafdac.gov.ng/Applicant/Login",
+      "Origin": "https://registration.nafdac.gov.ng",
       "Accept":
         "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
     },
     form.toString()
   );
 
-  console.log("\n--- LOGIN RESPONSE ---");
-  console.log("STATUS:", loginResponse.status);
-  console.log("LOCATION:", loginResponse.headers.location || "none");
+  console.log("LOGIN STATUS:", loginResponse.status);
+  console.log("LOGIN LOCATION:", loginResponse.headers.location);
 
-  const newCookies = getCookies(
-    loginResponse.headers["set-cookie"]
-  );
-
-  console.log(
-    "AUTH COOKIE RECEIVED:",
-    newCookies ? "YES" : "NO"
-  );
-
-  console.log("\n--- RESPONSE CHECK ---");
-
-  if (loginResponse.status >= 300 && loginResponse.status < 400) {
-    console.log("Login returned a redirect.");
-
-    if (loginResponse.headers.location) {
-      console.log(
-        "Redirect destination:",
-        loginResponse.headers.location
-      );
-    }
-  } else {
-    console.log(
-      "Response body length:",
-      loginResponse.body.length
-    );
-
-    console.log(
-      loginResponse.body.slice(0, 5000)
-    );
+  if (loginResponse.status !== 302) {
+    throw new Error("NAPAMS login did not return the expected redirect.");
   }
 
-  console.log("\n--- LOGIN TEST COMPLETE ---");
+  const authCookies = getCookies(loginResponse.headers["set-cookie"]);
+
+  const cookies = [initialCookies, authCookies]
+    .filter(Boolean)
+    .join("; ");
+
+  console.log("Authenticated session established.");
+
+  console.log("\nOpening dashboard...");
+
+  const dashboard = await request(
+    "GET",
+    "/Dashboard/Applicant",
+    {
+      "User-Agent": userAgent,
+      "Cookie": cookies,
+      "Accept": "text/html"
+    }
+  );
+
+  console.log("DASHBOARD STATUS:", dashboard.status);
+  console.log("DASHBOARD HTML LENGTH:", dashboard.body.length);
+
+  console.log("\n--- DASHBOARD LINKS ---");
+
+  const links = extractLinks(dashboard.body);
+
+  for (const link of links) {
+    console.log(`${link.text} -> ${link.href}`);
+  }
+
+  console.log("\n--- APPLICATION REFERENCES ---");
+
+  const applicationLines = links.filter(link =>
+    /application|submitted|status/i.test(
+      `${link.text} ${link.href}`
+    )
+  );
+
+  for (const link of applicationLines) {
+    console.log(`${link.text} -> ${link.href}`);
+  }
+
+  console.log("\n--- DASHBOARD TEST COMPLETE ---");
 }
 
 main().catch(error => {
