@@ -35,16 +35,16 @@ jobs:
 
       - name: Check generated data
         run: |
-          echo "Checking for data.json..."
-          ls -la
-          test -f data.json
+          echo "Checking for public/data.json..."
+          ls -la public
+          test -f public/data.json
 
       - name: Save latest application data
         run: |
           git config user.name "NAPAMS Monitor"
           git config user.email "actions@github.com"
 
-          git add data.json
+          git add public/data.json
 
           if git diff --cached --quiet; then
             echo "No application data changes."
