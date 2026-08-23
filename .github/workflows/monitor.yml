@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "*/15 * * * *"
 
+permissions:
+  contents: write
+
 jobs:
   monitor:
     runs-on: ubuntu-latest
@@ -29,3 +32,23 @@ jobs:
         env:
           NAPAMS_TIN: ${{ secrets.NAPAMS_TIN }}
           NAPAMS_PASSWORD: ${{ secrets.NAPAMS_PASSWORD }}
+
+      - name: Check generated data
+        run: |
+          echo "Checking for data.json..."
+          ls -la
+          test -f data.json
+
+      - name: Save latest application data
+        run: |
+          git config user.name "NAPAMS Monitor"
+          git config user.email "actions@github.com"
+
+          git add data.json
+
+          if git diff --cached --quiet; then
+            echo "No application data changes."
+          else
+            git commit -m "Update NAPAMS application status"
+            git push
+          fi
