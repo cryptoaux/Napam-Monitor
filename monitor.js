@@ -1,11 +1,14 @@
 const { chromium } = require("playwright");
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: true
+  });
+
   const page = await browser.newPage();
 
   try {
-    await page.goto("https://registration.nafdac.gov.ng/", {
+    await page.goto("https://registration.nafdac.gov.ng/Applicant/Login", {
       waitUntil: "domcontentloaded",
       timeout: 60000
     });
@@ -14,6 +17,7 @@ async function main() {
     console.log("TITLE:", await page.title());
 
     console.log("\n--- INPUTS ---");
+
     const inputs = await page.locator("input").evaluateAll(elements =>
       elements.map(e => ({
         type: e.type,
@@ -22,18 +26,27 @@ async function main() {
         placeholder: e.placeholder
       }))
     );
+
     console.log(JSON.stringify(inputs, null, 2));
 
     console.log("\n--- BUTTONS ---");
-    const buttons = await page.locator("button").allTextContents();
-    console.log(buttons);
 
-    console.log("\n--- LINKS ---");
-    const links = await page.locator("a").allTextContents();
-    console.log(links);
+    const buttons = await page.locator("button").evaluateAll(elements =>
+      elements.map(e => ({
+        text: e.innerText.trim(),
+        type: e.type,
+        id: e.id,
+        name: e.name
+      }))
+    );
+
+    console.log(JSON.stringify(buttons, null, 2));
 
     console.log("\n--- PAGE TEXT ---");
-    console.log((await page.locator("body").innerText()).slice(0, 10000));
+
+    console.log(
+      (await page.locator("body").innerText()).slice(0, 12000)
+    );
 
   } finally {
     await browser.close();
