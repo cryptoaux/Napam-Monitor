@@ -2,6 +2,7 @@ const https = require("https");
 
 const HOST = "registration.nafdac.gov.ng";
 const LOGIN_PATH = "/Applicant/Login";
+const APPLICATIONS_PATH = "/Application/FormApplication/Applications";
 
 function request(method, path, headers = {}, body = null) {
   return new Promise((resolve, reject) => {
@@ -62,25 +63,11 @@ function getAntiforgeryToken(html) {
   return match ? match[1] : null;
 }
 
-function extractLinks(html) {
-  const links = [];
-  const regex = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
-
-  let match;
-
-  while ((match = regex.exec(html)) !== null) {
-    const text = match[2]
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    links.push({
-      text,
-      href: match[1]
-    });
-  }
-
-  return links;
+function cleanText(value) {
+  return value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 async function main() {
@@ -96,6 +83,10 @@ async function main() {
     "AppleWebKit/537.36 (KHTML, like Gecko) " +
     "Chrome/131.0.0.0 Safari/537.36";
 
+  // --------------------------------------------------
+  // 1. GET LOGIN PAGE
+  // --------------------------------------------------
+
   console.log("Fetching NAPAMS login page...");
 
   const loginPage = await request("GET", LOGIN_PATH, {
@@ -110,6 +101,12 @@ async function main() {
     throw new Error("Antiforgery token was not found.");
   }
 
+  // --------------------------------------------------
+  // 2. LOGIN AS ADMIN
+  // --------------------------------------------------
+
+  console.log("Submitting Admin login...");
+
   const form = new URLSearchParams();
 
   form.append("ReturnUrl", "");
@@ -117,8 +114,6 @@ async function main() {
   form.append("Password", password);
   form.append("buttonFunc", "admin");
   form.append("__RequestVerificationToken", token);
-
-  console.log("Submitting Admin login...");
 
   const loginResponse = await request(
     "POST",
@@ -140,7 +135,7 @@ async function main() {
   console.log("LOGIN LOCATION:", loginResponse.headers.location);
 
   if (loginResponse.status !== 302) {
-    throw new Error("NAPAMS login did not return the expected redirect.");
+    throw new Error("NAPAMS login failed.");
   }
 
   const authCookies = getCookies(loginResponse.headers["set-cookie"]);
@@ -151,11 +146,15 @@ async function main() {
 
   console.log("Authenticated session established.");
 
-  console.log("\nOpening dashboard...");
+  // --------------------------------------------------
+  // 3. OPEN APPLICATIONS
+  // --------------------------------------------------
 
-  const dashboard = await request(
+  console.log("\nOpening submitted applications...");
+
+  const applications = await request(
     "GET",
-    "/Dashboard/Applicant",
+    APPLICATIONS_PATH,
     {
       "User-Agent": userAgent,
       "Cookie": cookies,
@@ -163,30 +162,34 @@ async function main() {
     }
   );
 
-  console.log("DASHBOARD STATUS:", dashboard.status);
-  console.log("DASHBOARD HTML LENGTH:", dashboard.body.length);
-
-  console.log("\n--- DASHBOARD LINKS ---");
-
-  const links = extractLinks(dashboard.body);
-
-  for (const link of links) {
-    console.log(`${link.text} -> ${link.href}`);
-  }
-
-  console.log("\n--- APPLICATION REFERENCES ---");
-
-  const applicationLines = links.filter(link =>
-    /application|submitted|status/i.test(
-      `${link.text} ${link.href}`
-    )
+  console.log("APPLICATIONS STATUS:", applications.status);
+  console.log(
+    "APPLICATIONS HTML LENGTH:",
+    applications.body.length
   );
 
-  for (const link of applicationLines) {
-    console.log(`${link.text} -> ${link.href}`);
+  // --------------------------------------------------
+  // 4. SHOW RELEVANT APPLICATION INFORMATION
+  // --------------------------------------------------
+
+  console.log("\n--- APPLICATION PAGE TEXT ---");
+
+  const text = cleanText(applications.body);
+
+  console.log(text.slice(0, 15000));
+
+  console.log("\n--- STATUS/CHECK REFERENCES ---");
+
+  const statusMatches =
+    applications.body.match(
+      /.{0,300}(check status|status|submitted application).{0,500}/gi
+    ) || [];
+
+  for (const match of statusMatches.slice(0, 20)) {
+    console.log(cleanText(match));
   }
 
-  console.log("\n--- DASHBOARD TEST COMPLETE ---");
+  console.log("\n--- APPLICATION PAGE TEST COMPLETE ---");
 }
 
 main().catch(error => {
