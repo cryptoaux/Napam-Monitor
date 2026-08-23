@@ -3,34 +3,281 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NAPAMS Monitor</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: #6b7280;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-card small {
+      color: #6b7280;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 8px;
+    }
+
+    .application {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .application-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .application h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .application-number {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .current-status {
+      padding: 10px 15px;
+      border-radius: 20px;
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .stages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stage {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .stage.current {
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: bold;
+    }
+
+    .stage.completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .loading,
+    .error {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .application-header {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <h1>NAPAMS Application Monitor</h1>
 
-  <div id="applications">
-    Loading applications...
-  </div>
+<header>
+  <h1>NAPAMS Monitor</h1>
+  <p>Application status dashboard</p>
+</header>
 
-  <script>
-    async function loadApplications() {
+<main>
+
+  <section class="summary">
+    <div class="summary-card">
+      <small>Total Applications</small>
+      <strong id="totalApplications">0</strong>
+    </div>
+
+    <div class="summary-card">
+      <small>In Progress</small>
+      <strong id="inProgress">0</strong>
+    </div>
+
+    <div class="summary-card">
+      <small>Approved</small>
+      <strong id="approved">0</strong>
+    </div>
+  </section>
+
+  <section id="applications">
+    <div class="loading">
+      Loading applications...
+    </div>
+  </section>
+
+</main>
+
+<script>
+  async function loadApplications() {
+    try {
       const response = await fetch("./data/applications.json");
+
+      if (!response.ok) {
+        throw new Error("Could not load application data.");
+      }
+
       const applications = await response.json();
+
+      document.getElementById("totalApplications").textContent =
+        applications.length;
+
+      const approved = applications.filter(
+        app => String(app.currentStatus).toLowerCase() === "approved"
+      ).length;
+
+      document.getElementById("approved").textContent = approved;
+
+      document.getElementById("inProgress").textContent =
+        applications.length - approved;
 
       const container = document.getElementById("applications");
 
-      container.innerHTML = applications.map(app => `
-        <div>
-          <h2>${app.name}</h2>
-          <p><strong>Application Number:</strong> ${app.applicationNumber}</p>
-          <p><strong>Current Status:</strong> ${app.currentStatus}</p>
-        </div>
-        <hr>
-      `).join("");
-    }
+      if (!applications.length) {
+        container.innerHTML =
+          '<div class="loading">No applications found.</div>';
+        return;
+      }
 
-    loadApplications();
-  </script>
+      container.innerHTML = applications.map(app => {
+
+        const stages = Array.isArray(app.stages)
+          ? app.stages
+          : [];
+
+        const stageHTML = stages.map(stage => {
+
+          let className = "stage";
+
+          if (stage.status === "current") {
+            className += " current";
+          }
+
+          if (stage.status === "completed") {
+            className += " completed";
+          }
+
+          return `
+            <span class="${className}">
+              ${stage.name}
+            </span>
+          `;
+        }).join("");
+
+        return `
+          <article class="application">
+
+            <div class="application-header">
+
+              <div>
+                <h2>${app.name}</h2>
+
+                <div class="application-number">
+                  Application Number:
+                  <strong>${app.applicationNumber}</strong>
+                </div>
+              </div>
+
+              <div class="current-status">
+                Current Status:
+                ${app.currentStatus}
+              </div>
+
+            </div>
+
+            <h3>Status Stages</h3>
+
+            <div class="stages">
+              ${stageHTML}
+            </div>
+
+          </article>
+        `;
+      }).join("");
+
+    } catch (error) {
+      document.getElementById("applications").innerHTML = `
+        <div class="error">
+          Unable to load application data.
+        </div>
+      `;
+
+      console.error(error);
+    }
+  }
+
+  loadApplications();
+</script>
+
 </body>
 </html>
