@@ -34,111 +34,138 @@
       max-width: 1200px;
       margin: 35px auto;
     }
-    /* =========================
-       SUMMARY
-       ========================= */
+    /* SEARCH */
+    .search-container {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .search-box {
+      width: 100%;
+      background: white;
+      border: 1px solid #d9dee7;
+      border-radius: 18px;
+      padding: 18px 20px 18px 52px;
+      font-size: 17px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-box:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+    }
+    .search-icon {
+      position: absolute;
+      left: 19px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 21px;
+      color: #6b7280;
+      pointer-events: none;
+    }
+    .clear-search {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: #eef1f5;
+      color: #4b5563;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .clear-search:hover {
+      background: #e1e5eb;
+    }
+    .search-result-info {
+      margin-top: 10px;
+      color: #6b7280;
+      font-size: 14px;
+    }
     .summary {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
+      gap: 22px;
       margin-bottom: 35px;
     }
     .summary-card {
       background: white;
       border: 1px solid #e1e5eb;
       border-radius: 22px;
-      padding: 25px;
+      padding: 30px;
     }
     .summary-title {
       color: #6b7280;
-      font-size: 17px;
-      margin-bottom: 15px;
+      font-size: 18px;
+      margin-bottom: 18px;
     }
     .summary-number {
-      font-size: 42px;
+      font-size: 48px;
       font-weight: 800;
     }
-    /* =========================
-       COMPANY DROPDOWN
-       ========================= */
-    .company-group {
-      margin-bottom: 22px;
-      border-radius: 22px;
+    /* COMPANY */
+    .company-card {
+      background: white;
+      border: 1px solid #e1e5eb;
+      border-radius: 24px;
+      margin-bottom: 25px;
       overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
     }
     .company-header {
       width: 100%;
-      border: 1px solid #e1e5eb;
+      padding: 25px 30px;
+      border: none;
       background: white;
-      padding: 22px 25px;
-      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      cursor: pointer;
       text-align: left;
-      transition: background 0.2s ease;
     }
     .company-header:hover {
-      background: #f9fafb;
+      background: #fafbfc;
     }
-    .company-header-left {
-      min-width: 0;
-    }
-    .company-name {
-      margin: 0;
-      font-size: 24px;
+    .company-title {
+      font-size: 25px;
       font-weight: 800;
       text-transform: uppercase;
-      color: #1f2937;
+      color: #111827;
     }
-    .company-count {
-      margin-top: 6px;
+    .company-meta {
       color: #6b7280;
-      font-size: 14px;
+      font-size: 15px;
+      margin-top: 7px;
     }
-    .dropdown-arrow {
-      width: 34px;
-      height: 34px;
-      min-width: 34px;
-      border-radius: 50%;
-      background: #f0f2f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #374151;
-      transition: transform 0.25s ease;
+    .company-arrow {
+      font-size: 24px;
+      color: #6b7280;
+      transition: transform 0.2s ease;
     }
-    .company-group.open .dropdown-arrow {
+    .company-card.open .company-arrow {
       transform: rotate(180deg);
     }
     .company-applications {
       display: none;
-      background: #eef1f5;
-      padding: 15px;
-      border-left: 1px solid #e1e5eb;
-      border-right: 1px solid #e1e5eb;
-      border-bottom: 1px solid #e1e5eb;
+      padding: 0 20px 20px;
     }
-    .company-group.open .company-applications {
+    .company-card.open .company-applications {
       display: block;
     }
-    /* =========================
-       APPLICATION CARD
-       ========================= */
     .application-card {
-      background: white;
+      background: #ffffff;
       border: 1px solid #e1e5eb;
-      border-radius: 22px;
-      padding: 30px;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
-    }
-    .application-card:last-child {
-      margin-bottom: 0;
+      border-radius: 20px;
+      padding: 25px;
+      margin-top: 15px;
     }
     .application-name {
-      font-size: 27px;
+      font-size: 23px;
       font-weight: 800;
       margin-bottom: 8px;
       text-transform: uppercase;
@@ -151,9 +178,6 @@
     .application-number strong {
       color: #374151;
     }
-    /* =========================
-       CURRENT STATUS
-       ========================= */
     .current-status {
       display: inline-flex;
       align-items: center;
@@ -162,7 +186,7 @@
       border-radius: 30px;
       font-size: 16px;
       font-weight: 700;
-      margin-bottom: 28px;
+      margin-bottom: 25px;
     }
     .current-status-dot {
       width: 10px;
@@ -182,9 +206,6 @@
       background: #dff5df;
       color: #087508;
     }
-    /* =========================
-       STATUS STAGES
-       ========================= */
     .status-title {
       font-size: 20px;
       font-weight: 800;
@@ -231,7 +252,6 @@
       color: #4b5563;
       white-space: nowrap;
     }
-    /* NAPAMS COLORS */
     .green {
       background: #008000;
     }
@@ -241,9 +261,14 @@
     .red {
       background: #ff4d4d;
     }
-    /* =========================
-       OTHER
-       ========================= */
+    .no-results {
+      background: white;
+      border: 1px solid #e1e5eb;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      color: #6b7280;
+    }
     .last-updated {
       text-align: center;
       color: #6b7280;
@@ -264,10 +289,7 @@
       padding: 20px;
       margin-bottom: 25px;
     }
-    /* =========================
-       MOBILE
-       ========================= */
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
       .summary {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -287,37 +309,36 @@
         margin-top: 25px;
       }
       .summary {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        grid-template-columns: 1fr;
+        gap: 15px;
       }
       .summary-card {
-        padding: 20px;
-      }
-      .summary-title {
-        font-size: 14px;
+        padding: 23px;
       }
       .summary-number {
-        font-size: 34px;
+        font-size: 40px;
+      }
+      .search-box {
+        font-size: 15px;
+        padding: 16px 45px 16px 48px;
       }
       .company-header {
-        padding: 20px;
+        padding: 22px;
       }
-      .company-name {
+      .company-title {
         font-size: 20px;
-        padding-right: 10px;
       }
-      .company-count {
+      .company-meta {
         font-size: 13px;
       }
       .company-applications {
-        padding: 10px;
+        padding: 0 15px 15px;
       }
       .application-card {
-        padding: 22px;
-        border-radius: 20px;
+        padding: 20px;
       }
       .application-name {
-        font-size: 22px;
+        font-size: 20px;
       }
       .application-number {
         font-size: 14px;
@@ -348,18 +369,6 @@
       }
     }
     @media (max-width: 430px) {
-      .summary {
-        grid-template-columns: 1fr 1fr;
-      }
-      .summary-card {
-        padding: 17px;
-      }
-      .summary-number {
-        font-size: 30px;
-      }
-      .company-name {
-        font-size: 18px;
-      }
       .stage-name {
         font-size: 8px;
       }
@@ -381,19 +390,31 @@
   </div>
   <div class="container">
 <div id="error"></div>
+<!-- SEARCH -->
+<div class="search-container">
+  <span class="search-icon">🔎</span>
+  <input
+    type="search"
+    id="productSearch"
+    class="search-box"
+    placeholder="Search for a product..."
+    autocomplete="off"
+  >
+  <button
+    type="button"
+    id="clearSearch"
+    class="clear-search"
+    aria-label="Clear search"
+  >
+    ×
+  </button>
+  <div
+    id="searchResultInfo"
+    class="search-result-info"
+  ></div>
+</div>
 <!-- SUMMARY -->
 <div class="summary">
-  <div class="summary-card">
-    <div class="summary-title">
-      Total Companies
-    </div>
-    <div
-      class="summary-number"
-      id="totalCompanies"
-    >
-      0
-    </div>
-  </div>
   <div class="summary-card">
     <div class="summary-title">
       Total Applications
@@ -427,6 +448,17 @@
       0
     </div>
   </div>
+  <div class="summary-card">
+    <div class="summary-title">
+      Companies
+    </div>
+    <div
+      class="summary-number"
+      id="totalCompanies"
+    >
+      0
+    </div>
+  </div>
 </div>
 <div id="applications">
   <div class="loading">
@@ -442,11 +474,12 @@
   </div>
   <script>
     const DATA_URL = "./data.json";
-    const REFRESH_INTERVAL =
-      60 * 1000;
-    /* =========================
-       SECURITY
-       ========================= */
+    /*
+     * The website checks for new data every minute.
+     * GitHub Actions is responsible for checking NAPAMS.
+     */
+    const REFRESH_INTERVAL = 60 * 1000;
+    let allCompanies = [];
     function escapeHtml(value) {
       return String(value ?? "")
         .replace(/&/g, "&amp;")
@@ -455,36 +488,32 @@
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
-    /* =========================
-       COLORS
-       ========================= */
     function colorClass(color) {
-      const normalized =
-        String(color || "")
-          .toUpperCase();
-      if (normalized === "GREEN") {
+      if (
+        String(color).toUpperCase() === "GREEN"
+      ) {
         return "green";
       }
-      if (normalized === "YELLOW") {
+      if (
+        String(color).toUpperCase() === "YELLOW"
+      ) {
         return "yellow";
       }
       return "red";
     }
     function currentStatusClass(color) {
-      const normalized =
-        String(color || "")
-          .toUpperCase();
-      if (normalized === "GREEN") {
+      if (
+        String(color).toUpperCase() === "GREEN"
+      ) {
         return "current-status-green";
       }
-      if (normalized === "YELLOW") {
+      if (
+        String(color).toUpperCase() === "YELLOW"
+      ) {
         return "current-status-yellow";
       }
       return "current-status-red";
     }
-    /* =========================
-       CURRENT STATUS COLOR
-       ========================= */
     function getCurrentStatusColor(app) {
       const stages =
         Array.isArray(app.stages)
@@ -519,32 +548,9 @@
         "YELLOW"
       );
     }
-    /* =========================
-       GROUP BY COMPANY
-       ========================= */
-    function groupByCompany(
-      applications
-    ) {
-      const groups = {};
-      applications.forEach(
-        (app) => {
-          const companyName =
-            String(
-              app.companyName ||
-              app.company ||
-              "Unknown Company"
-            ).trim();
-          if (!groups[companyName]) {
-            groups[companyName] = [];
-          }
-          groups[companyName].push(app);
-        }
-      );
-      return groups;
-    }
-    /* =========================
-       RENDER APPLICATION
-       ========================= */
+    /*
+     * Render one application card.
+     */
     function renderApplication(app) {
       const stages =
         Array.isArray(app.stages)
@@ -573,11 +579,7 @@
                 <div class="stage-item">
                   ${
                     index > 0
-                      ? `
-                        <div
-                          class="stage-connector"
-                        ></div>
-                      `
+                      ? `<div class="stage-connector"></div>`
                       : ""
                   }
                   <div
@@ -599,9 +601,7 @@
           currentColor
         );
       const currentDotClass =
-        colorClass(
-          currentColor
-        );
+        colorClass(currentColor);
       card.innerHTML = `
         <div class="application-name">
           ${escapeHtml(
@@ -648,157 +648,313 @@
       `;
       return card;
     }
-    /* =========================
-       RENDER GROUPED COMPANIES
-       ========================= */
-    function renderApplications(
-      applications
-    ) {
+    /*
+     * Normalize company/application data.
+     *
+     * This supports the grouped format produced
+     * by the current NAPAMS monitor.
+     */
+    function normalizeCompanies(data) {
+      if (
+        data &&
+        Array.isArray(data.companies)
+      ) {
+        return data.companies;
+      }
+      /*
+       * Backwards compatibility:
+       * if data.json is still just an applications
+       * array, place everything into one company.
+       */
+      if (Array.isArray(data)) {
+        return [
+          {
+            id: "default_company",
+            name: "Applications",
+            applications: data
+          }
+        ];
+      }
+      if (
+        data &&
+        Array.isArray(data.applications)
+      ) {
+        return [
+          {
+            id: "default_company",
+            name: "Applications",
+            applications: data.applications
+          }
+        ];
+      }
+      return [];
+    }
+    /*
+     * Render companies with their applications
+     * grouped underneath each company.
+     */
+    function renderCompanies(companies) {
       const container =
         document.getElementById(
           "applications"
         );
       container.innerHTML = "";
       if (
-        !Array.isArray(applications) ||
-        applications.length === 0
+        !Array.isArray(companies) ||
+        companies.length === 0
       ) {
         container.innerHTML = `
-          <div class="loading">
+          <div class="no-results">
             No submitted applications found.
           </div>
         `;
         return;
       }
-      const groups =
-        groupByCompany(
-          applications
-        );
-      Object.entries(groups)
-        .forEach(
-          (
-            [
-              companyName,
-              companyApplications
-            ]
-          ) => {
-            const companyGroup =
-              document.createElement(
-                "div"
-              );
-            companyGroup.className =
-              "company-group";
-            /*
-             * COMPANY HEADER
-             */
-            const companyHeader =
-              document.createElement(
-                "button"
-              );
-            companyHeader.type =
-              "button";
-            companyHeader.className =
-              "company-header";
-            companyHeader.innerHTML = `
-              <div class="company-header-left">
-                <h2 class="company-name">
-                  ${escapeHtml(
-                    companyName
-                  )}
-                </h2>
-                <div class="company-count">
-                  ${
-                    companyApplications.length
-                  }
-                  ${
-                    companyApplications.length === 1
-                      ? "application"
-                      : "applications"
-                  }
-                  · Tap to view
-                </div>
-              </div>
-              <div class="dropdown-arrow">
-                ▼
-              </div>
-            `;
-            /*
-             * APPLICATIONS CONTAINER
-             */
-            const applicationsWrapper =
-              document.createElement(
-                "div"
-              );
-            applicationsWrapper.className =
-              "company-applications";
-            companyApplications.forEach(
-              (app) => {
-                applicationsWrapper.appendChild(
-                  renderApplication(app)
-                );
-              }
+      companies.forEach(
+        (company, companyIndex) => {
+          const applications =
+            Array.isArray(
+              company.applications
+            )
+              ? company.applications
+              : [];
+          if (
+            applications.length === 0
+          ) {
+            return;
+          }
+          const companyCard =
+            document.createElement(
+              "div"
             );
-            /*
-             * DROPDOWN CLICK
-             */
-            companyHeader.addEventListener(
-              "click",
-              () => {
-                companyGroup.classList.toggle(
-                  "open"
-                );
-              }
-            );
-            companyGroup.appendChild(
-              companyHeader
-            );
-            companyGroup.appendChild(
-              applicationsWrapper
-            );
-            container.appendChild(
-              companyGroup
+          companyCard.className =
+            "company-card";
+          /*
+           * Keep the first company open.
+           * Other companies are collapsed.
+           */
+          if (companyIndex === 0) {
+            companyCard.classList.add(
+              "open"
             );
           }
-        );
+          const companyHeader =
+            document.createElement(
+              "button"
+            );
+          companyHeader.type =
+            "button";
+          companyHeader.className =
+            "company-header";
+          companyHeader.innerHTML = `
+            <div>
+              <div class="company-title">
+                ${escapeHtml(
+                  company.name ||
+                  "Unknown Company"
+                )}
+              </div>
+              <div class="company-meta">
+                ${applications.length}
+                application${
+                  applications.length === 1
+                    ? ""
+                    : "s"
+                }
+              </div>
+            </div>
+            <div class="company-arrow">
+              ▼
+            </div>
+          `;
+          companyHeader.addEventListener(
+            "click",
+            () => {
+              companyCard.classList.toggle(
+                "open"
+              );
+            }
+          );
+          const applicationsContainer =
+            document.createElement(
+              "div"
+            );
+          applicationsContainer.className =
+            "company-applications";
+          applications.forEach(
+            (app) => {
+              applicationsContainer.appendChild(
+                renderApplication(app)
+              );
+            }
+          );
+          companyCard.appendChild(
+            companyHeader
+          );
+          companyCard.appendChild(
+            applicationsContainer
+          );
+          container.appendChild(
+            companyCard
+          );
+        }
+      );
+      /*
+       * If the search produced companies but
+       * none had applications, show no results.
+       */
+      if (!container.children.length) {
+        container.innerHTML = `
+          <div class="no-results">
+            No products found.
+          </div>
+        `;
+      }
     }
-    /* =========================
-       SUMMARY
-       ========================= */
-    function updateSummary(
-      applications
-    ) {
-      const groups =
-        groupByCompany(
-          applications
+    /*
+     * Search products by name.
+     *
+     * Partial matching is supported.
+     *
+     * Example:
+     * "bread"
+     * will find:
+     * "KASFOL FOODS AND CONFECTIONERIES BREAD"
+     */
+    function searchProducts() {
+      const searchInput =
+        document.getElementById(
+          "productSearch"
         );
-      const totalCompanies =
-        Object.keys(groups).length;
+      const query =
+        String(
+          searchInput.value || ""
+        )
+          .trim()
+          .toLowerCase();
+      const clearButton =
+        document.getElementById(
+          "clearSearch"
+        );
+      const resultInfo =
+        document.getElementById(
+          "searchResultInfo"
+        );
+      if (query) {
+        clearButton.style.display =
+          "flex";
+      } else {
+        clearButton.style.display =
+          "none";
+      }
+      /*
+       * No search:
+       * display everything.
+       */
+      if (!query) {
+        renderCompanies(
+          allCompanies
+        );
+        resultInfo.textContent =
+          "";
+        return;
+      }
+      let matchingApplications = 0;
+      const filteredCompanies =
+        allCompanies
+          .map(
+            (company) => {
+              const applications =
+                Array.isArray(
+                  company.applications
+                )
+                  ? company.applications
+                  : [];
+              const matching =
+                applications.filter(
+                  (app) => {
+                    const product =
+                      String(
+                        app.product ||
+                        app.name ||
+                        ""
+                      )
+                        .toLowerCase();
+                    return product.includes(
+                      query
+                    );
+                  }
+                );
+              matchingApplications +=
+                matching.length;
+              if (
+                matching.length === 0
+              ) {
+                return null;
+              }
+              return {
+                ...company,
+                applications:
+                  matching
+              };
+            }
+          )
+          .filter(Boolean);
+      renderCompanies(
+        filteredCompanies
+      );
+      resultInfo.textContent =
+        matchingApplications === 0
+          ? "No products found."
+          : `${matchingApplications} matching application${
+              matchingApplications === 1
+                ? ""
+                : "s"
+            } found`;
+    }
+    /*
+     * Update summary numbers.
+     */
+    function updateSummary(
+      companies
+    ) {
+      let totalApplications = 0;
       let approved = 0;
       let inProgress = 0;
-      applications.forEach(
-        (app) => {
-          const status =
-            String(
-              app.currentStatus ||
-              ""
-            ).toLowerCase();
-          if (
-            status.includes("approved")
-          ) {
-            approved++;
-          } else {
-            inProgress++;
-          }
+      companies.forEach(
+        (company) => {
+          const applications =
+            Array.isArray(
+              company.applications
+            )
+              ? company.applications
+              : [];
+          totalApplications +=
+            applications.length;
+          applications.forEach(
+            (app) => {
+              const status =
+                String(
+                  app.currentStatus ||
+                  ""
+                ).toLowerCase();
+              if (
+                status.includes(
+                  "approved"
+                )
+              ) {
+                approved++;
+              } else {
+                inProgress++;
+              }
+            }
+          );
         }
       );
       document.getElementById(
-        "totalCompanies"
-      ).textContent =
-        totalCompanies;
-      document.getElementById(
         "totalApplications"
       ).textContent =
-        applications.length;
+        totalApplications;
       document.getElementById(
         "inProgress"
       ).textContent =
@@ -807,10 +963,11 @@
         "approved"
       ).textContent =
         approved;
+      document.getElementById(
+        "totalCompanies"
+      ).textContent =
+        companies.length;
     }
-    /* =========================
-       LOAD DATA
-       ========================= */
     async function loadData() {
       try {
         const response =
@@ -829,21 +986,22 @@
         }
         const data =
           await response.json();
-        const applications =
-          Array.isArray(data)
-            ? data
-            : Array.isArray(
-                data.applications
-              )
-              ? data.applications
-              : [];
+        allCompanies =
+          normalizeCompanies(
+            data
+          );
         updateSummary(
-          applications
+          allCompanies
         );
-        renderApplications(
-          applications
-        );
-        if (data.updatedAt) {
+        /*
+         * Render using the current
+         * search value so a refresh
+         * doesn't cancel the search.
+         */
+        searchProducts();
+        if (
+          data.updatedAt
+        ) {
           document.getElementById(
             "lastUpdated"
           ).textContent =
@@ -876,9 +1034,32 @@
         `;
       }
     }
-    /* =========================
-       START
-       ========================= */
+    /*
+     * Search while typing.
+     */
+    document.getElementById(
+      "productSearch"
+    ).addEventListener(
+      "input",
+      searchProducts
+    );
+    /*
+     * Clear search.
+     */
+    document.getElementById(
+      "clearSearch"
+    ).addEventListener(
+      "click",
+      () => {
+        const input =
+          document.getElementById(
+            "productSearch"
+          );
+        input.value = "";
+        searchProducts();
+        input.focus();
+      }
+    );
     loadData();
     setInterval(
       loadData,
