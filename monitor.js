@@ -8,10 +8,15 @@ async function main() {
   const page = await browser.newPage();
 
   try {
+    console.log("Opening NAPAMS login...");
+
     await page.goto("https://registration.nafdac.gov.ng/Applicant/Login", {
-      waitUntil: "domcontentloaded",
+      waitUntil: "commit",
       timeout: 60000
     });
+
+    // Give the page time to finish loading.
+    await page.waitForTimeout(10000);
 
     console.log("URL:", page.url());
     console.log("TITLE:", await page.title());
@@ -41,6 +46,17 @@ async function main() {
     );
 
     console.log(JSON.stringify(buttons, null, 2));
+
+    console.log("\n--- LINKS ---");
+
+    const links = await page.locator("a").evaluateAll(elements =>
+      elements.map(e => ({
+        text: e.innerText.trim(),
+        href: e.href
+      }))
+    );
+
+    console.log(JSON.stringify(links, null, 2));
 
     console.log("\n--- PAGE TEXT ---");
 
