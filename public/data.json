@@ -1,7 +1,909 @@
 {
-  "updatedAt": "2026-08-23T20:35:46.594Z",
-  "totalCompanies": 0,
-  "totalApplications": 0,
-  "companies": [],
-  "applications": []
+  "updatedAt": "2026-08-23T21:00:02.788Z",
+  "totalCompanies": 2,
+  "totalApplications": 4,
+  "companies": [
+    {
+      "id": "company_01",
+      "name": "Company Name 1",
+      "applications": [
+        {
+          "companyId": "company_01",
+          "companyName": "Company Name 1",
+          "applicationNumber": "NF-BR-517353",
+          "appID": "517353",
+          "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+          "product": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+          "currentStatus": "Approval",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": false
+            },
+            {
+              "name": "Documentation",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (11/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (202/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": false
+            },
+            {
+              "name": "Internal Review",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (134/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (142/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": true
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        },
+        {
+          "companyId": "company_01",
+          "companyName": "Company Name 1",
+          "applicationNumber": "PEX-BR-517870",
+          "appID": "517870",
+          "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+          "product": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+          "currentStatus": "Vetting",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": false
+            },
+            {
+              "name": "Documentation",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (11/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (276/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": true
+            },
+            {
+              "name": "Internal Review",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (276/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "company_02",
+      "name": "Company Name 2",
+      "applications": [
+        {
+          "companyId": "company_02",
+          "companyName": "Company Name 2",
+          "applicationNumber": "PEX-BR-518391",
+          "appID": "518391",
+          "name": "SHOLAHAM BRAED",
+          "product": "SHOLAHAM BRAED",
+          "currentStatus": "Vetting",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": false
+            },
+            {
+              "name": "Documentation",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (13/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (113/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": true
+            },
+            {
+              "name": "Internal Review",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (113/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        },
+        {
+          "companyId": "company_02",
+          "companyName": "Company Name 2",
+          "applicationNumber": "NF-BR-518269",
+          "appID": "518269",
+          "name": "SHOLAHAM BRAED",
+          "product": "SHOLAHAM BRAED",
+          "currentStatus": "Vetting",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": false
+            },
+            {
+              "name": "Documentation",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (32/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (66/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": true
+            },
+            {
+              "name": "Internal Review",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (147/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "applications": [
+    {
+      "companyId": "company_01",
+      "companyName": "Company Name 1",
+      "applicationNumber": "NF-BR-517353",
+      "appID": "517353",
+      "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+      "product": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+      "currentStatus": "Approval",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": false
+        },
+        {
+          "name": "Documentation",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (11/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (202/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": false
+        },
+        {
+          "name": "Internal Review",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (134/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (142/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": true
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    },
+    {
+      "companyId": "company_01",
+      "companyName": "Company Name 1",
+      "applicationNumber": "PEX-BR-517870",
+      "appID": "517870",
+      "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+      "product": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+      "currentStatus": "Vetting",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": false
+        },
+        {
+          "name": "Documentation",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (11/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (276/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": true
+        },
+        {
+          "name": "Internal Review",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (276/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    },
+    {
+      "companyId": "company_02",
+      "companyName": "Company Name 2",
+      "applicationNumber": "PEX-BR-518391",
+      "appID": "518391",
+      "name": "SHOLAHAM BRAED",
+      "product": "SHOLAHAM BRAED",
+      "currentStatus": "Vetting",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": false
+        },
+        {
+          "name": "Documentation",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (13/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (113/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": true
+        },
+        {
+          "name": "Internal Review",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (113/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    },
+    {
+      "companyId": "company_02",
+      "companyName": "Company Name 2",
+      "applicationNumber": "NF-BR-518269",
+      "appID": "518269",
+      "name": "SHOLAHAM BRAED",
+      "product": "SHOLAHAM BRAED",
+      "currentStatus": "Vetting",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": false
+        },
+        {
+          "name": "Documentation",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (32/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (66/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": true
+        },
+        {
+          "name": "Internal Review",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (147/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    }
+  ]
 }
