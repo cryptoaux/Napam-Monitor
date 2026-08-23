@@ -13,132 +13,309 @@
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6fa;
       color: #1f2937;
     }
 
-    header {
-      background: #ffffff;
+    .header {
+      background: white;
+      padding: 35px 7%;
       border-bottom: 1px solid #e5e7eb;
-      padding: 20px;
     }
 
-    header h1 {
+    .header h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 42px;
+      font-weight: 800;
     }
 
-    header p {
-      margin: 6px 0 0;
+    .header p {
+      margin: 12px 0 0;
       color: #6b7280;
+      font-size: 21px;
     }
 
-    main {
+    .container {
+      width: 86%;
       max-width: 1200px;
-      margin: 30px auto;
-      padding: 0 20px;
+      margin: 35px auto;
     }
+
+    /* =========================
+       SUMMARY
+       ========================= */
 
     .summary {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 25px;
+      gap: 22px;
+      margin-bottom: 35px;
     }
 
     .summary-card {
       background: white;
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid #e1e5eb;
+      border-radius: 22px;
+      padding: 30px;
     }
 
-    .summary-card small {
+    .summary-title {
       color: #6b7280;
+      font-size: 18px;
+      margin-bottom: 18px;
     }
 
-    .summary-card strong {
-      display: block;
-      font-size: 28px;
-      margin-top: 8px;
+    .summary-number {
+      font-size: 48px;
+      font-weight: 800;
     }
 
-    .application {
+    /* =========================
+       APPLICATION CARD
+       ========================= */
+
+    .application-card {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 20px;
+      border: 1px solid #e1e5eb;
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
     }
 
-    .application-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      align-items: flex-start;
-      margin-bottom: 20px;
-    }
-
-    .application h2 {
-      margin: 0 0 6px;
-      font-size: 20px;
+    .application-name {
+      font-size: 27px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
 
     .application-number {
       color: #6b7280;
-      font-size: 14px;
+      font-size: 16px;
+      margin-bottom: 20px;
     }
 
+    .application-number strong {
+      color: #374151;
+    }
+
+    /* =========================
+       CURRENT STATUS
+       ========================= */
+
     .current-status {
-      padding: 10px 15px;
-      border-radius: 20px;
-      background: #fef3c7;
-      color: #92400e;
-      font-weight: bold;
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+
+    .current-status-yellow {
+      background: #fff0c2;
+      color: #9a4d00;
+    }
+
+    .current-status-red {
+      background: #ffe1e1;
+      color: #b42323;
+    }
+
+    .current-status-green {
+      background: #dff5df;
+      color: #087508;
+    }
+
+    /* =========================
+       STAGES
+       ========================= */
+
+    .status-title {
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .stage-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      width: 100%;
+      overflow: hidden;
+      row-gap: 14px;
+    }
+
+    .stage-item {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      margin-right: 7px;
+    }
+
+    .stage-connector {
+      width: 24px;
+      height: 3px;
+      background: #d9dde3;
+      margin-right: 7px;
+      flex-shrink: 0;
+    }
+
+    .stage-item:first-child .stage-connector {
+      display: none;
+    }
+
+    .stage-dot {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+
+      flex-shrink: 0;
+    }
+
+    .stage-name {
+      margin-left: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #4b5563;
       white-space: nowrap;
     }
 
-    .stages {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    /* =========================
+       NAPAMS COLORS
+       ========================= */
+
+    .green {
+      background: #008000;
     }
 
-    .stage {
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      background: #fee2e2;
-      color: #991b1b;
+    .yellow {
+      background: #ffb629;
     }
 
-    .stage.current {
-      background: #fef3c7;
-      color: #92400e;
-      font-weight: bold;
+    .red {
+      background: #ff4d4d;
     }
 
-    .stage.completed {
-      background: #dcfce7;
-      color: #166534;
-    }
+    /* =========================
+       FOOTER / UPDATE
+       ========================= */
 
-    .loading,
-    .error {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
+    .last-updated {
       text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin: 35px 0;
     }
+
+    .loading {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .error {
+      background: #ffe1e1;
+      color: #a00000;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
 
     @media (max-width: 700px) {
-      .summary {
-        grid-template-columns: 1fr;
+
+      .header {
+        padding: 25px 6%;
       }
 
-      .application-header {
-        flex-direction: column;
+      .header h1 {
+        font-size: 31px;
+      }
+
+      .header p {
+        font-size: 17px;
+      }
+
+      .container {
+        width: 92%;
+        margin-top: 25px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .summary-card {
+        padding: 23px;
+      }
+
+      .summary-number {
+        font-size: 40px;
+      }
+
+      .application-card {
+        padding: 22px;
+        border-radius: 20px;
+      }
+
+      .application-name {
+        font-size: 22px;
+      }
+
+      .application-number {
+        font-size: 14px;
+      }
+
+      .current-status {
+        font-size: 14px;
+        padding: 10px 15px;
+      }
+
+      .status-title {
+        font-size: 21px;
+      }
+
+      .stage-container {
+        align-items: flex-start;
+      }
+
+      .stage-item {
+        margin-right: 3px;
+      }
+
+      .stage-connector {
+        width: 12px;
+        margin-right: 4px;
+      }
+
+      .stage-dot {
+        width: 25px;
+        height: 25px;
+        min-width: 25px;
+        font-size: 9px;
+      }
+
+      .stage-name {
+        font-size: 10px;
+        margin-left: 4px;
       }
     }
   </style>
@@ -146,138 +323,475 @@
 
 <body>
 
-<header>
-  <h1>NAPAMS Monitor</h1>
-  <p>Application status dashboard</p>
-</header>
+  <div class="header">
+    <h1>NAPAMS Monitor</h1>
+    <p>Application status dashboard</p>
+  </div>
 
-<main>
+  <div class="container">
 
-  <section class="summary">
-    <div class="summary-card">
-      <small>Total Applications</small>
-      <strong id="totalApplications">0</strong>
+    <div id="error"></div>
+
+    <div class="summary">
+
+      <div class="summary-card">
+        <div class="summary-title">
+          Total Applications
+        </div>
+
+        <div
+          class="summary-number"
+          id="totalApplications"
+        >
+          0
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-title">
+          In Progress
+        </div>
+
+        <div
+          class="summary-number"
+          id="inProgress"
+        >
+          0
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-title">
+          Approved
+        </div>
+
+        <div
+          class="summary-number"
+          id="approved"
+        >
+          0
+        </div>
+      </div>
+
     </div>
 
-    <div class="summary-card">
-      <small>In Progress</small>
-      <strong id="inProgress">0</strong>
+    <div id="applications">
+      <div class="loading">
+        Loading applications...
+      </div>
     </div>
 
-    <div class="summary-card">
-      <small>Approved</small>
-      <strong id="approved">0</strong>
+    <div
+      class="last-updated"
+      id="lastUpdated"
+    >
+      Loading latest update...
     </div>
-  </section>
 
-  <section id="applications">
-    <div class="loading">
-      Loading applications...
-    </div>
-  </section>
+  </div>
 
-</main>
 
-<script>
-  async function loadApplications() {
-    try {
-      const response = await fetch("./data/applications.json");
+  <script>
 
-      if (!response.ok) {
-        throw new Error("Could not load application data.");
+    /*
+     * The monitor should create/update this file.
+     *
+     * Example:
+     *
+     * data.json
+     */
+
+    const DATA_URL =
+      "./data.json";
+
+
+    /*
+     * Refresh website data.
+     *
+     * 60 seconds = 1 minute.
+     *
+     * The website itself does NOT login to NAPAMS.
+     * monitor.js does that.
+     */
+
+    const REFRESH_INTERVAL =
+      60 * 1000;
+
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /*
+     * Convert monitor color
+     * to CSS class.
+     */
+
+    function colorClass(color) {
+
+      if (color === "GREEN") {
+        return "green";
       }
 
-      const applications = await response.json();
+      if (color === "YELLOW") {
+        return "yellow";
+      }
 
-      document.getElementById("totalApplications").textContent =
-        applications.length;
+      return "red";
 
-      const approved = applications.filter(
-        app => String(app.currentStatus).toLowerCase() === "approved"
-      ).length;
+    }
 
-      document.getElementById("approved").textContent = approved;
 
-      document.getElementById("inProgress").textContent =
-        applications.length - approved;
+    /*
+     * Current-status background.
+     */
 
-      const container = document.getElementById("applications");
+    function currentStatusClass(color) {
 
-      if (!applications.length) {
-        container.innerHTML =
-          '<div class="loading">No applications found.</div>';
+      if (color === "GREEN") {
+        return "current-status-green";
+      }
+
+      if (color === "YELLOW") {
+        return "current-status-yellow";
+      }
+
+      return "current-status-red";
+
+    }
+
+
+    /*
+     * Render every application.
+     */
+
+    function renderApplications(applications) {
+
+      const container =
+        document.getElementById(
+          "applications"
+        );
+
+      container.innerHTML = "";
+
+      if (
+        !Array.isArray(applications) ||
+        applications.length === 0
+      ) {
+
+        container.innerHTML = `
+          <div class="loading">
+            No submitted applications found.
+          </div>
+        `;
+
         return;
       }
 
-      container.innerHTML = applications.map(app => {
 
-        const stages = Array.isArray(app.stages)
-          ? app.stages
-          : [];
+      applications.forEach((app) => {
 
-        const stageHTML = stages.map(stage => {
+        const stages =
+          Array.isArray(app.stages)
+            ? app.stages
+            : [];
 
-          let className = "stage";
 
-          if (stage.status === "current") {
-            className += " current";
-          }
+        /*
+         * Find the current stage color.
+         */
 
-          if (stage.status === "completed") {
-            className += " completed";
-          }
+        let currentColor =
+          app.currentStatusColor ||
+          "YELLOW";
 
-          return `
-            <span class="${className}">
-              ${stage.name}
-            </span>
-          `;
-        }).join("");
 
-        return `
-          <article class="application">
+        const card =
+          document.createElement("div");
 
-            <div class="application-header">
+        card.className =
+          "application-card";
 
-              <div>
-                <h2>${app.name}</h2>
 
-                <div class="application-number">
-                  Application Number:
-                  <strong>${app.applicationNumber}</strong>
+        /*
+         * Build stage timeline.
+         */
+
+        const stageHTML =
+          stages.map(
+            (stage, index) => {
+
+              const stageColor =
+                stage.color ||
+                "RED";
+
+              const cssColor =
+                colorClass(
+                  stageColor
+                );
+
+              const stageName =
+                stage.name ||
+                stage.trackingStageName ||
+                "Unknown";
+
+
+              return `
+                <div class="stage-item">
+
+                  <div class="stage-connector"></div>
+
+                  <div
+                    class="stage-dot ${cssColor}"
+                  >
+                    ${index + 1}
+                  </div>
+
+                  <div class="stage-name">
+                    ${escapeHtml(stageName)}
+                  </div>
+
                 </div>
-              </div>
+              `;
 
-              <div class="current-status">
-                Current Status:
-                ${app.currentStatus}
-              </div>
+            }
+          ).join("");
 
-            </div>
 
-            <h3>Status Stages</h3>
+        card.innerHTML = `
 
-            <div class="stages">
-              ${stageHTML}
-            </div>
+          <div class="application-name">
+            ${escapeHtml(
+              app.product ||
+              app.name ||
+              "Unknown Product"
+            )}
+          </div>
 
-          </article>
+          <div class="application-number">
+            Application Number:
+            <strong>
+              ${escapeHtml(
+                app.applicationNumber ||
+                "Unknown"
+              )}
+            </strong>
+          </div>
+
+          <div
+            class="
+              current-status
+              ${currentStatusClass(
+                currentColor
+              )}
+            "
+          >
+            Current Status:
+            <strong>
+              ${escapeHtml(
+                app.currentStatus ||
+                "Unknown"
+              )}
+            </strong>
+          </div>
+
+          <div class="status-title">
+            Status Stages
+          </div>
+
+          <div class="stage-container">
+            ${stageHTML}
+          </div>
+
         `;
-      }).join("");
 
-    } catch (error) {
-      document.getElementById("applications").innerHTML = `
-        <div class="error">
-          Unable to load application data.
-        </div>
-      `;
 
-      console.error(error);
+        container.appendChild(card);
+
+      });
+
     }
-  }
 
-  loadApplications();
-</script>
+
+    /*
+     * Update summary numbers.
+     */
+
+    function updateSummary(applications) {
+
+      const total =
+        applications.length;
+
+
+      let approved = 0;
+
+      let inProgress = 0;
+
+
+      applications.forEach(
+        (app) => {
+
+          const status =
+            String(
+              app.currentStatus ||
+              ""
+            ).toLowerCase();
+
+
+          if (
+            status.includes(
+              "approved"
+            )
+          ) {
+
+            approved++;
+
+          } else {
+
+            inProgress++;
+
+          }
+
+        }
+      );
+
+
+      document.getElementById(
+        "totalApplications"
+      ).textContent = total;
+
+
+      document.getElementById(
+        "inProgress"
+      ).textContent = inProgress;
+
+
+      document.getElementById(
+        "approved"
+      ).textContent = approved;
+
+    }
+
+
+    /*
+     * Load latest data.
+     */
+
+    async function loadData() {
+
+      try {
+
+        const response =
+          await fetch(
+            DATA_URL +
+            "?t=" +
+            Date.now(),
+            {
+              cache: "no-store"
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Could not load data.json"
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        /*
+         * Accept either:
+         *
+         * {
+         *   applications: [...]
+         * }
+         *
+         * or directly:
+         *
+         * [...]
+         */
+
+        const applications =
+          Array.isArray(data)
+            ? data
+            : data.applications || [];
+
+
+        updateSummary(
+          applications
+        );
+
+
+        renderApplications(
+          applications
+        );
+
+
+        document.getElementById(
+          "lastUpdated"
+        ).textContent =
+          "Last updated: " +
+          new Date().toLocaleString();
+
+
+        document.getElementById(
+          "error"
+        ).innerHTML = "";
+
+
+      } catch (error) {
+
+        console.error(
+          "Dashboard error:",
+          error
+        );
+
+
+        document.getElementById(
+          "error"
+        ).innerHTML = `
+          <div class="error">
+            Unable to load the latest
+            application data.
+          </div>
+        `;
+
+      }
+
+    }
+
+
+    /*
+     * Initial load.
+     */
+
+    loadData();
+
+
+    /*
+     * Automatically refresh.
+     */
+
+    setInterval(
+      loadData,
+      REFRESH_INTERVAL
+    );
+
+  </script>
 
 </body>
 </html>
