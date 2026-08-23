@@ -1,48 +1,49 @@
-const { chromium } = require("playwright");
+const dns = require("dns").promises;
+const https = require("https");
 
 async function main() {
-  const browser = await chromium.launch({
-    headless: true
-  });
+  console.log("Testing NAPAMS DNS...");
 
   try {
-    const context = await browser.newContext();
+    const addresses = await dns.lookup("registration.nafdac.gov.ng", {
+      all: true
+    });
 
-    const response = await context.request.get(
+    console.log("DNS RESULT:");
+    console.log(addresses);
+  } catch (error) {
+    console.error("DNS FAILED:");
+    console.error(error);
+  }
+
+  console.log("\nTesting HTTPS connection...");
+
+  await new Promise((resolve) => {
+    const request = https.get(
       "https://registration.nafdac.gov.ng/Applicant/Login",
       {
-        timeout: 60000
+        timeout: 30000
+      },
+      response => {
+        console.log("HTTPS STATUS:", response.statusCode);
+        console.log("HTTPS HEADERS:", response.headers);
+        response.resume();
+        resolve();
       }
     );
 
-    console.log("HTTP STATUS:", response.status());
-    console.log("CONTENT TYPE:", response.headers()["content-type"]);
+    request.on("error", error => {
+      console.error("HTTPS FAILED:");
+      console.error(error);
+      resolve();
+    });
 
-    const html = await response.text();
-
-    console.log("HTML LENGTH:", html.length);
-
-    console.log("\n--- HAS BODY ---");
-    console.log(html.toLowerCase().includes("<body"));
-
-    console.log("\n--- HAS USERNAME ---");
-    console.log(html.includes('id="Username"'));
-
-    console.log("\n--- HAS PASSWORD ---");
-    console.log(html.includes('id="Password"'));
-
-    console.log("\n--- HAS ADMIN BUTTON ---");
-    console.log(html.includes('value="admin"'));
-
-    console.log("\n--- HTML LENGTH/ENDING ---");
-    console.log(html.slice(-1000));
-
-  } finally {
-    await browser.close();
-  }
+    request.on("timeout", () => {
+      console.error("HTTPS TIMEOUT");
+      request.destroy();
+      resolve();
+    });
+  });
 }
 
-main().catch(error => {
-  console.error(error);
-  process.exit(1);
-});
+main();
