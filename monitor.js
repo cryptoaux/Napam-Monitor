@@ -1,20 +1,22 @@
 const { chromium } = require("playwright");
 
 async function main() {
+  const tin = process.env.NAPAMS_TIN;
+  const password = process.env.NAPAMS_PASSWORD;
+
+  if (!tin || !password) {
+    throw new Error("NAPAMS_TIN or NAPAMS_PASSWORD is missing.");
+  }
+
   const browser = await chromium.launch({
     headless: true
   });
 
-  const context = await browser.newContext({
-    userAgent:
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-  });
-
+  const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
-    console.log("Opening NAPAMS in Chrome-compatible mode...");
+    console.log("Opening NAPAMS Admin login...");
 
     await page.goto(
       "https://registration.nafdac.gov.ng/Applicant/Login",
@@ -24,40 +26,46 @@ async function main() {
       }
     );
 
-    await page.waitForTimeout(15000);
+    await page.waitForTimeout(5000);
 
     console.log("URL:", page.url());
     console.log("TITLE:", await page.title());
 
-    const html = await page.content();
+    // Admin is the default login tab.
+    console.log("Filling Admin TIN...");
 
-    console.log("HTML LENGTH:", html.length);
+    await page.locator("#Username").fill(tin);
 
-    console.log("\n--- BODY COUNT ---");
-    console.log(await page.locator("body").count());
+    console.log("Filling Admin password...");
+
+    await page.locator("#Password").fill(password);
+
+    console.log("Logging in as Admin...");
+
+    await page.locator('#login-submit[value="admin"]').click();
+
+    await page.waitForTimeout(5000);
+
+    console.log("\n--- AFTER LOGIN ---");
+    console.log("URL:", page.url());
+    console.log("TITLE:", await page.title());
 
     console.log("\n--- PAGE TEXT ---");
 
-    if (await page.locator("body").count()) {
-      console.log(
-        (await page.locator("body").innerText()).slice(0, 12000)
-      );
-    } else {
-      console.log("NO BODY FOUND");
-    }
+    const text = await page.locator("body").innerText();
 
-    console.log("\n--- INPUTS ---");
+    console.log(text.slice(0, 12000));
 
-    const inputs = await page.locator("input").evaluateAll(elements =>
-      elements.map(e => ({
-        type: e.type,
-        name: e.name,
-        id: e.id,
-        placeholder: e.placeholder
-      }))
-    );
+  } catch (error) {
+    console.error("NAPAMS login failed:");
+    console.error(error);
 
-    console.log(JSON.stringify(inputs, null, 2));
+    await page.screenshot({
+      path: "napams-login-error.png",
+      fullPage: true
+    }).catch(() => {});
+
+    throw error;
 
   } finally {
     await browser.close();
