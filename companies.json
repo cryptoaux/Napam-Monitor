@@ -1,22 +1,20 @@
-{
-  "companies": [
-    {
-      "id": "company_01",
-      "name": "Company Name 1",
-      "tinSecret": "COMPANY_1_TIN",
-      "passwordSecret": "COMPANY_1_PASSWORD"
-    },
-    {
-      "id": "company_02",
-      "name": "Company Name 2",
-      "tinSecret": "COMPANY_2_TIN",
-      "passwordSecret": "COMPANY_2_PASSWORD"
-    },
-    {
-      "id": "company_03",
-      "name": "Company Name 3",
-      "tinSecret": "COMPANY_3_TIN",
-      "passwordSecret": "COMPANY_3_PASSWORD"
-    }
-  ]
-}
+[
+  {
+    "id": "company_01",
+    "name": "Company Name 1",
+    "tinSecret": "COMPANY_1_TIN",
+    "passwordSecret": "COMPANY_1_PASSWORD"
+  },
+  {
+    "id": "company_02",
+    "name": "Company Name 2",
+    "tinSecret": "COMPANY_2_TIN",
+    "passwordSecret": "COMPANY_2_PASSWORD"
+  },
+  {
+    "id": "company_03",
+    "name": "Company Name 3",
+    "tinSecret": "COMPANY_3_TIN",
+    "passwordSecret": "COMPANY_3_PASSWORD"
+  }
+]
