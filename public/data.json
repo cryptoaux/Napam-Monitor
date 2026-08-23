@@ -1,40 +1,127 @@
 {
-  "updatedAt": "2026-08-23T14:21:32.632Z",
-  "totalApplications": 3,
+  "updatedAt": "2026-08-23T15:22:48.404Z",
+  "totalApplications": 4,
   "applications": [
     {
-      "applicationNumber": "NF-FD-586182",
-      "name": "HORJA WHEAT BREAD",
-      "currentStatus": "Submission",
+      "companyName": "Company Name 1",
+      "applicationNumber": "Unknown",
+      "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+      "currentStatus": "Approval",
       "currentStatusColor": "YELLOW",
       "stages": [
         {
           "name": "Submission",
-          "color": "YELLOW",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": ""
         },
         {
           "name": "Documentation",
           "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (5/10 Days)"
+          "duration": " (11/10 Days)"
         },
         {
           "name": "Vetting",
           "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (202/20 Days)"
+        },
+        {
+          "name": "Unknown",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (134/20 Days)"
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (142/40 Days)"
+        },
+        {
+          "name": "Inspection",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": " (0/20 Days)"
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": ""
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": ""
+        },
+        {
+          "name": "Approval",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": ""
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": ""
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": ""
+        }
+      ]
+    },
+    {
+      "companyName": "Company Name 1",
+      "applicationNumber": "Unknown",
+      "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
+      "currentStatus": "Vetting",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": ""
+        },
+        {
+          "name": "Documentation",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (11/10 Days)"
+        },
+        {
+          "name": "Vetting",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (276/20 Days)"
         },
         {
           "name": "Unknown",
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (0/20 Days)"
+          "duration": " (276/20 Days)"
         },
         {
           "name": "DOSSIER REVIEW CLEARANCE",
@@ -88,38 +175,39 @@
       ]
     },
     {
-      "applicationNumber": "PEX-FD-586340",
-      "name": "HORJA BREAD",
-      "currentStatus": "Submission",
+      "companyName": "Company Name 2",
+      "applicationNumber": "Unknown",
+      "name": "SHOLAHAM BRAED",
+      "currentStatus": "Vetting",
       "currentStatusColor": "YELLOW",
       "stages": [
         {
           "name": "Submission",
-          "color": "YELLOW",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": ""
         },
         {
           "name": "Documentation",
           "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (15/10 Days)"
+          "duration": " (13/10 Days)"
         },
         {
           "name": "Vetting",
-          "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (0/20 Days)"
+          "duration": " (113/20 Days)"
         },
         {
           "name": "Unknown",
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (0/20 Days)"
+          "duration": " (113/20 Days)"
         },
         {
           "name": "DOSSIER REVIEW CLEARANCE",
@@ -173,38 +261,39 @@
       ]
     },
     {
-      "applicationNumber": "NF-FD-586183",
-      "name": "HORJA BREAD",
-      "currentStatus": "Submission",
+      "companyName": "Company Name 2",
+      "applicationNumber": "Unknown",
+      "name": "SHOLAHAM BRAED",
+      "currentStatus": "Vetting",
       "currentStatusColor": "YELLOW",
       "stages": [
         {
           "name": "Submission",
-          "color": "YELLOW",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": ""
         },
         {
           "name": "Documentation",
           "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (35/10 Days)"
+          "duration": " (32/10 Days)"
         },
         {
           "name": "Vetting",
-          "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (0/20 Days)"
+          "duration": " (66/20 Days)"
         },
         {
           "name": "Unknown",
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (0/20 Days)"
+          "duration": " (147/20 Days)"
         },
         {
           "name": "DOSSIER REVIEW CLEARANCE",
