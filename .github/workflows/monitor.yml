@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "*/15 * * * *"
 
+permissions:
+  contents: write
+
 jobs:
   monitor:
     runs-on: ubuntu-latest
@@ -16,28 +19,74 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 22
 
       - name: Install dependencies
         run: npm install
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Test NAPAMS connectivity
+        run: |
+          echo "========================================"
+          echo "NAPAMS CONNECTIVITY TEST"
+          echo "========================================"
+
+          echo "Testing IPv4..."
+          curl -4 -v \
+            --connect-timeout 30 \
+            --max-time 60 \
+            https://registration.nafdac.gov.ng/Applicant/Login \
+            -o /tmp/napams-login.html
+
+          echo "Curl exit code: $?"
+
+          echo "Response file:"
+          ls -lh /tmp/napams-login.html
+
+          echo "Response size:"
+          wc -c /tmp/napams-login.html
+
       - name: Run NAPAMS monitor
+        run: npm run monitor
         env:
+          # Company 1
           COMPANY_1_TIN: ${{ secrets.COMPANY_1_TIN }}
           COMPANY_1_PASSWORD: ${{ secrets.COMPANY_1_PASSWORD }}
+
+          # Company 2
           COMPANY_2_TIN: ${{ secrets.COMPANY_2_TIN }}
           COMPANY_2_PASSWORD: ${{ secrets.COMPANY_2_PASSWORD }}
+
+          # Company 3
           COMPANY_3_TIN: ${{ secrets.COMPANY_3_TIN }}
           COMPANY_3_PASSWORD: ${{ secrets.COMPANY_3_PASSWORD }}
-        run: npm run monitor
 
-      - name: Show generated data summary
+      - name: Check generated data
         if: always()
         run: |
-          if [ -f public/data.json ]; then
-            echo "public/data.json was created successfully."
-            echo "File size:"
-            wc -c public/data.json
+          echo "Checking for public/data.json..."
+
+          if [ -d public ]; then
+            ls -la public
           else
-            echo "public/data.json was not created."
+            echo "public directory does not exist."
+          fi
+
+          test -f public/data.json
+
+      - name: Save latest application data
+        if: success()
+        run: |
+          git config user.name "NAPAMS Monitor"
+          git config user.email "actions@github.com"
+
+          git add public/data.json
+
+          if git diff --cached --quiet; then
+            echo "No application data changes."
+          else
+            git commit -m "Update NAPAMS application status"
+            git push
           fi
