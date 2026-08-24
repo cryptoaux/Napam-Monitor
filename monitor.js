@@ -645,17 +645,6 @@ function loadCompanies() {
  * ============================================================
  * LOGIN TO ONE COMPANY
  * ============================================================
- *
- * IMPORTANT:
- *
- * NAPAMS sometimes returns HTTP 400 when logging in even
- * though the credentials are correct.
- *
- * Manually refreshing the login page and logging in again
- * normally fixes it.
- *
- * This function now automatically does the same thing.
- * ============================================================
  */
 
 async function loginCompany(
@@ -681,14 +670,11 @@ async function loginCompany(
   /*
    * NAPAMS login retry count.
    *
-   * Each attempt gets:
+   * Every attempt gets:
    *
-   * - a completely fresh login page
+   * - a fresh login page
    * - a fresh antiforgery token
    * - fresh cookies
-   *
-   * This is equivalent to manually refreshing
-   * the NAPAMS login page before trying again.
    */
 
   const MAX_LOGIN_ATTEMPTS = 4;
@@ -930,10 +916,8 @@ async function loginCompany(
      */
 
     if (
-      loginResponse.status ===
-        302 ||
-      loginResponse.status ===
-        303
+      loginResponse.status === 302 ||
+      loginResponse.status === 303
     ) {
 
       const authCookies =
@@ -965,16 +949,10 @@ async function loginCompany(
      * ========================================================
      * 7. HTTP 400
      * ========================================================
-     *
-     * This is the important fix.
-     *
-     * Instead of immediately failing, we behave like a user
-     * manually refreshing the NAPAMS page and logging in again.
      */
 
     if (
-      loginResponse.status ===
-      400
+      loginResponse.status === 400
     ) {
 
       console.log(
@@ -1788,4 +1766,4 @@ main().catch(
     process.exit(1);
 
   }
-);
+);p
