@@ -5,30 +5,6 @@ const fs = require("fs");
  * ============================================================
  * NAPAMS MULTI-COMPANY MONITOR
  * ============================================================
- *
- * companies.json must contain:
- *
- * {
- *   "companies": [
- *     {
- *       "id": "company_01",
- *       "name": "Company Name 1",
- *       "tinSecret": "COMPANY_1_TIN",
- *       "passwordSecret": "COMPANY_1_PASSWORD"
- *     }
- *   ]
- * }
- *
- * NAPAMS stage colors:
- *
- * bg-primary  = GREEN / completed
- * bg-warning  = YELLOW / current
- * bg-danger   = RED / pending
- *
- * Credentials are read from GitHub Actions Secrets.
- *
- * TIN and passwords are NEVER written to public/data.json.
- * ============================================================
  */
 
 const HOST = "registration.nafdac.gov.ng";
@@ -43,24 +19,77 @@ const COMPANIES_FILE = "companies.json";
 
 /*
  * ============================================================
- * HTTP REQUEST
+ * HTTP REQUEST WITH RETRIES
+ * ============================================================
+ *
+ * IMPORTANT:
+ *
+ * This intentionally keeps the same networking behaviour as
+ * the older successful workflow.
+ *
+ * We are NOT using:
+ * - custom https.Agent
+ * - keepAlive
+ * - forced TLS 1.2
+ * - forced IPv4
+ *
+ * The older workflow successfully reached:
+ *
+ * GET /Application/FormApplication/Applications
+ *
+ * and received HTTP 200.
+ *
+ * Therefore we keep that exact request style and only add
+ * retries and connection diagnostics.
  * ============================================================
  */
 
-function request(method, path, headers = {}, body = null) {
+function request(
+  method,
+  path,
+  headers = {},
+  body = null,
+  attempt = 1
+) {
+
+  const MAX_ATTEMPTS = 3;
+
   return new Promise((resolve, reject) => {
+
+    console.log(
+      `HTTP ${method} ${path} (attempt ${attempt}/${MAX_ATTEMPTS})`
+    );
+
+    console.log(
+      `Node.js version: ${process.version}`
+    );
 
     const req = https.request(
       {
         hostname: HOST,
+
+        port: 443,
+
         path,
+
         method,
+
         headers,
-        timeout: 60000
+
+        timeout: 120000
       },
+
       (res) => {
 
         let data = "";
+
+        console.log(
+          `HTTP RESPONSE: ${res.statusCode}`
+        );
+
+        console.log(
+          `HTTP VERSION: ${res.httpVersion}`
+        );
 
         res.setEncoding("utf8");
 
@@ -81,15 +110,145 @@ function request(method, path, headers = {}, body = null) {
       }
     );
 
-    req.on("error", reject);
+
+    /*
+     * ========================================================
+     * SOCKET DIAGNOSTICS
+     * ========================================================
+     */
+
+    req.on("socket", (socket) => {
+
+      console.log(
+        "Socket assigned."
+      );
+
+      socket.on("connect", () => {
+
+        console.log(
+          "TCP connection established."
+        );
+
+      });
+
+      socket.on("secureConnect", () => {
+
+        console.log(
+          "TLS secure connection established."
+        );
+
+        try {
+
+          console.log(
+            `TLS protocol: ${socket.getProtocol()}`
+          );
+
+          console.log(
+            `TLS cipher: ${
+              socket.getCipher()?.name ||
+              "Unknown"
+            }`
+          );
+
+          console.log(
+            `TLS authorized: ${socket.authorized}`
+          );
+
+        } catch (error) {
+
+          console.log(
+            "TLS diagnostic information unavailable."
+          );
+
+        }
+
+      });
+
+      socket.on("error", (error) => {
+
+        console.error(
+          `SOCKET ERROR: ${error.code || error.message}`
+        );
+
+      });
+
+    });
+
+
+    /*
+     * ========================================================
+     * REQUEST ERROR
+     * ========================================================
+     */
+
+    req.on("error", (error) => {
+
+      console.error(
+        `HTTP ERROR: ${error.code || error.message}`
+      );
+
+      /*
+       * Retry failed connections.
+       */
+
+      if (attempt < MAX_ATTEMPTS) {
+
+        const delay =
+          attempt * 3000;
+
+        console.log(
+          `Retrying in ${delay / 1000} seconds...`
+        );
+
+        setTimeout(() => {
+
+          request(
+            method,
+            path,
+            headers,
+            body,
+            attempt + 1
+          )
+            .then(resolve)
+            .catch(reject);
+
+        }, delay);
+
+        return;
+
+      }
+
+      reject(error);
+
+    });
+
+
+    /*
+     * ========================================================
+     * TIMEOUT
+     * ========================================================
+     */
 
     req.on("timeout", () => {
 
+      console.error(
+        "REQUEST TIMEOUT after 120 seconds"
+      );
+
       req.destroy(
-        new Error("Request timed out.")
+        new Error(
+          "NAPAMS request timed out after 120 seconds."
+        )
       );
 
     });
+
+
+    /*
+     * ========================================================
+     * SEND BODY
+     * ========================================================
+     */
 
     if (body) {
       req.write(body);
@@ -98,6 +257,7 @@ function request(method, path, headers = {}, body = null) {
     req.end();
 
   });
+
 }
 
 
@@ -118,7 +278,10 @@ function getCookies(setCookie) {
   }
 
   return setCookie
-    .map((cookie) => cookie.split(";")[0])
+    .map(
+      (cookie) =>
+        cookie.split(";")[0]
+    )
     .join("; ");
 
 }
@@ -136,7 +299,9 @@ function getAntiforgeryToken(html) {
     /name=["']__RequestVerificationToken["'][^>]*value=["']([^"']+)["']/i
   );
 
-  return match ? match[1] : null;
+  return match
+    ? match[1]
+    : null;
 
 }
 
@@ -163,27 +328,17 @@ function cleanText(value) {
  * ============================================================
  * APPLICATION NUMBERS
  * ============================================================
- *
- * NAPAMS application numbers appear in rows containing
- * "View Status".
- *
- * Supported examples:
- *
- * NF-BR-517353
- * PEX-BR-517870
- *
- * We also keep a broader fallback so other NAPAMS product
- * prefixes do not break the monitor.
- * ============================================================
  */
 
 function extractSubmittedApplicationNumbers(html) {
 
   const numbers = [];
 
-  const rowRegex = /<tr[\s\S]*?<\/tr>/gi;
+  const rowRegex =
+    /<tr[\s\S]*?<\/tr>/gi;
 
-  const rows = html.match(rowRegex) || [];
+  const rows =
+    html.match(rowRegex) || [];
 
   for (const row of rows) {
 
@@ -191,13 +346,15 @@ function extractSubmittedApplicationNumbers(html) {
       continue;
     }
 
-    const matches = row.match(
-      /\b(?:NF|PEX)-[A-Z]{2}-\d{4,}\b/gi
-    ) || [];
+    const matches =
+      row.match(
+        /\b(?:NF|PEX)-[A-Z]{2}-\d{4,}\b/gi
+      ) || [];
 
     for (const value of matches) {
 
-      const number = value.toUpperCase();
+      const number =
+        value.toUpperCase();
 
       if (!numbers.includes(number)) {
         numbers.push(number);
@@ -207,21 +364,22 @@ function extractSubmittedApplicationNumbers(html) {
 
   }
 
+
   /*
-   * Fallback:
-   *
-   * If the table structure changes, search the whole page.
+   * Fallback.
    */
 
   if (numbers.length === 0) {
 
-    const matches = html.match(
-      /\b(?:NF|PEX)-[A-Z]{2}-\d{4,}\b/gi
-    ) || [];
+    const matches =
+      html.match(
+        /\b(?:NF|PEX)-[A-Z]{2}-\d{4,}\b/gi
+      ) || [];
 
     for (const value of matches) {
 
-      const number = value.toUpperCase();
+      const number =
+        value.toUpperCase();
 
       if (!numbers.includes(number)) {
         numbers.push(number);
@@ -251,14 +409,23 @@ function extractApplicationIds(html) {
 
   let match;
 
-  while ((match = regex.exec(html)) !== null) {
+  while (
+    (match = regex.exec(html)) !== null
+  ) {
 
-    const index = Number(match[1]);
+    const index =
+      Number(match[1]);
 
-    const id = match[2];
+    const id =
+      match[2];
 
-    if (!Number.isNaN(index) && id) {
+    if (
+      !Number.isNaN(index) &&
+      id
+    ) {
+
       ids[index] = id;
+
     }
 
   }
@@ -272,74 +439,52 @@ function extractApplicationIds(html) {
  * ============================================================
  * NAPAMS STAGE COLOR
  * ============================================================
- *
- * IMPORTANT:
- *
- * Do NOT determine colors from words such as:
- *
- * "success"
- * "complete"
- * "approved"
- *
- * NAPAMS itself tells us the real state through the
- * Bootstrap class inside `description`.
- *
- * bg-primary -> GREEN
- * bg-warning -> YELLOW
- * bg-danger  -> RED
- *
- * currentStageSet is also authoritative for the current
- * stage.
- * ============================================================
  */
 
 function getStageColor(stage) {
 
-  const description = String(
-    stage?.description || ""
-  ).toLowerCase();
+  const description =
+    String(
+      stage?.description || ""
+    ).toLowerCase();
 
-  /*
-   * Current stage.
-   *
-   * NAPAMS explicitly marks the current stage with
-   * currentStageSet = true and normally uses bg-warning.
-   */
+  if (
+    stage?.currentStageSet === true
+  ) {
 
-  if (stage?.currentStageSet === true) {
     return "YELLOW";
+
   }
 
-  /*
-   * Explicit NAPAMS warning class.
-   */
+  if (
+    /\bbg-warning\b/.test(
+      description
+    )
+  ) {
 
-  if (/\bbg-warning\b/.test(description)) {
     return "YELLOW";
+
   }
 
-  /*
-   * Explicit NAPAMS danger class.
-   */
+  if (
+    /\bbg-danger\b/.test(
+      description
+    )
+  ) {
 
-  if (/\bbg-danger\b/.test(description)) {
     return "RED";
+
   }
 
-  /*
-   * Explicit NAPAMS primary class.
-   *
-   * In the NAPAMS tracking page this represents a
-   * completed/green stage.
-   */
+  if (
+    /\bbg-primary\b/.test(
+      description
+    )
+  ) {
 
-  if (/\bbg-primary\b/.test(description)) {
     return "GREEN";
-  }
 
-  /*
-   * Fallback.
-   */
+  }
 
   return "RED";
 
@@ -354,14 +499,8 @@ function getStageColor(stage) {
 
 function normalizeStageName(name) {
 
-  const value = String(name || "").trim();
-
-  /*
-   * NAPAMS has an internal stage with ID 5039 whose name can
-   * be empty.
-   *
-   * Give it a useful public name instead of "Unknown".
-   */
+  const value =
+    String(name || "").trim();
 
   if (!value) {
     return "Internal Review";
@@ -378,9 +517,6 @@ function normalizeStageName(name) {
  * ============================================================
  * CURRENT STATUS
  * ============================================================
- *
- * NAPAMS currentStageSet is authoritative.
- * ============================================================
  */
 
 function getCurrentStatus(stages) {
@@ -389,18 +525,16 @@ function getCurrentStatus(stages) {
     !Array.isArray(stages) ||
     stages.length === 0
   ) {
+
     return "Unknown";
+
   }
 
-  /*
-   * First priority:
-   * NAPAMS explicitly says which stage is current.
-   */
-
-  const explicitCurrent = stages.find(
-    (stage) =>
-      stage?.currentStageSet === true
-  );
+  const explicitCurrent =
+    stages.find(
+      (stage) =>
+        stage?.currentStageSet === true
+    );
 
   if (explicitCurrent) {
 
@@ -410,15 +544,12 @@ function getCurrentStatus(stages) {
 
   }
 
-  /*
-   * Second priority:
-   * Warning stage.
-   */
-
-  const yellowStage = stages.find(
-    (stage) =>
-      getStageColor(stage) === "YELLOW"
-  );
+  const yellowStage =
+    stages.find(
+      (stage) =>
+        getStageColor(stage) ===
+        "YELLOW"
+    );
 
   if (yellowStage) {
 
@@ -428,15 +559,12 @@ function getCurrentStatus(stages) {
 
   }
 
-  /*
-   * Third priority:
-   * First stage which is not green.
-   */
-
-  const firstNonGreen = stages.find(
-    (stage) =>
-      getStageColor(stage) !== "GREEN"
-  );
+  const firstNonGreen =
+    stages.find(
+      (stage) =>
+        getStageColor(stage) !==
+        "GREEN"
+    );
 
   if (firstNonGreen) {
 
@@ -446,12 +574,10 @@ function getCurrentStatus(stages) {
 
   }
 
-  /*
-   * Everything is green.
-   */
-
   return normalizeStageName(
-    stages[stages.length - 1].trackingStageName
+    stages[
+      stages.length - 1
+    ].trackingStageName
   );
 
 }
@@ -478,9 +604,11 @@ async function checkApplicationStatus(
     "POST",
     path,
     {
-      "User-Agent": userAgent,
+      "User-Agent":
+        userAgent,
 
-      "Cookie": cookies,
+      "Cookie":
+        cookies,
 
       "Accept":
         "application/json, text/plain, */*",
@@ -504,7 +632,11 @@ async function checkApplicationStatus(
 
 function loadCompanies() {
 
-  if (!fs.existsSync(COMPANIES_FILE)) {
+  if (
+    !fs.existsSync(
+      COMPANIES_FILE
+    )
+  ) {
 
     throw new Error(
       `Missing ${COMPANIES_FILE}`
@@ -521,29 +653,23 @@ function loadCompanies() {
   const parsed =
     JSON.parse(raw);
 
-  /*
-   * Support both:
-   *
-   * 1. New format:
-   *    { "companies": [...] }
-   *
-   * 2. Old format:
-   *    [...]
-   *
-   * This prevents the previous
-   * "companies.json must contain an array"
-   * error.
-   */
+  if (
+    Array.isArray(parsed)
+  ) {
 
-  if (Array.isArray(parsed)) {
     return parsed;
+
   }
 
   if (
     parsed &&
-    Array.isArray(parsed.companies)
+    Array.isArray(
+      parsed.companies
+    )
   ) {
+
     return parsed.companies;
+
   }
 
   throw new Error(
@@ -578,6 +704,7 @@ async function loginCompany(
     "========================================"
   );
 
+
   /*
    * 1. Login page
    */
@@ -591,8 +718,11 @@ async function loginCompany(
       "GET",
       LOGIN_PATH,
       {
-        "User-Agent": userAgent,
-        "Accept": "text/html"
+        "User-Agent":
+          userAgent,
+
+        "Accept":
+          "text/html"
       }
     );
 
@@ -608,7 +738,9 @@ async function loginCompany(
 
   const initialCookies =
     getCookies(
-      loginPage.headers["set-cookie"]
+      loginPage.headers[
+        "set-cookie"
+      ]
     );
 
   if (!token) {
@@ -618,6 +750,7 @@ async function loginCompany(
     );
 
   }
+
 
   /*
    * 2. Login
@@ -630,13 +763,25 @@ async function loginCompany(
   const form =
     new URLSearchParams();
 
-  form.append("ReturnUrl", "");
+  form.append(
+    "ReturnUrl",
+    ""
+  );
 
-  form.append("Username", tin);
+  form.append(
+    "Username",
+    tin
+  );
 
-  form.append("Password", password);
+  form.append(
+    "Password",
+    password
+  );
 
-  form.append("buttonFunc", "admin");
+  form.append(
+    "buttonFunc",
+    "admin"
+  );
 
   form.append(
     "__RequestVerificationToken",
@@ -648,7 +793,8 @@ async function loginCompany(
       "POST",
       LOGIN_PATH,
       {
-        "User-Agent": userAgent,
+        "User-Agent":
+          userAgent,
 
         "Content-Type":
           "application/x-www-form-urlencoded",
@@ -679,18 +825,21 @@ async function loginCompany(
   );
 
   if (
-    loginResponse.status !== 302
+    loginResponse.status !==
+    302
   ) {
 
     throw new Error(
-      "NAPAMS login failed."
+      `NAPAMS login failed. HTTP ${loginResponse.status}`
     );
 
   }
 
   const authCookies =
     getCookies(
-      loginResponse.headers["set-cookie"]
+      loginResponse.headers[
+        "set-cookie"
+      ]
     );
 
   const cookies = [
@@ -704,8 +853,12 @@ async function loginCompany(
     "Authenticated session established."
   );
 
+
   /*
    * 3. Applications page
+   *
+   * THIS IS THE SAME PATH THAT WORKED IN THE OLD
+   * SUCCESSFUL WORKFLOW.
    */
 
   console.log(
@@ -717,11 +870,14 @@ async function loginCompany(
       "GET",
       APPLICATIONS_PATH,
       {
-        "User-Agent": userAgent,
+        "User-Agent":
+          userAgent,
 
-        "Cookie": cookies,
+        "Cookie":
+          cookies,
 
-        "Accept": "text/html"
+        "Accept":
+          "text/html"
       }
     );
 
@@ -731,18 +887,21 @@ async function loginCompany(
   );
 
   if (
-    applicationsPage.status !== 200
+    applicationsPage.status !==
+    200
   ) {
 
     throw new Error(
-      "Could not open Applications page."
+      `Could not open Applications page. HTTP ${applicationsPage.status}`
     );
 
   }
 
   return {
     cookies,
-    html: applicationsPage.body
+
+    html:
+      applicationsPage.body
   };
 
 }
@@ -779,7 +938,9 @@ function logStages(stages) {
         )}`
       );
 
-      if (stage.duration) {
+      if (
+        stage.duration
+      ) {
 
         console.log(
           `     Duration: ${stage.duration}`
@@ -830,7 +991,9 @@ async function processCompany(
 
   const submittedCount =
     countMatch
-      ? Number(countMatch[1])
+      ? Number(
+          countMatch[1]
+        )
       : null;
 
   console.log(
@@ -839,16 +1002,11 @@ async function processCompany(
       "Unknown"
   );
 
-  /*
-   * Application IDs
-   */
 
   const appIDs =
-    extractApplicationIds(html);
-
-  /*
-   * Application numbers
-   */
+    extractApplicationIds(
+      html
+    );
 
   const submittedApplicationNumbers =
     extractSubmittedApplicationNumbers(
@@ -875,7 +1033,9 @@ async function processCompany(
     }
   );
 
-  if (appIDs.length === 0) {
+  if (
+    appIDs.length === 0
+  ) {
 
     throw new Error(
       "No appID values were found."
@@ -884,6 +1044,7 @@ async function processCompany(
   }
 
   const results = [];
+
 
   /*
    * Check every application.
@@ -899,7 +1060,9 @@ async function processCompany(
       appIDs[index];
 
     const applicationNumber =
-      submittedApplicationNumbers[index] ||
+      submittedApplicationNumbers[
+        index
+      ] ||
       "Unknown";
 
     console.log(
@@ -911,12 +1074,30 @@ async function processCompany(
       applicationNumber
     );
 
-    const response =
-      await checkApplicationStatus(
-        appID,
-        cookies,
-        userAgent
+    let response;
+
+    try {
+
+      response =
+        await checkApplicationStatus(
+          appID,
+          cookies,
+          userAgent
+        );
+
+    } catch (error) {
+
+      console.error(
+        `APPLICATION FAILED: ${applicationNumber}`
       );
+
+      console.error(
+        error.message
+      );
+
+      continue;
+
+    }
 
     console.log(
       "STATUS ENDPOINT HTTP:",
@@ -968,25 +1149,27 @@ async function processCompany(
         : [];
 
     const currentStatus =
-      getCurrentStatus(stages);
-
-    /*
-     * Find the actual current stage.
-     */
+      getCurrentStatus(
+        stages
+      );
 
     const currentStage =
       stages.find(
         (stage) =>
-          stage?.currentStageSet === true
+          stage?.currentStageSet ===
+          true
       ) ||
       stages.find(
         (stage) =>
-          getStageColor(stage) === "YELLOW"
+          getStageColor(stage) ===
+          "YELLOW"
       );
 
     const currentStatusColor =
       currentStage
-        ? getStageColor(currentStage)
+        ? getStageColor(
+            currentStage
+          )
         : stages.length > 0
         ? getStageColor(
             stages[
@@ -1010,15 +1193,9 @@ async function processCompany(
       currentStatusColor
     );
 
-    logStages(stages);
-
-    /*
-     * Save the company name with every application.
-     *
-     * This allows the website to group applications
-     * by company instead of treating every product as
-     * a separate company.
-     */
+    logStages(
+      stages
+    );
 
     results.push({
 
@@ -1032,7 +1209,8 @@ async function processCompany(
 
       appID,
 
-      success: true,
+      success:
+        true,
 
       product,
 
@@ -1057,7 +1235,9 @@ async function processCompany(
  * ============================================================
  */
 
-function saveWebsiteData(results) {
+function saveWebsiteData(
+  results
+) {
 
   const successfulResults =
     results
@@ -1111,7 +1291,9 @@ function saveWebsiteData(results) {
                     ),
 
                   color:
-                    getStageColor(stage),
+                    getStageColor(
+                      stage
+                    ),
 
                   napamsDescription:
                     stage.description ||
@@ -1131,7 +1313,8 @@ function saveWebsiteData(results) {
                     stage.trackingApplicationStage,
 
                   currentStageSet:
-                    stage.currentStageSet === true
+                    stage.currentStageSet ===
+                    true
 
                 })
               )
@@ -1141,21 +1324,17 @@ function saveWebsiteData(results) {
         }
       );
 
+
   /*
    * Group applications by company.
-   *
-   * This makes the structure much easier for the
-   * website to render:
-   *
-   * companies
-   *   └── applications
    */
 
   const companyMap =
     new Map();
 
   for (
-    const application of successfulResults
+    const application of
+    successfulResults
   ) {
 
     const companyKey =
@@ -1163,7 +1342,9 @@ function saveWebsiteData(results) {
       application.companyName;
 
     if (
-      !companyMap.has(companyKey)
+      !companyMap.has(
+        companyKey
+      )
     ) {
 
       companyMap.set(
@@ -1184,7 +1365,9 @@ function saveWebsiteData(results) {
     companyMap
       .get(companyKey)
       .applications
-      .push(application);
+      .push(
+        application
+      );
 
   }
 
@@ -1205,11 +1388,6 @@ function saveWebsiteData(results) {
       successfulResults.length,
 
     companies,
-
-    /*
-     * Keep the flat applications array for backwards
-     * compatibility with the current website.
-     */
 
     applications:
       successfulResults
@@ -1298,6 +1476,11 @@ async function main() {
     `Companies configured: ${companies.length}`
   );
 
+  console.log(
+    `Node.js version: ${process.version}`
+  );
+
+
   /*
    * Process companies one by one.
    */
@@ -1309,11 +1492,6 @@ async function main() {
     console.log(
       `\nProcessing: ${company.name}`
     );
-
-    /*
-     * Read credentials using the names specified
-     * in companies.json.
-     */
 
     const tin =
       company.tinSecret
@@ -1374,9 +1552,12 @@ async function main() {
         error.message
       );
 
+      continue;
+
     }
 
   }
+
 
   /*
    * Save combined website data.
