@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-08-24T12:07:18.992Z",
-  "totalCompanies": 3,
-  "totalApplications": 6,
+  "updatedAt": "2026-08-24T12:14:55.057Z",
+  "totalCompanies": 4,
+  "totalApplications": 7,
   "companies": [
     {
       "id": "company_01",
@@ -686,6 +686,123 @@
           ]
         }
       ]
+    },
+    {
+      "id": "company_04",
+      "name": "BISLO GLOBAL VENTURE",
+      "applications": [
+        {
+          "companyId": "company_04",
+          "companyName": "BISLO GLOBAL VENTURE",
+          "applicationNumber": "NF-PW-520376",
+          "appID": "520376",
+          "name": "BISLOF WATER",
+          "product": "BISLOF WATER",
+          "currentStatus": "Approval",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": false
+            },
+            {
+              "name": "Documentation",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (8/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (96/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": false
+            },
+            {
+              "name": "Internal Review",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (286/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (40/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": true
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        }
+      ]
     }
   ],
   "applications": [
@@ -1334,6 +1451,117 @@
           "duration": "",
           "trackingApplicationStage": 2024,
           "currentStageSet": false
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    },
+    {
+      "companyId": "company_04",
+      "companyName": "BISLO GLOBAL VENTURE",
+      "applicationNumber": "NF-PW-520376",
+      "appID": "520376",
+      "name": "BISLOF WATER",
+      "product": "BISLOF WATER",
+      "currentStatus": "Approval",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": false
+        },
+        {
+          "name": "Documentation",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (8/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (96/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": false
+        },
+        {
+          "name": "Internal Review",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (286/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (40/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": true
         },
         {
           "name": "Approved",
