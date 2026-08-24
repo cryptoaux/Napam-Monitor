@@ -17,4 +17,10 @@
     "tinSecret": "COMPANY_3_TIN",
     "passwordSecret": "COMPANY_3_PASSWORD"
   }
+   {
+    "id": "company_04",
+    "name": "Company Name 4",
+    "tinSecret": "COMPANY_4_TIN",
+    "passwordSecret": "COMPANY_4_PASSWORD"
+  }
 ]
