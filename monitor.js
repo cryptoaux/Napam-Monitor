@@ -1,5 +1,6 @@
 const https = require("https");
 const fs = require("fs");
+const { execFile } = require("child_process");
 
 /*
  * ============================================================
@@ -9,6 +10,8 @@ const fs = require("fs");
 
 const HOST = "registration.nafdac.gov.ng";
 
+const BASE_URL = `https://${HOST}`;
+
 const LOGIN_PATH = "/Applicant/Login";
 
 const APPLICATIONS_PATH =
@@ -16,31 +19,29 @@ const APPLICATIONS_PATH =
 
 const COMPANIES_FILE = "companies.json";
 
+const REQUEST_TIMEOUT = 180000;
+
+const MAX_ATTEMPTS = 3;
+
 
 /*
  * ============================================================
- * HTTP REQUEST WITH RETRIES
+ * CURL REQUEST
  * ============================================================
  *
- * IMPORTANT:
+ * Node's https.request() was repeatedly receiving ECONNRESET
+ * from the NAPAMS server.
  *
- * This intentionally keeps the same networking behaviour as
- * the older successful workflow.
+ * curl from the SAME GitHub Actions runner successfully gets:
  *
- * We are NOT using:
- * - custom https.Agent
- * - keepAlive
- * - forced TLS 1.2
- * - forced IPv4
+ * HTTP/1.1 -> 200
+ * HTTP/2   -> 200
  *
- * The older workflow successfully reached:
+ * Therefore all NAPAMS HTTP traffic is handled through curl.
  *
- * GET /Application/FormApplication/Applications
- *
- * and received HTTP 200.
- *
- * Therefore we keep that exact request style and only add
- * retries and connection diagnostics.
+ * This keeps the rest of the monitor in Node.js while using
+ * the networking implementation that has already been proven
+ * to work against NAPAMS.
  * ============================================================
  */
 
@@ -52,8 +53,6 @@ function request(
   attempt = 1
 ) {
 
-  const MAX_ATTEMPTS = 3;
-
   return new Promise((resolve, reject) => {
 
     console.log(
@@ -64,199 +63,348 @@ function request(
       `Node.js version: ${process.version}`
     );
 
-    const req = https.request(
+    const url =
+      `${BASE_URL}${path}`;
+
+    const args = [
+      "--silent",
+      "--show-error",
+      "--location",
+      "--http1.1",
+      "--max-time",
+      String(Math.ceil(REQUEST_TIMEOUT / 1000)),
+
+      "--request",
+      method,
+
+      "--url",
+      url,
+
+      "--dump-header",
+      "-"
+    ];
+
+
+    /*
+     * Headers
+     */
+
+    for (
+      const [name, value] of Object.entries(headers)
+    ) {
+
+      if (
+        value === undefined ||
+        value === null
+      ) {
+        continue;
+      }
+
+      args.push(
+        "--header",
+        `${name}: ${value}`
+      );
+
+    }
+
+
+    /*
+     * Body
+     */
+
+    if (body !== null) {
+
+      args.push(
+        "--data",
+        body
+      );
+
+    }
+
+
+    console.log(
+      `CURL REQUEST: ${method} ${url}`
+    );
+
+
+    execFile(
+      "curl",
+      args,
       {
-        hostname: HOST,
-
-        port: 443,
-
-        path,
-
-        method,
-
-        headers,
-
-        timeout: 120000
+        encoding: "utf8",
+        maxBuffer: 20 * 1024 * 1024,
+        timeout: REQUEST_TIMEOUT + 10000
       },
+      (error, stdout, stderr) => {
 
-      (res) => {
+        if (error) {
 
-        let data = "";
+          console.error(
+            `CURL ERROR: ${error.code || error.message}`
+          );
+
+          if (stderr) {
+
+            console.error(
+              stderr.trim()
+            );
+
+          }
+
+
+          /*
+           * Retry failed requests.
+           */
+
+          if (
+            attempt <
+            MAX_ATTEMPTS
+          ) {
+
+            const delay =
+              attempt * 3000;
+
+            console.log(
+              `Retrying in ${delay / 1000} seconds...`
+            );
+
+            setTimeout(() => {
+
+              request(
+                method,
+                path,
+                headers,
+                body,
+                attempt + 1
+              )
+                .then(resolve)
+                .catch(reject);
+
+            }, delay);
+
+            return;
+
+          }
+
+          reject(error);
+
+          return;
+
+        }
+
+
+        /*
+         * curl output contains:
+         *
+         * HTTP headers
+         *
+         * blank line
+         *
+         * response body
+         *
+         * Because --location is enabled, there can be more
+         * than one header block.
+         */
+
+        const parsed =
+          parseCurlResponse(
+            stdout
+          );
+
 
         console.log(
-          `HTTP RESPONSE: ${res.statusCode}`
+          `HTTP RESPONSE: ${parsed.status}`
         );
 
         console.log(
-          `HTTP VERSION: ${res.httpVersion}`
+          `HTTP VERSION: ${parsed.httpVersion || "Unknown"}`
         );
 
-        res.setEncoding("utf8");
+        console.log(
+          `RESPONSE SIZE: ${Buffer.byteLength(
+            parsed.body,
+            "utf8"
+          )} bytes`
+        );
 
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
 
-        res.on("end", () => {
-
-          resolve({
-            status: res.statusCode,
-            headers: res.headers,
-            body: data
-          });
-
-        });
+        resolve(parsed);
 
       }
     );
 
+  });
 
-    /*
-     * ========================================================
-     * SOCKET DIAGNOSTICS
-     * ========================================================
-     */
+}
 
-    req.on("socket", (socket) => {
 
-      console.log(
-        "Socket assigned."
+/*
+ * ============================================================
+ * PARSE CURL RESPONSE
+ * ============================================================
+ */
+
+function parseCurlResponse(output) {
+
+  const lines =
+    output.split(/\r?\n/);
+
+  let status = 0;
+
+  let httpVersion = "";
+
+  const responseHeaders = {};
+
+  let bodyStart = -1;
+
+
+  /*
+   * Find the final HTTP response header block.
+   *
+   * curl --location can output multiple response blocks
+   * when redirects occur.
+   */
+
+  let headerStart = -1;
+
+  for (
+    let i = 0;
+    i < lines.length;
+    i++
+  ) {
+
+    if (
+      /^HTTP\/\d(?:\.\d)?\s+\d{3}/i.test(
+        lines[i]
+      )
+    ) {
+
+      headerStart = i;
+
+    }
+
+  }
+
+
+  if (
+    headerStart >= 0
+  ) {
+
+    const statusLine =
+      lines[headerStart];
+
+    const statusMatch =
+      statusLine.match(
+        /^HTTP\/([0-9.]+)\s+(\d{3})/i
       );
 
-      socket.on("connect", () => {
+    if (statusMatch) {
 
-        console.log(
-          "TCP connection established."
+      httpVersion =
+        statusMatch[1];
+
+      status =
+        Number(
+          statusMatch[2]
         );
 
-      });
-
-      socket.on("secureConnect", () => {
-
-        console.log(
-          "TLS secure connection established."
-        );
-
-        try {
-
-          console.log(
-            `TLS protocol: ${socket.getProtocol()}`
-          );
-
-          console.log(
-            `TLS cipher: ${
-              socket.getCipher()?.name ||
-              "Unknown"
-            }`
-          );
-
-          console.log(
-            `TLS authorized: ${socket.authorized}`
-          );
-
-        } catch (error) {
-
-          console.log(
-            "TLS diagnostic information unavailable."
-          );
-
-        }
-
-      });
-
-      socket.on("error", (error) => {
-
-        console.error(
-          `SOCKET ERROR: ${error.code || error.message}`
-        );
-
-      });
-
-    });
+    }
 
 
-    /*
-     * ========================================================
-     * REQUEST ERROR
-     * ========================================================
-     */
+    for (
+      let i = headerStart + 1;
+      i < lines.length;
+      i++
+    ) {
 
-    req.on("error", (error) => {
+      const line =
+        lines[i];
 
-      console.error(
-        `HTTP ERROR: ${error.code || error.message}`
-      );
+      if (
+        line.trim() === ""
+      ) {
 
-      /*
-       * Retry failed connections.
-       */
+        bodyStart =
+          i + 1;
 
-      if (attempt < MAX_ATTEMPTS) {
-
-        const delay =
-          attempt * 3000;
-
-        console.log(
-          `Retrying in ${delay / 1000} seconds...`
-        );
-
-        setTimeout(() => {
-
-          request(
-            method,
-            path,
-            headers,
-            body,
-            attempt + 1
-          )
-            .then(resolve)
-            .catch(reject);
-
-        }, delay);
-
-        return;
+        break;
 
       }
 
-      reject(error);
 
-    });
+      const separator =
+        line.indexOf(":");
 
+      if (
+        separator <= 0
+      ) {
+        continue;
+      }
 
-    /*
-     * ========================================================
-     * TIMEOUT
-     * ========================================================
-     */
+      const name =
+        line
+          .slice(0, separator)
+          .trim()
+          .toLowerCase();
 
-    req.on("timeout", () => {
-
-      console.error(
-        "REQUEST TIMEOUT after 120 seconds"
-      );
-
-      req.destroy(
-        new Error(
-          "NAPAMS request timed out after 120 seconds."
-        )
-      );
-
-    });
+      const value =
+        line
+          .slice(separator + 1)
+          .trim();
 
 
-    /*
-     * ========================================================
-     * SEND BODY
-     * ========================================================
-     */
+      /*
+       * Preserve multiple Set-Cookie headers.
+       */
 
-    if (body) {
-      req.write(body);
+      if (
+        name === "set-cookie"
+      ) {
+
+        if (
+          !responseHeaders[name]
+        ) {
+
+          responseHeaders[name] = [];
+
+        }
+
+        responseHeaders[name].push(
+          value
+        );
+
+      } else {
+
+        responseHeaders[name] =
+          value;
+
+      }
+
     }
 
-    req.end();
+  }
 
-  });
+
+  /*
+   * If headers could not be identified, return the complete
+   * output as body so the caller can diagnose the response.
+   */
+
+  const body =
+    bodyStart >= 0
+      ? lines
+          .slice(bodyStart)
+          .join("\n")
+      : output;
+
+
+  return {
+    status,
+    headers:
+      responseHeaders,
+    body,
+    httpVersion
+  };
 
 }
 
@@ -295,9 +443,10 @@ function getCookies(setCookie) {
 
 function getAntiforgeryToken(html) {
 
-  const match = html.match(
-    /name=["']__RequestVerificationToken["'][^>]*value=["']([^"']+)["']/i
-  );
+  const match =
+    html.match(
+      /name=["']__RequestVerificationToken["'][^>]*value=["']([^"']+)["']/i
+    );
 
   return match
     ? match[1]
@@ -342,7 +491,9 @@ function extractSubmittedApplicationNumbers(html) {
 
   for (const row of rows) {
 
-    if (!/View Status/i.test(row)) {
+    if (
+      !/View Status/i.test(row)
+    ) {
       continue;
     }
 
@@ -356,8 +507,14 @@ function extractSubmittedApplicationNumbers(html) {
       const number =
         value.toUpperCase();
 
-      if (!numbers.includes(number)) {
-        numbers.push(number);
+      if (
+        !numbers.includes(number)
+      ) {
+
+        numbers.push(
+          number
+        );
+
       }
 
     }
@@ -369,7 +526,9 @@ function extractSubmittedApplicationNumbers(html) {
    * Fallback.
    */
 
-  if (numbers.length === 0) {
+  if (
+    numbers.length === 0
+  ) {
 
     const matches =
       html.match(
@@ -381,8 +540,14 @@ function extractSubmittedApplicationNumbers(html) {
       const number =
         value.toUpperCase();
 
-      if (!numbers.includes(number)) {
-        numbers.push(number);
+      if (
+        !numbers.includes(number)
+      ) {
+
+        numbers.push(
+          number
+        );
+
       }
 
     }
@@ -424,7 +589,8 @@ function extractApplicationIds(html) {
       id
     ) {
 
-      ids[index] = id;
+      ids[index] =
+        id;
 
     }
 
@@ -500,7 +666,9 @@ function getStageColor(stage) {
 function normalizeStageName(name) {
 
   const value =
-    String(name || "").trim();
+    String(
+      name || ""
+    ).trim();
 
   if (!value) {
     return "Internal Review";
@@ -614,7 +782,7 @@ async function checkApplicationStatus(
         "application/json, text/plain, */*",
 
       "Referer":
-        "https://registration.nafdac.gov.ng/Application/FormApplication/Applications",
+        `${BASE_URL}${APPLICATIONS_PATH}`,
 
       "X-Requested-With":
         "XMLHttpRequest"
@@ -722,7 +890,7 @@ async function loginCompany(
           userAgent,
 
         "Accept":
-          "text/html"
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       }
     );
 
@@ -808,10 +976,10 @@ async function loginCompany(
           initialCookies,
 
         "Referer":
-          "https://registration.nafdac.gov.ng/Applicant/Login",
+          `${BASE_URL}${LOGIN_PATH}`,
 
         "Origin":
-          "https://registration.nafdac.gov.ng",
+          BASE_URL,
 
         "Accept":
           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -824,9 +992,13 @@ async function loginCompany(
     loginResponse.status
   );
 
+  /*
+   * ASP.NET Core normally redirects after successful login.
+   */
+
   if (
-    loginResponse.status !==
-    302
+    loginResponse.status !== 302 &&
+    loginResponse.status !== 303
   ) {
 
     throw new Error(
@@ -856,9 +1028,6 @@ async function loginCompany(
 
   /*
    * 3. Applications page
-   *
-   * THIS IS THE SAME PATH THAT WORKED IN THE OLD
-   * SUCCESSFUL WORKFLOW.
    */
 
   console.log(
@@ -877,7 +1046,7 @@ async function loginCompany(
           cookies,
 
         "Accept":
-          "text/html"
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       }
     );
 
@@ -1397,7 +1566,8 @@ function saveWebsiteData(
   fs.mkdirSync(
     "public",
     {
-      recursive: true
+      recursive:
+        true
     }
   );
 
