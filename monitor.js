@@ -21,17 +21,36 @@ const COMPANIES_FILE = "companies.json";
  * HTTPS AGENT
  * ============================================================
  *
- * Force IPv4.
+ * Force IPv4 and TLS 1.2.
  *
  * GitHub Actions can sometimes experience connection problems
  * when Node attempts IPv6 first against the NAPAMS server.
+ *
+ * TLS 1.2 is explicitly forced because:
+ *
+ * curl from the same GitHub Actions environment successfully
+ * connects to NAPAMS, while Node.js https.request() receives
+ * ECONNRESET before receiving an HTTP response.
+ * ============================================================
  */
 
 const httpsAgent = new https.Agent({
   keepAlive: true,
+
+  /*
+   * Force IPv4.
+   */
   family: 4,
+
+  /*
+   * Force TLS 1.2.
+   */
+  secureProtocol: "TLSv1_2_method",
+
   maxSockets: 10,
+
   maxFreeSockets: 5,
+
   timeout: 120000
 });
 
@@ -57,11 +76,18 @@ function request(
       `HTTP ${method} ${path} (attempt ${attempt}/${MAX_ATTEMPTS})`
     );
 
+    console.log(
+      `TLS/Connection diagnostics: Node=${process.version}, IPv4=true, TLS=1.2`
+    );
+
     const req = https.request(
       {
         hostname: HOST,
+
         port: 443,
+
         path,
+
         method,
 
         /*
@@ -69,6 +95,9 @@ function request(
          */
         family: 4,
 
+        /*
+         * Reuse our configured HTTPS agent.
+         */
         agent: httpsAgent,
 
         headers: {
@@ -81,12 +110,23 @@ function request(
          */
         timeout: 120000,
 
+        /*
+         * Explicit SNI hostname.
+         */
         servername: HOST
       },
 
       (res) => {
 
         let data = "";
+
+        console.log(
+          `HTTP RESPONSE: ${res.statusCode}`
+        );
+
+        console.log(
+          `HTTP VERSION: ${res.httpVersion}`
+        );
 
         res.setEncoding("utf8");
 
@@ -106,6 +146,52 @@ function request(
 
       }
     );
+
+    req.on("socket", (socket) => {
+
+      console.log(
+        "Socket assigned."
+      );
+
+      socket.on("connect", () => {
+
+        console.log(
+          "TCP connection established."
+        );
+
+      });
+
+      socket.on("secureConnect", () => {
+
+        console.log(
+          "TLS secure connection established."
+        );
+
+        try {
+
+          console.log(
+            `TLS protocol: ${socket.getProtocol()}`
+          );
+
+          console.log(
+            `TLS cipher: ${socket.getCipher()?.name || "Unknown"}`
+          );
+
+          console.log(
+            `TLS authorized: ${socket.authorized}`
+          );
+
+        } catch (error) {
+
+          console.log(
+            "TLS diagnostic information unavailable."
+          );
+
+        }
+
+      });
+
+    });
 
     req.on("error", async (error) => {
 
@@ -163,7 +249,7 @@ function request(
     req.on("timeout", () => {
 
       console.error(
-        `REQUEST TIMEOUT after 120 seconds`
+        "REQUEST TIMEOUT after 120 seconds"
       );
 
       req.destroy(
@@ -987,10 +1073,8 @@ async function processCompany(
   /*
    * Check every application.
    *
-   * IMPORTANT:
-   *
-   * A failure on one application no longer
-   * causes the entire company to fail.
+   * A failure on one application does not cause
+   * the entire company to fail.
    */
 
   for (
@@ -1435,6 +1519,14 @@ async function main() {
 
   console.log(
     `Companies configured: ${companies.length}`
+  );
+
+  console.log(
+    `Node.js version: ${process.version}`
+  );
+
+  console.log(
+    "Network configuration: IPv4 + TLS 1.2"
   );
 
   /*
