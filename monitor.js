@@ -1,6 +1,5 @@
 const https = require("https");
 const fs = require("fs");
-const { execFile } = require("child_process");
 
 /*
  * ============================================================
@@ -10,8 +9,6 @@ const { execFile } = require("child_process");
 
 const HOST = "registration.nafdac.gov.ng";
 
-const BASE_URL = `https://${HOST}`;
-
 const LOGIN_PATH = "/Applicant/Login";
 
 const APPLICATIONS_PATH =
@@ -19,29 +16,10 @@ const APPLICATIONS_PATH =
 
 const COMPANIES_FILE = "companies.json";
 
-const REQUEST_TIMEOUT = 180000;
-
-const MAX_ATTEMPTS = 3;
-
 
 /*
  * ============================================================
- * CURL REQUEST
- * ============================================================
- *
- * Node's https.request() was repeatedly receiving ECONNRESET
- * from the NAPAMS server.
- *
- * curl from the SAME GitHub Actions runner successfully gets:
- *
- * HTTP/1.1 -> 200
- * HTTP/2   -> 200
- *
- * Therefore all NAPAMS HTTP traffic is handled through curl.
- *
- * This keeps the rest of the monitor in Node.js while using
- * the networking implementation that has already been proven
- * to work against NAPAMS.
+ * HTTP REQUEST WITH RETRIES
  * ============================================================
  */
 
@@ -53,6 +31,8 @@ function request(
   attempt = 1
 ) {
 
+  const MAX_ATTEMPTS = 3;
+
   return new Promise((resolve, reject) => {
 
     console.log(
@@ -63,348 +43,182 @@ function request(
       `Node.js version: ${process.version}`
     );
 
-    const url =
-      `${BASE_URL}${path}`;
+    const req = https.request(
+      {
+        hostname: HOST,
+        port: 443,
+        path,
+        method,
+        headers,
+        timeout: 120000
+      },
 
-    const args = [
-      "--silent",
-      "--show-error",
-      "--location",
-      "--http1.1",
-      "--max-time",
-      String(Math.ceil(REQUEST_TIMEOUT / 1000)),
+      (res) => {
 
-      "--request",
-      method,
+        let data = "";
 
-      "--url",
-      url,
+        console.log(
+          `HTTP RESPONSE: ${res.statusCode}`
+        );
 
-      "--dump-header",
-      "-"
-    ];
+        console.log(
+          `HTTP VERSION: ${res.httpVersion}`
+        );
 
+        res.setEncoding("utf8");
 
-    /*
-     * Headers
-     */
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
 
-    for (
-      const [name, value] of Object.entries(headers)
-    ) {
+        res.on("end", () => {
 
-      if (
-        value === undefined ||
-        value === null
-      ) {
-        continue;
+          resolve({
+            status: res.statusCode,
+            headers: res.headers,
+            body: data
+          });
+
+        });
+
       }
-
-      args.push(
-        "--header",
-        `${name}: ${value}`
-      );
-
-    }
-
-
-    /*
-     * Body
-     */
-
-    if (body !== null) {
-
-      args.push(
-        "--data",
-        body
-      );
-
-    }
-
-
-    console.log(
-      `CURL REQUEST: ${method} ${url}`
     );
 
 
-    execFile(
-      "curl",
-      args,
-      {
-        encoding: "utf8",
-        maxBuffer: 20 * 1024 * 1024,
-        timeout: REQUEST_TIMEOUT + 10000
-      },
-      (error, stdout, stderr) => {
+    /*
+     * SOCKET DIAGNOSTICS
+     */
 
-        if (error) {
+    req.on("socket", (socket) => {
 
-          console.error(
-            `CURL ERROR: ${error.code || error.message}`
+      console.log(
+        "Socket assigned."
+      );
+
+      socket.on("connect", () => {
+
+        console.log(
+          "TCP connection established."
+        );
+
+      });
+
+      socket.on("secureConnect", () => {
+
+        console.log(
+          "TLS secure connection established."
+        );
+
+        try {
+
+          console.log(
+            `TLS protocol: ${socket.getProtocol()}`
           );
 
-          if (stderr) {
+          console.log(
+            `TLS cipher: ${
+              socket.getCipher()?.name ||
+              "Unknown"
+            }`
+          );
 
-            console.error(
-              stderr.trim()
-            );
+          console.log(
+            `TLS authorized: ${socket.authorized}`
+          );
 
-          }
+        } catch (error) {
 
-
-          /*
-           * Retry failed requests.
-           */
-
-          if (
-            attempt <
-            MAX_ATTEMPTS
-          ) {
-
-            const delay =
-              attempt * 3000;
-
-            console.log(
-              `Retrying in ${delay / 1000} seconds...`
-            );
-
-            setTimeout(() => {
-
-              request(
-                method,
-                path,
-                headers,
-                body,
-                attempt + 1
-              )
-                .then(resolve)
-                .catch(reject);
-
-            }, delay);
-
-            return;
-
-          }
-
-          reject(error);
-
-          return;
+          console.log(
+            "TLS diagnostic information unavailable."
+          );
 
         }
 
+      });
 
-        /*
-         * curl output contains:
-         *
-         * HTTP headers
-         *
-         * blank line
-         *
-         * response body
-         *
-         * Because --location is enabled, there can be more
-         * than one header block.
-         */
+      socket.on("error", (error) => {
 
-        const parsed =
-          parseCurlResponse(
-            stdout
-          );
-
-
-        console.log(
-          `HTTP RESPONSE: ${parsed.status}`
+        console.error(
+          `SOCKET ERROR: ${error.code || error.message}`
         );
 
-        console.log(
-          `HTTP VERSION: ${parsed.httpVersion || "Unknown"}`
-        );
+      });
+
+    });
+
+
+    /*
+     * REQUEST ERROR
+     */
+
+    req.on("error", (error) => {
+
+      console.error(
+        `HTTP ERROR: ${error.code || error.message}`
+      );
+
+      if (attempt < MAX_ATTEMPTS) {
+
+        const delay =
+          attempt * 3000;
 
         console.log(
-          `RESPONSE SIZE: ${Buffer.byteLength(
-            parsed.body,
-            "utf8"
-          )} bytes`
+          `Retrying in ${delay / 1000} seconds...`
         );
 
+        setTimeout(() => {
 
-        resolve(parsed);
+          request(
+            method,
+            path,
+            headers,
+            body,
+            attempt + 1
+          )
+            .then(resolve)
+            .catch(reject);
+
+        }, delay);
+
+        return;
 
       }
-    );
+
+      reject(error);
+
+    });
+
+
+    /*
+     * TIMEOUT
+     */
+
+    req.on("timeout", () => {
+
+      console.error(
+        "REQUEST TIMEOUT after 120 seconds"
+      );
+
+      req.destroy(
+        new Error(
+          "NAPAMS request timed out after 120 seconds."
+        )
+      );
+
+    });
+
+
+    /*
+     * SEND BODY
+     */
+
+    if (body) {
+      req.write(body);
+    }
+
+    req.end();
 
   });
-
-}
-
-
-/*
- * ============================================================
- * PARSE CURL RESPONSE
- * ============================================================
- */
-
-function parseCurlResponse(output) {
-
-  const lines =
-    output.split(/\r?\n/);
-
-  let status = 0;
-
-  let httpVersion = "";
-
-  const responseHeaders = {};
-
-  let bodyStart = -1;
-
-
-  /*
-   * Find the final HTTP response header block.
-   *
-   * curl --location can output multiple response blocks
-   * when redirects occur.
-   */
-
-  let headerStart = -1;
-
-  for (
-    let i = 0;
-    i < lines.length;
-    i++
-  ) {
-
-    if (
-      /^HTTP\/\d(?:\.\d)?\s+\d{3}/i.test(
-        lines[i]
-      )
-    ) {
-
-      headerStart = i;
-
-    }
-
-  }
-
-
-  if (
-    headerStart >= 0
-  ) {
-
-    const statusLine =
-      lines[headerStart];
-
-    const statusMatch =
-      statusLine.match(
-        /^HTTP\/([0-9.]+)\s+(\d{3})/i
-      );
-
-    if (statusMatch) {
-
-      httpVersion =
-        statusMatch[1];
-
-      status =
-        Number(
-          statusMatch[2]
-        );
-
-    }
-
-
-    for (
-      let i = headerStart + 1;
-      i < lines.length;
-      i++
-    ) {
-
-      const line =
-        lines[i];
-
-      if (
-        line.trim() === ""
-      ) {
-
-        bodyStart =
-          i + 1;
-
-        break;
-
-      }
-
-
-      const separator =
-        line.indexOf(":");
-
-      if (
-        separator <= 0
-      ) {
-        continue;
-      }
-
-      const name =
-        line
-          .slice(0, separator)
-          .trim()
-          .toLowerCase();
-
-      const value =
-        line
-          .slice(separator + 1)
-          .trim();
-
-
-      /*
-       * Preserve multiple Set-Cookie headers.
-       */
-
-      if (
-        name === "set-cookie"
-      ) {
-
-        if (
-          !responseHeaders[name]
-        ) {
-
-          responseHeaders[name] = [];
-
-        }
-
-        responseHeaders[name].push(
-          value
-        );
-
-      } else {
-
-        responseHeaders[name] =
-          value;
-
-      }
-
-    }
-
-  }
-
-
-  /*
-   * If headers could not be identified, return the complete
-   * output as body so the caller can diagnose the response.
-   */
-
-  const body =
-    bodyStart >= 0
-      ? lines
-          .slice(bodyStart)
-          .join("\n")
-      : output;
-
-
-  return {
-    status,
-    headers:
-      responseHeaders,
-    body,
-    httpVersion
-  };
 
 }
 
@@ -443,10 +257,9 @@ function getCookies(setCookie) {
 
 function getAntiforgeryToken(html) {
 
-  const match =
-    html.match(
-      /name=["']__RequestVerificationToken["'][^>]*value=["']([^"']+)["']/i
-    );
+  const match = html.match(
+    /name=["']__RequestVerificationToken["'][^>]*value=["']([^"']+)["']/i
+  );
 
   return match
     ? match[1]
@@ -491,9 +304,7 @@ function extractSubmittedApplicationNumbers(html) {
 
   for (const row of rows) {
 
-    if (
-      !/View Status/i.test(row)
-    ) {
+    if (!/View Status/i.test(row)) {
       continue;
     }
 
@@ -507,14 +318,8 @@ function extractSubmittedApplicationNumbers(html) {
       const number =
         value.toUpperCase();
 
-      if (
-        !numbers.includes(number)
-      ) {
-
-        numbers.push(
-          number
-        );
-
+      if (!numbers.includes(number)) {
+        numbers.push(number);
       }
 
     }
@@ -526,9 +331,7 @@ function extractSubmittedApplicationNumbers(html) {
    * Fallback.
    */
 
-  if (
-    numbers.length === 0
-  ) {
+  if (numbers.length === 0) {
 
     const matches =
       html.match(
@@ -540,14 +343,8 @@ function extractSubmittedApplicationNumbers(html) {
       const number =
         value.toUpperCase();
 
-      if (
-        !numbers.includes(number)
-      ) {
-
-        numbers.push(
-          number
-        );
-
+      if (!numbers.includes(number)) {
+        numbers.push(number);
       }
 
     }
@@ -589,8 +386,7 @@ function extractApplicationIds(html) {
       id
     ) {
 
-      ids[index] =
-        id;
+      ids[index] = id;
 
     }
 
@@ -666,9 +462,7 @@ function getStageColor(stage) {
 function normalizeStageName(name) {
 
   const value =
-    String(
-      name || ""
-    ).trim();
+    String(name || "").trim();
 
   if (!value) {
     return "Internal Review";
@@ -782,7 +576,7 @@ async function checkApplicationStatus(
         "application/json, text/plain, */*",
 
       "Referer":
-        `${BASE_URL}${APPLICATIONS_PATH}`,
+        "https://registration.nafdac.gov.ng/Application/FormApplication/Applications",
 
       "X-Requested-With":
         "XMLHttpRequest"
@@ -851,6 +645,17 @@ function loadCompanies() {
  * ============================================================
  * LOGIN TO ONE COMPANY
  * ============================================================
+ *
+ * IMPORTANT:
+ *
+ * NAPAMS sometimes returns HTTP 400 when logging in even
+ * though the credentials are correct.
+ *
+ * Manually refreshing the login page and logging in again
+ * normally fixes it.
+ *
+ * This function now automatically does the same thing.
+ * ============================================================
  */
 
 async function loginCompany(
@@ -874,132 +679,348 @@ async function loginCompany(
 
 
   /*
-   * 1. Login page
+   * NAPAMS login retry count.
+   *
+   * Each attempt gets:
+   *
+   * - a completely fresh login page
+   * - a fresh antiforgery token
+   * - fresh cookies
+   *
+   * This is equivalent to manually refreshing
+   * the NAPAMS login page before trying again.
    */
 
-  console.log(
-    "Fetching NAPAMS login page..."
-  );
+  const MAX_LOGIN_ATTEMPTS = 4;
 
-  const loginPage =
-    await request(
-      "GET",
-      LOGIN_PATH,
-      {
-        "User-Agent":
-          userAgent,
+  let cookies = "";
 
-        "Accept":
-          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-      }
-    );
-
-  console.log(
-    "LOGIN PAGE STATUS:",
-    loginPage.status
-  );
-
-  const token =
-    getAntiforgeryToken(
-      loginPage.body
-    );
-
-  const initialCookies =
-    getCookies(
-      loginPage.headers[
-        "set-cookie"
-      ]
-    );
-
-  if (!token) {
-
-    throw new Error(
-      "Antiforgery token was not found."
-    );
-
-  }
+  let authenticated = false;
 
 
-  /*
-   * 2. Login
-   */
-
-  console.log(
-    "Submitting Admin login..."
-  );
-
-  const form =
-    new URLSearchParams();
-
-  form.append(
-    "ReturnUrl",
-    ""
-  );
-
-  form.append(
-    "Username",
-    tin
-  );
-
-  form.append(
-    "Password",
-    password
-  );
-
-  form.append(
-    "buttonFunc",
-    "admin"
-  );
-
-  form.append(
-    "__RequestVerificationToken",
-    token
-  );
-
-  const loginResponse =
-    await request(
-      "POST",
-      LOGIN_PATH,
-      {
-        "User-Agent":
-          userAgent,
-
-        "Content-Type":
-          "application/x-www-form-urlencoded",
-
-        "Content-Length":
-          Buffer.byteLength(
-            form.toString()
-          ),
-
-        "Cookie":
-          initialCookies,
-
-        "Referer":
-          `${BASE_URL}${LOGIN_PATH}`,
-
-        "Origin":
-          BASE_URL,
-
-        "Accept":
-          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-      },
-      form.toString()
-    );
-
-  console.log(
-    "LOGIN STATUS:",
-    loginResponse.status
-  );
-
-  /*
-   * ASP.NET Core normally redirects after successful login.
-   */
-
-  if (
-    loginResponse.status !== 302 &&
-    loginResponse.status !== 303
+  for (
+    let loginAttempt = 1;
+    loginAttempt <= MAX_LOGIN_ATTEMPTS;
+    loginAttempt++
   ) {
+
+    console.log(
+      `\nLOGIN ATTEMPT ${loginAttempt}/${MAX_LOGIN_ATTEMPTS}`
+    );
+
+
+    /*
+     * ========================================================
+     * 1. FRESH LOGIN PAGE
+     * ========================================================
+     */
+
+    console.log(
+      "Fetching NAPAMS login page..."
+    );
+
+    const loginPage =
+      await request(
+        "GET",
+        LOGIN_PATH,
+        {
+          "User-Agent":
+            userAgent,
+
+          "Accept":
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        }
+      );
+
+    console.log(
+      "LOGIN PAGE STATUS:",
+      loginPage.status
+    );
+
+    if (
+      loginPage.status !==
+      200
+    ) {
+
+      console.log(
+        `Login page returned HTTP ${loginPage.status}`
+      );
+
+      if (
+        loginAttempt <
+        MAX_LOGIN_ATTEMPTS
+      ) {
+
+        const delay =
+          loginAttempt * 3000;
+
+        console.log(
+          `Refreshing again in ${delay / 1000} seconds...`
+        );
+
+        await new Promise(
+          (resolve) =>
+            setTimeout(
+              resolve,
+              delay
+            )
+        );
+
+        continue;
+
+      }
+
+      throw new Error(
+        `Could not load NAPAMS login page. HTTP ${loginPage.status}`
+      );
+
+    }
+
+
+    /*
+     * ========================================================
+     * 2. FRESH ANTIFORGERY TOKEN
+     * ========================================================
+     */
+
+    const token =
+      getAntiforgeryToken(
+        loginPage.body
+      );
+
+
+    /*
+     * ========================================================
+     * 3. FRESH LOGIN COOKIES
+     * ========================================================
+     */
+
+    const initialCookies =
+      getCookies(
+        loginPage.headers[
+          "set-cookie"
+        ]
+      );
+
+
+    if (!token) {
+
+      console.log(
+        "Antiforgery token was not found."
+      );
+
+      if (
+        loginAttempt <
+        MAX_LOGIN_ATTEMPTS
+      ) {
+
+        console.log(
+          "Refreshing login page to obtain a new token..."
+        );
+
+        await new Promise(
+          (resolve) =>
+            setTimeout(
+              resolve,
+              3000
+            )
+        );
+
+        continue;
+
+      }
+
+      throw new Error(
+        "Antiforgery token was not found after multiple login page refreshes."
+      );
+
+    }
+
+    console.log(
+      "Fresh antiforgery token obtained."
+    );
+
+
+    /*
+     * ========================================================
+     * 4. LOGIN FORM
+     * ========================================================
+     */
+
+    const form =
+      new URLSearchParams();
+
+    form.append(
+      "ReturnUrl",
+      ""
+    );
+
+    form.append(
+      "Username",
+      tin
+    );
+
+    form.append(
+      "Password",
+      password
+    );
+
+    form.append(
+      "buttonFunc",
+      "admin"
+    );
+
+    form.append(
+      "__RequestVerificationToken",
+      token
+    );
+
+
+    /*
+     * ========================================================
+     * 5. SUBMIT LOGIN
+     * ========================================================
+     */
+
+    console.log(
+      "Submitting Admin login..."
+    );
+
+    const loginResponse =
+      await request(
+        "POST",
+        LOGIN_PATH,
+        {
+          "User-Agent":
+            userAgent,
+
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+
+          "Content-Length":
+            Buffer.byteLength(
+              form.toString()
+            ),
+
+          "Cookie":
+            initialCookies,
+
+          "Referer":
+            "https://registration.nafdac.gov.ng/Applicant/Login",
+
+          "Origin":
+            "https://registration.nafdac.gov.ng",
+
+          "Accept":
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        },
+        form.toString()
+      );
+
+    console.log(
+      "LOGIN STATUS:",
+      loginResponse.status
+    );
+
+
+    /*
+     * ========================================================
+     * 6. SUCCESSFUL LOGIN
+     * ========================================================
+     */
+
+    if (
+      loginResponse.status ===
+        302 ||
+      loginResponse.status ===
+        303
+    ) {
+
+      const authCookies =
+        getCookies(
+          loginResponse.headers[
+            "set-cookie"
+          ]
+        );
+
+      cookies = [
+        initialCookies,
+        authCookies
+      ]
+        .filter(Boolean)
+        .join("; ");
+
+      authenticated = true;
+
+      console.log(
+        "Authenticated session established."
+      );
+
+      break;
+
+    }
+
+
+    /*
+     * ========================================================
+     * 7. HTTP 400
+     * ========================================================
+     *
+     * This is the important fix.
+     *
+     * Instead of immediately failing, we behave like a user
+     * manually refreshing the NAPAMS page and logging in again.
+     */
+
+    if (
+      loginResponse.status ===
+      400
+    ) {
+
+      console.log(
+        "NAPAMS returned HTTP 400 Bad Request."
+      );
+
+      if (
+        loginAttempt <
+        MAX_LOGIN_ATTEMPTS
+      ) {
+
+        const delay =
+          loginAttempt * 3000;
+
+        console.log(
+          "Refreshing login page and generating a new session..."
+        );
+
+        console.log(
+          `Retrying login in ${delay / 1000} seconds...`
+        );
+
+        await new Promise(
+          (resolve) =>
+            setTimeout(
+              resolve,
+              delay
+            )
+        );
+
+        continue;
+
+      }
+
+      throw new Error(
+        `NAPAMS login returned HTTP 400 after ${MAX_LOGIN_ATTEMPTS} fresh login attempts.`
+      );
+
+    }
+
+
+    /*
+     * ========================================================
+     * 8. OTHER LOGIN ERRORS
+     * ========================================================
+     */
 
     throw new Error(
       `NAPAMS login failed. HTTP ${loginResponse.status}`
@@ -1007,27 +1028,29 @@ async function loginCompany(
 
   }
 
-  const authCookies =
-    getCookies(
-      loginResponse.headers[
-        "set-cookie"
-      ]
+
+  /*
+   * ==========================================================
+   * MAKE SURE LOGIN SUCCEEDED
+   * ==========================================================
+   */
+
+  if (
+    !authenticated ||
+    !cookies
+  ) {
+
+    throw new Error(
+      "NAPAMS login did not establish an authenticated session."
     );
 
-  const cookies = [
-    initialCookies,
-    authCookies
-  ]
-    .filter(Boolean)
-    .join("; ");
-
-  console.log(
-    "Authenticated session established."
-  );
+  }
 
 
   /*
-   * 3. Applications page
+   * ==========================================================
+   * 9. OPEN APPLICATIONS
+   * ==========================================================
    */
 
   console.log(
@@ -1046,7 +1069,7 @@ async function loginCompany(
           cookies,
 
         "Accept":
-          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+          "text/html"
       }
     );
 
@@ -1566,8 +1589,7 @@ function saveWebsiteData(
   fs.mkdirSync(
     "public",
     {
-      recursive:
-        true
+      recursive: true
     }
   );
 
