@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-24T11:46:25.000Z",
+  "updatedAt": "2026-08-24T11:55:11.535Z",
   "totalCompanies": 3,
   "totalApplications": 6,
   "companies": [
@@ -461,11 +461,11 @@
     },
     {
       "id": "company_03",
-      "name": "Company Name 3",
+      "name": "M & B ENTERPRISES",
       "applications": [
         {
           "companyId": "company_03",
-          "companyName": "Company Name 3",
+          "companyName": "M & B ENTERPRISES",
           "applicationNumber": "Unknown",
           "appID": "436040",
           "name": "BASMUZ WATER",
@@ -576,7 +576,7 @@
         },
         {
           "companyId": "company_03",
-          "companyName": "Company Name 3",
+          "companyName": "M & B ENTERPRISES",
           "applicationNumber": "Unknown",
           "appID": "436037",
           "name": "BASMUZ WATER",
@@ -1135,7 +1135,7 @@
     },
     {
       "companyId": "company_03",
-      "companyName": "Company Name 3",
+      "companyName": "M & B ENTERPRISES",
       "applicationNumber": "Unknown",
       "appID": "436040",
       "name": "BASMUZ WATER",
@@ -1246,7 +1246,7 @@
     },
     {
       "companyId": "company_03",
-      "companyName": "Company Name 3",
+      "companyName": "M & B ENTERPRISES",
       "applicationNumber": "Unknown",
       "appID": "436037",
       "name": "BASMUZ WATER",
