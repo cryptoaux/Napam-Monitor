@@ -81,6 +81,21 @@ jobs:
           COMPANY_4_TIN: ${{ secrets.COMPANY_4_TIN }}
           COMPANY_4_PASSWORD: ${{ secrets.COMPANY_4_PASSWORD }}
 
+          COMPANY_5_TIN: ${{ secrets.COMPANY_5_TIN }}
+          COMPANY_5_PASSWORD: ${{ secrets.COMPANY_5_PASSWORD }}
+
+          COMPANY_6_TIN: ${{ secrets.COMPANY_6_TIN }}
+          COMPANY_6_PASSWORD: ${{ secrets.COMPANY_6_PASSWORD }}
+
+          COMPANY_7_TIN: ${{ secrets.COMPANY_7_TIN }}
+          COMPANY_7_PASSWORD: ${{ secrets.COMPANY_7_PASSWORD }}
+
+          COMPANY_8_TIN: ${{ secrets.COMPANY_8_TIN }}
+          COMPANY_8_PASSWORD: ${{ secrets.COMPANY_8_PASSWORD }}
+
+          COMPANY_9_TIN: ${{ secrets.COMPANY_9_TIN }}
+          COMPANY_9_PASSWORD: ${{ secrets.COMPANY_9_PASSWORD }}
+
       - name: Check generated data
         run: |
           echo "========================================"
