@@ -17,10 +17,40 @@
     "tinSecret": "COMPANY_3_TIN",
     "passwordSecret": "COMPANY_3_PASSWORD"
   },
-   {
+  {
     "id": "company_04",
     "name": "BISLO GLOBAL VENTURE",
     "tinSecret": "COMPANY_4_TIN",
     "passwordSecret": "COMPANY_4_PASSWORD"
+  },
+  {
+    "id": "company_05",
+    "name": "ROCKFLOW SOLUTIONS INTEGRATED ENTERPRISES",
+    "tinSecret": "COMPANY_5_TIN",
+    "passwordSecret": "COMPANY_5_PASSWORD"
+  },
+  {
+    "id": "company_06",
+    "name": "L - TEE GLOBAL RESOURCES",
+    "tinSecret": "COMPANY_6_TIN",
+    "passwordSecret": "COMPANY_6_PASSWORD"
+  },
+  {
+    "id": "company_07",
+    "name": "DOLABS MEGABIZ VENTURES",
+    "tinSecret": "COMPANY_7_TIN",
+    "passwordSecret": "COMPANY_7_PASSWORD"
+  },
+  {
+    "id": "company_08",
+    "name": "PROSPEROUS-GREENFIELD COMPANY LTD",
+    "tinSecret": "COMPANY_8_TIN",
+    "passwordSecret": "COMPANY_8_PASSWORD"
+  },
+  {
+    "id": "company_09",
+    "name": "MODADE GLOBAL LIMITED",
+    "tinSecret": "COMPANY_9_TIN",
+    "passwordSecret": "COMPANY_9_PASSWORD"
   }
 ]
