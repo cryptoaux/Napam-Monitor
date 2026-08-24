@@ -27,24 +27,6 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Test NAPAMS connectivity
-        run: |
-          echo "========================================"
-          echo "TESTING NAPAMS CONNECTIVITY"
-          echo "========================================"
-
-          echo "DNS lookup:"
-          getent hosts registration.nafdac.gov.ng || true
-
-          echo ""
-          echo "Testing HTTPS connection:"
-          curl -I -L --max-time 30 \
-            --connect-timeout 15 \
-            https://registration.nafdac.gov.ng/
-
-          echo ""
-          echo "NAPAMS connectivity test completed."
-
       - name: Run NAPAMS monitor
         run: npm run monitor
         env:
