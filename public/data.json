@@ -1,15 +1,15 @@
 {
-  "updatedAt": "2026-08-24T08:21:17.705Z",
+  "updatedAt": "2026-08-24T08:47:21.925Z",
   "totalCompanies": 2,
   "totalApplications": 4,
   "companies": [
     {
       "id": "company_01",
-      "name": "Company Name 1",
+      "name": "KASFOL FOODS AND CONFECTIONERIES",
       "applications": [
         {
           "companyId": "company_01",
-          "companyName": "Company Name 1",
+          "companyName": "KASFOL FOODS AND CONFECTIONERIES",
           "applicationNumber": "NF-BR-517353",
           "appID": "517353",
           "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
@@ -120,7 +120,7 @@
         },
         {
           "companyId": "company_01",
-          "companyName": "Company Name 1",
+          "companyName": "KASFOL FOODS AND CONFECTIONERIES",
           "applicationNumber": "PEX-BR-517870",
           "appID": "517870",
           "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
@@ -233,11 +233,11 @@
     },
     {
       "id": "company_02",
-      "name": "Company Name 2",
+      "name": "SHOLAHAM OIL AND GAS LIMITED",
       "applications": [
         {
           "companyId": "company_02",
-          "companyName": "Company Name 2",
+          "companyName": "SHOLAHAM OIL AND GAS LIMITED",
           "applicationNumber": "PEX-BR-518391",
           "appID": "518391",
           "name": "SHOLAHAM BRAED",
@@ -348,7 +348,7 @@
         },
         {
           "companyId": "company_02",
-          "companyName": "Company Name 2",
+          "companyName": "SHOLAHAM OIL AND GAS LIMITED",
           "applicationNumber": "NF-BR-518269",
           "appID": "518269",
           "name": "SHOLAHAM BRAED",
@@ -463,7 +463,7 @@
   "applications": [
     {
       "companyId": "company_01",
-      "companyName": "Company Name 1",
+      "companyName": "KASFOL FOODS AND CONFECTIONERIES",
       "applicationNumber": "NF-BR-517353",
       "appID": "517353",
       "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
@@ -574,7 +574,7 @@
     },
     {
       "companyId": "company_01",
-      "companyName": "Company Name 1",
+      "companyName": "KASFOL FOODS AND CONFECTIONERIES",
       "applicationNumber": "PEX-BR-517870",
       "appID": "517870",
       "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
@@ -685,7 +685,7 @@
     },
     {
       "companyId": "company_02",
-      "companyName": "Company Name 2",
+      "companyName": "SHOLAHAM OIL AND GAS LIMITED",
       "applicationNumber": "PEX-BR-518391",
       "appID": "518391",
       "name": "SHOLAHAM BRAED",
@@ -796,7 +796,7 @@
     },
     {
       "companyId": "company_02",
-      "companyName": "Company Name 2",
+      "companyName": "SHOLAHAM OIL AND GAS LIMITED",
       "applicationNumber": "NF-BR-518269",
       "appID": "518269",
       "name": "SHOLAHAM BRAED",
