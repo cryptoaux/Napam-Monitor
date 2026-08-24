@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Install dependencies
         run: npm install
@@ -70,15 +69,12 @@ jobs:
       - name: Run NAPAMS monitor
         run: npm run monitor
         env:
-          # Company 1
           COMPANY_1_TIN: ${{ secrets.COMPANY_1_TIN }}
           COMPANY_1_PASSWORD: ${{ secrets.COMPANY_1_PASSWORD }}
 
-          # Company 2
           COMPANY_2_TIN: ${{ secrets.COMPANY_2_TIN }}
           COMPANY_2_PASSWORD: ${{ secrets.COMPANY_2_PASSWORD }}
 
-          # Company 3
           COMPANY_3_TIN: ${{ secrets.COMPANY_3_TIN }}
           COMPANY_3_PASSWORD: ${{ secrets.COMPANY_3_PASSWORD }}
 
