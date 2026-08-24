@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm install
@@ -27,26 +28,44 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Test NAPAMS connectivity
+      - name: NAPAMS connectivity test
         run: |
           echo "========================================"
           echo "NAPAMS CONNECTIVITY TEST"
           echo "========================================"
 
-          echo "Testing IPv4..."
-          curl -4 -v \
-            --connect-timeout 30 \
-            --max-time 60 \
+          echo ""
+          echo "Testing HTTP/1.1..."
+
+          curl --http1.1 -v --max-time 180 \
             https://registration.nafdac.gov.ng/Applicant/Login \
-            -o /tmp/napams-login.html
+            -o /tmp/napams-http11.html
 
-          echo "Curl exit code: $?"
+          HTTP11_EXIT=$?
 
-          echo "Response file:"
-          ls -lh /tmp/napams-login.html
+          echo "HTTP/1.1 exit code: $HTTP11_EXIT"
+          echo "HTTP/1.1 response size:"
+          wc -c /tmp/napams-http11.html 2>/dev/null || true
 
-          echo "Response size:"
-          wc -c /tmp/napams-login.html
+          echo ""
+          echo "Testing HTTP/2..."
+
+          curl --http2 -v --max-time 180 \
+            https://registration.nafdac.gov.ng/Applicant/Login \
+            -o /tmp/napams-http2.html
+
+          HTTP2_EXIT=$?
+
+          echo "HTTP/2 exit code: $HTTP2_EXIT"
+          echo "HTTP/2 response size:"
+          wc -c /tmp/napams-http2.html 2>/dev/null || true
+
+          echo ""
+          echo "========================================"
+          echo "CONNECTIVITY TEST COMPLETE"
+          echo "HTTP/1.1 exit: $HTTP11_EXIT"
+          echo "HTTP/2 exit: $HTTP2_EXIT"
+          echo "========================================"
 
       - name: Run NAPAMS monitor
         run: npm run monitor
@@ -64,21 +83,30 @@ jobs:
           COMPANY_3_PASSWORD: ${{ secrets.COMPANY_3_PASSWORD }}
 
       - name: Check generated data
-        if: always()
         run: |
-          echo "Checking for public/data.json..."
+          echo "========================================"
+          echo "CHECKING GENERATED DATA"
+          echo "========================================"
 
-          if [ -d public ]; then
-            ls -la public
-          else
-            echo "public directory does not exist."
-          fi
+          echo "Checking for public/data.json..."
+          ls -la public
 
           test -f public/data.json
 
+          echo ""
+          echo "data.json exists:"
+          wc -c public/data.json
+
+          echo ""
+          echo "First 30 lines:"
+          head -30 public/data.json
+
       - name: Save latest application data
-        if: success()
         run: |
+          echo "========================================"
+          echo "SAVING APPLICATION DATA"
+          echo "========================================"
+
           git config user.name "NAPAMS Monitor"
           git config user.email "actions@github.com"
 
@@ -89,4 +117,24 @@ jobs:
           else
             git commit -m "Update NAPAMS application status"
             git push
+          fi
+
+      - name: Playtest website
+        run: |
+          echo "========================================"
+          echo "PLAYTEST"
+          echo "========================================"
+
+          if [ -f package.json ]; then
+            echo "package.json found."
+
+            if npm run | grep -q "playtest"; then
+              npm run playtest
+            else
+              echo "No playtest script found in package.json."
+              echo "Skipping playtest."
+            fi
+          else
+            echo "package.json not found."
+            echo "Skipping playtest."
           fi
