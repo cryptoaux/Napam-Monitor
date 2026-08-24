@@ -52,5 +52,95 @@
     "name": "MODADE GLOBAL LIMITED",
     "tinSecret": "COMPANY_9_TIN",
     "passwordSecret": "COMPANY_9_PASSWORD"
+  },
+  {
+    "id": "company_10",
+    "name": "ROCKFLOW INTEGRATED SERVICES LTD",
+    "tinSecret": "COMPANY_10_TIN",
+    "passwordSecret": "COMPANY_10_PASSWORD"
+  },
+  {
+    "id": "company_11",
+    "name": "ADE-YUSMOR GLOBAL BUSINESS VENTURES",
+    "tinSecret": "COMPANY_11_TIN",
+    "passwordSecret": "COMPANY_11_PASSWORD"
+  },
+  {
+    "id": "company_12",
+    "name": "DORSOLAJ SERVICES NIGERIA ENTERPRISES",
+    "tinSecret": "COMPANY_12_TIN",
+    "passwordSecret": "COMPANY_12_PASSWORD"
+  },
+  {
+    "id": "company_13",
+    "name": "NATHAN B NIGERIA LIMITED",
+    "tinSecret": "COMPANY_13_TIN",
+    "passwordSecret": "COMPANY_13_PASSWORD"
+  },
+  {
+    "id": "company_14",
+    "name": "WALEGOLD OIL & GAS LIMITED",
+    "tinSecret": "COMPANY_14_TIN",
+    "passwordSecret": "COMPANY_14_PASSWORD"
+  },
+  {
+    "id": "company_15",
+    "name": "AYO-MAT COMMERCIAL ENTERPRISES",
+    "tinSecret": "COMPANY_15_TIN",
+    "passwordSecret": "COMPANY_15_PASSWORD"
+  },
+  {
+    "id": "company_16",
+    "name": "TERSly LIMITED",
+    "tinSecret": "COMPANY_16_TIN",
+    "passwordSecret": "COMPANY_16_PASSWORD"
+  },
+  {
+    "id": "company_17",
+    "name": "OJA GLOBAL VENTURES LTD",
+    "tinSecret": "COMPANY_17_TIN",
+    "passwordSecret": "COMPANY_17_PASSWORD"
+  },
+  {
+    "id": "company_18",
+    "name": "ALEXANDER GLOBAL BUSINESS VENTURES",
+    "tinSecret": "COMPANY_18_TIN",
+    "passwordSecret": "COMPANY_18_PASSWORD"
+  },
+  {
+    "id": "company_19",
+    "name": "OMODUROJAYE ENTERPRISES",
+    "tinSecret": "COMPANY_19_TIN",
+    "passwordSecret": "COMPANY_19_PASSWORD"
+  },
+  {
+    "id": "company_20",
+    "name": "KEEN & TENTEM GLOBAL BUSINESS VENTURES",
+    "tinSecret": "COMPANY_20_TIN",
+    "passwordSecret": "COMPANY_20_PASSWORD"
+  },
+  {
+    "id": "company_21",
+    "name": "MERIS DRINKS AND CONFECTIONERIES",
+    "tinSecret": "COMPANY_21_TIN",
+    "passwordSecret": "COMPANY_21_PASSWORD"
+  },
+  {
+    "id": "company_22",
+    "name": "AFRIAURA PRIME ESSENTIALS LTD",
+    "tinSecret": "COMPANY_22_TIN",
+    "passwordSecret": "COMPANY_22_PASSWORD"
+  },
+  {
+    "id": "company_23",
+    "name": "EBEN-GOSHEN VENTURES",
+    "tinSecret": "COMPANY_23_TIN",
+    "passwordSecret": "COMPANY_23_PASSWORD"
+  },
+  {
+    "id": "company_24",
+    "name": "DOMINANT PROPERTIES",
+    "tinSecret": "COMPANY_24_TIN",
+    "passwordSecret": "COMPANY_24_PASSWORD"
   }
 ]
