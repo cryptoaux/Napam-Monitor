@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T14:23:04.472Z",
+  "updatedAt": "2026-08-26T01:51:34.762Z",
   "totalCompanies": 21,
   "totalApplications": 41,
   "companies": [
@@ -58,7 +58,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (144/40 Days)",
+              "duration": " (145/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -151,7 +151,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (278/20 Days)",
+              "duration": " (279/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -160,7 +160,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (278/20 Days)",
+              "duration": " (279/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -268,7 +268,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (115/20 Days)",
+              "duration": " (116/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -277,7 +277,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (115/20 Days)",
+              "duration": " (116/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -388,7 +388,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (149/20 Days)",
+              "duration": " (150/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -514,7 +514,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (167/40 Days)",
+              "duration": " (168/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -598,7 +598,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (783/10 Days)",
+              "duration": " (784/10 Days)",
               "trackingApplicationStage": 2,
               "currentStageSet": false
             },
@@ -742,7 +742,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (41/40 Days)",
+              "duration": " (42/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -841,7 +841,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -850,7 +850,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -958,7 +958,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (278/20 Days)",
+              "duration": " (279/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -967,7 +967,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (278/20 Days)",
+              "duration": " (279/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -1087,7 +1087,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (241/40 Days)",
+              "duration": " (242/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -1186,7 +1186,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (275/20 Days)",
+              "duration": " (276/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1195,7 +1195,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (275/20 Days)",
+              "duration": " (276/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -1303,7 +1303,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (86/20 Days)",
+              "duration": " (87/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1312,7 +1312,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (86/20 Days)",
+              "duration": " (87/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -1414,7 +1414,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (86/20 Days)",
+              "duration": " (87/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1432,7 +1432,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (41/40 Days)",
+              "duration": " (42/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -1531,7 +1531,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (98/20 Days)",
+              "duration": " (99/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1549,7 +1549,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (64/40 Days)",
+              "duration": " (65/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -1642,7 +1642,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (122/20 Days)",
+              "duration": " (123/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1660,7 +1660,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (64/40 Days)",
+              "duration": " (65/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -1753,7 +1753,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (180/20 Days)",
+              "duration": " (181/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1771,7 +1771,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (64/40 Days)",
+              "duration": " (65/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -1864,7 +1864,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (180/20 Days)",
+              "duration": " (181/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1882,7 +1882,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (64/40 Days)",
+              "duration": " (65/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -1981,7 +1981,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (391/20 Days)",
+              "duration": " (392/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -1990,7 +1990,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (391/20 Days)",
+              "duration": " (392/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -2101,7 +2101,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (292/20 Days)",
+              "duration": " (293/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -2209,7 +2209,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (278/20 Days)",
+              "duration": " (279/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -2218,7 +2218,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (278/20 Days)",
+              "duration": " (279/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -2344,7 +2344,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (265/40 Days)",
+              "duration": " (266/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -2452,7 +2452,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (259/20 Days)",
+              "duration": " (260/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -2569,7 +2569,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (279/20 Days)",
+              "duration": " (280/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -2689,7 +2689,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (266/40 Days)",
+              "duration": " (267/40 Days)",
               "trackingApplicationStage": 5038,
               "currentStageSet": false
             },
@@ -2779,7 +2779,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (1215/10 Days)",
+              "duration": " (1216/10 Days)",
               "trackingApplicationStage": 2,
               "currentStageSet": false
             },
@@ -2905,7 +2905,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -2914,7 +2914,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -3016,7 +3016,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -3025,7 +3025,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -3127,7 +3127,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -3136,7 +3136,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (258/20 Days)",
+              "duration": " (259/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -3238,7 +3238,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (402/20 Days)",
+              "duration": " (403/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -3247,7 +3247,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (402/20 Days)",
+              "duration": " (403/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -3349,7 +3349,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (438/20 Days)",
+              "duration": " (439/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -3358,7 +3358,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (438/20 Days)",
+              "duration": " (439/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -3457,7 +3457,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (7/10 Days)",
+              "duration": " (8/10 Days)",
               "trackingApplicationStage": 2,
               "currentStageSet": false
             },
@@ -3568,7 +3568,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (17/10 Days)",
+              "duration": " (18/10 Days)",
               "trackingApplicationStage": 2,
               "currentStageSet": false
             },
@@ -3679,7 +3679,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (37/10 Days)",
+              "duration": " (38/10 Days)",
               "trackingApplicationStage": 2,
               "currentStageSet": false
             },
@@ -3805,7 +3805,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (131/20 Days)",
+              "duration": " (132/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -3814,7 +3814,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (131/20 Days)",
+              "duration": " (132/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -4042,7 +4042,7 @@
               "color": "GREEN",
               "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (1105/20 Days)",
+              "duration": " (1106/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -4267,7 +4267,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -4276,7 +4276,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -4378,7 +4378,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -4387,7 +4387,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -4489,7 +4489,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -4498,7 +4498,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -4600,7 +4600,7 @@
               "color": "YELLOW",
               "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 9,
               "currentStageSet": true
             },
@@ -4609,7 +4609,7 @@
               "color": "RED",
               "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
               "status": "",
-              "duration": " (6/20 Days)",
+              "duration": " (7/20 Days)",
               "trackingApplicationStage": 5039,
               "currentStageSet": false
             },
@@ -4733,7 +4733,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (144/40 Days)",
+          "duration": " (145/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -4826,7 +4826,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (278/20 Days)",
+          "duration": " (279/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -4835,7 +4835,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (278/20 Days)",
+          "duration": " (279/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -4937,7 +4937,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (115/20 Days)",
+          "duration": " (116/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -4946,7 +4946,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (115/20 Days)",
+          "duration": " (116/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -5057,7 +5057,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (149/20 Days)",
+          "duration": " (150/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -5177,7 +5177,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (167/40 Days)",
+          "duration": " (168/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -5261,7 +5261,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (783/10 Days)",
+          "duration": " (784/10 Days)",
           "trackingApplicationStage": 2,
           "currentStageSet": false
         },
@@ -5399,7 +5399,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (41/40 Days)",
+          "duration": " (42/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -5492,7 +5492,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -5501,7 +5501,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -5603,7 +5603,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (278/20 Days)",
+          "duration": " (279/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -5612,7 +5612,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (278/20 Days)",
+          "duration": " (279/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -5732,7 +5732,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (241/40 Days)",
+          "duration": " (242/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -5825,7 +5825,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (275/20 Days)",
+          "duration": " (276/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -5834,7 +5834,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (275/20 Days)",
+          "duration": " (276/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -5936,7 +5936,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (86/20 Days)",
+          "duration": " (87/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -5945,7 +5945,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (86/20 Days)",
+          "duration": " (87/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -6047,7 +6047,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (86/20 Days)",
+          "duration": " (87/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6065,7 +6065,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (41/40 Days)",
+          "duration": " (42/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -6158,7 +6158,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (98/20 Days)",
+          "duration": " (99/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6176,7 +6176,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (64/40 Days)",
+          "duration": " (65/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -6269,7 +6269,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (122/20 Days)",
+          "duration": " (123/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6287,7 +6287,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (64/40 Days)",
+          "duration": " (65/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -6380,7 +6380,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (180/20 Days)",
+          "duration": " (181/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6398,7 +6398,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (64/40 Days)",
+          "duration": " (65/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -6491,7 +6491,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (180/20 Days)",
+          "duration": " (181/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6509,7 +6509,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (64/40 Days)",
+          "duration": " (65/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -6602,7 +6602,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (391/20 Days)",
+          "duration": " (392/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6611,7 +6611,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (391/20 Days)",
+          "duration": " (392/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -6722,7 +6722,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (292/20 Days)",
+          "duration": " (293/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -6824,7 +6824,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (278/20 Days)",
+          "duration": " (279/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -6833,7 +6833,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (278/20 Days)",
+          "duration": " (279/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -6953,7 +6953,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (265/40 Days)",
+          "duration": " (266/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -7055,7 +7055,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (259/20 Days)",
+          "duration": " (260/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -7166,7 +7166,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (279/20 Days)",
+          "duration": " (280/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -7286,7 +7286,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (266/40 Days)",
+          "duration": " (267/40 Days)",
           "trackingApplicationStage": 5038,
           "currentStageSet": false
         },
@@ -7370,7 +7370,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (1215/10 Days)",
+          "duration": " (1216/10 Days)",
           "trackingApplicationStage": 2,
           "currentStageSet": false
         },
@@ -7490,7 +7490,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -7499,7 +7499,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -7601,7 +7601,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -7610,7 +7610,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -7712,7 +7712,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -7721,7 +7721,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (258/20 Days)",
+          "duration": " (259/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -7823,7 +7823,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (402/20 Days)",
+          "duration": " (403/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -7832,7 +7832,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (402/20 Days)",
+          "duration": " (403/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -7934,7 +7934,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (438/20 Days)",
+          "duration": " (439/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -7943,7 +7943,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (438/20 Days)",
+          "duration": " (439/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -8036,7 +8036,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (7/10 Days)",
+          "duration": " (8/10 Days)",
           "trackingApplicationStage": 2,
           "currentStageSet": false
         },
@@ -8147,7 +8147,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (17/10 Days)",
+          "duration": " (18/10 Days)",
           "trackingApplicationStage": 2,
           "currentStageSet": false
         },
@@ -8258,7 +8258,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (37/10 Days)",
+          "duration": " (38/10 Days)",
           "trackingApplicationStage": 2,
           "currentStageSet": false
         },
@@ -8378,7 +8378,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (131/20 Days)",
+          "duration": " (132/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -8387,7 +8387,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (131/20 Days)",
+          "duration": " (132/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -8609,7 +8609,7 @@
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (1105/20 Days)",
+          "duration": " (1106/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -8822,7 +8822,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -8831,7 +8831,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -8933,7 +8933,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -8942,7 +8942,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -9044,7 +9044,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -9053,7 +9053,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
@@ -9155,7 +9155,7 @@
           "color": "YELLOW",
           "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 9,
           "currentStageSet": true
         },
@@ -9164,7 +9164,7 @@
           "color": "RED",
           "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
-          "duration": " (6/20 Days)",
+          "duration": " (7/20 Days)",
           "trackingApplicationStage": 5039,
           "currentStageSet": false
         },
