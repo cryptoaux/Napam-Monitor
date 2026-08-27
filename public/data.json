@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-08-27T14:27:50.473Z",
+  "updatedAt": "2026-08-27T20:40:28.065Z",
   "totalCompanies": 21,
-  "totalApplications": 42,
+  "totalApplications": 44,
   "companies": [
     {
       "id": "company_01",
@@ -4115,6 +4115,117 @@
           "companyId": "company_20",
           "companyName": "KEEN & TENTEM GLOBAL BUSINESS VENTURES",
           "applicationNumber": "NF-WT-265547",
+          "appID": "596223",
+          "name": "KENTEM WATER ",
+          "product": "KENTEM WATER ",
+          "currentStatus": "Submission",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": true
+            },
+            {
+              "name": "Documentation",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": false
+            },
+            {
+              "name": "Internal Review",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        },
+        {
+          "companyId": "company_20",
+          "companyName": "KEEN & TENTEM GLOBAL BUSINESS VENTURES",
+          "applicationNumber": "Unknown",
           "appID": "265547",
           "name": "KENTEM WATER ",
           "product": "KENTEM WATER ",
@@ -4345,6 +4456,117 @@
       "id": "company_22",
       "name": "AFRIAURA PRIME ESSENTIALS LTD",
       "applications": [
+        {
+          "companyId": "company_22",
+          "companyName": "AFRIAURA PRIME ESSENTIALS LTD",
+          "applicationNumber": "NF-CS-596617",
+          "appID": "596617",
+          "name": "AFRIAURA PRIME essential car wash liquid soap",
+          "product": "AFRIAURA PRIME essential car wash liquid soap",
+          "currentStatus": "Submission",
+          "currentStatusColor": "YELLOW",
+          "stages": [
+            {
+              "name": "Submission",
+              "color": "YELLOW",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 1,
+              "currentStageSet": true
+            },
+            {
+              "name": "Documentation",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/10 Days)",
+              "trackingApplicationStage": 2,
+              "currentStageSet": false
+            },
+            {
+              "name": "Vetting",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 9,
+              "currentStageSet": false
+            },
+            {
+              "name": "Internal Review",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 5039,
+              "currentStageSet": false
+            },
+            {
+              "name": "DOSSIER REVIEW CLEARANCE",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/40 Days)",
+              "trackingApplicationStage": 5038,
+              "currentStageSet": false
+            },
+            {
+              "name": "Inspection",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": " (0/20 Days)",
+              "trackingApplicationStage": 22,
+              "currentStageSet": false
+            },
+            {
+              "name": "Laboratory",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 10,
+              "currentStageSet": false
+            },
+            {
+              "name": "Product Safety Report",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 3039,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approval",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 2024,
+              "currentStageSet": false
+            },
+            {
+              "name": "Approved",
+              "color": "RED",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 16,
+              "currentStageSet": false
+            },
+            {
+              "name": "Compliance Directive",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+              "status": "",
+              "duration": "",
+              "trackingApplicationStage": 100,
+              "currentStageSet": false
+            }
+          ]
+        },
         {
           "companyId": "company_22",
           "companyName": "AFRIAURA PRIME ESSENTIALS LTD",
@@ -8793,6 +9015,117 @@
       "companyId": "company_20",
       "companyName": "KEEN & TENTEM GLOBAL BUSINESS VENTURES",
       "applicationNumber": "NF-WT-265547",
+      "appID": "596223",
+      "name": "KENTEM WATER ",
+      "product": "KENTEM WATER ",
+      "currentStatus": "Submission",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": true
+        },
+        {
+          "name": "Documentation",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": false
+        },
+        {
+          "name": "Internal Review",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    },
+    {
+      "companyId": "company_20",
+      "companyName": "KEEN & TENTEM GLOBAL BUSINESS VENTURES",
+      "applicationNumber": "Unknown",
       "appID": "265547",
       "name": "KENTEM WATER ",
       "product": "KENTEM WATER ",
@@ -8995,6 +9328,117 @@
           "name": "Approved",
           "color": "GREEN",
           "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 16,
+          "currentStageSet": false
+        },
+        {
+          "name": "Compliance Directive",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 100,
+          "currentStageSet": false
+        }
+      ]
+    },
+    {
+      "companyId": "company_22",
+      "companyName": "AFRIAURA PRIME ESSENTIALS LTD",
+      "applicationNumber": "NF-CS-596617",
+      "appID": "596617",
+      "name": "AFRIAURA PRIME essential car wash liquid soap",
+      "product": "AFRIAURA PRIME essential car wash liquid soap",
+      "currentStatus": "Submission",
+      "currentStatusColor": "YELLOW",
+      "stages": [
+        {
+          "name": "Submission",
+          "color": "YELLOW",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 1,
+          "currentStageSet": true
+        },
+        {
+          "name": "Documentation",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/10 Days)",
+          "trackingApplicationStage": 2,
+          "currentStageSet": false
+        },
+        {
+          "name": "Vetting",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 9,
+          "currentStageSet": false
+        },
+        {
+          "name": "Internal Review",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 5039,
+          "currentStageSet": false
+        },
+        {
+          "name": "DOSSIER REVIEW CLEARANCE",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/40 Days)",
+          "trackingApplicationStage": 5038,
+          "currentStageSet": false
+        },
+        {
+          "name": "Inspection",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": " (0/20 Days)",
+          "trackingApplicationStage": 22,
+          "currentStageSet": false
+        },
+        {
+          "name": "Laboratory",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 10,
+          "currentStageSet": false
+        },
+        {
+          "name": "Product Safety Report",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 3039,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approval",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "status": "",
+          "duration": "",
+          "trackingApplicationStage": 2024,
+          "currentStageSet": false
+        },
+        {
+          "name": "Approved",
+          "color": "RED",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": "",
           "trackingApplicationStage": 16,
