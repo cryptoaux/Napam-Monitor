@@ -1774,18 +1774,33 @@ async function main() {
 }
 
 
-main().catch(
-  (error) => {
+if (require.main === module) {
 
-    console.error(
-      "\nNAPAMS monitor failed:"
-    );
+  main().catch(
+    (error) => {
 
-    console.error(
-      error
-    );
+      console.error(
+        "\nNAPAMS monitor failed:"
+      );
 
-    process.exit(1);
+      console.error(
+        error
+      );
 
-  }
-);
+      process.exit(1);
+
+    }
+  );
+
+}
+
+module.exports = {
+  getCookies,
+  getAntiforgeryToken,
+  cleanText,
+  extractSubmittedApplicationNumbers,
+  extractApplicationIds,
+  getStageColor,
+  normalizeStageName,
+  getCurrentStatus
+};
