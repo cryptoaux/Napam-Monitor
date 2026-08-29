@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-29T03:09:01.129Z",
+  "updatedAt": "2026-08-29T10:03:59.048Z",
   "totalCompanies": 21,
   "totalApplications": 43,
   "companies": [
@@ -14,8 +14,8 @@
           "appID": "517353",
           "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
           "product": "KASFOL FOODS AND CONFECTIONERIES BREAD",
-          "currentStatus": "Approval",
-          "currentStatusColor": "YELLOW",
+          "currentStatus": "Laboratory",
+          "currentStatusColor": "GREEN",
           "stages": [
             {
               "name": "Submission",
@@ -91,17 +91,17 @@
             },
             {
               "name": "Approval",
-              "color": "YELLOW",
-              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
               "duration": "",
               "trackingApplicationStage": 2024,
-              "currentStageSet": true
+              "currentStageSet": false
             },
             {
               "name": "Approved",
-              "color": "RED",
-              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
               "duration": "",
               "trackingApplicationStage": 16,
@@ -470,8 +470,8 @@
           "appID": "436040",
           "name": "BASMUZ WATER",
           "product": "BASMUZ WATER",
-          "currentStatus": "Approval",
-          "currentStatusColor": "YELLOW",
+          "currentStatus": "Laboratory",
+          "currentStatusColor": "GREEN",
           "stages": [
             {
               "name": "Submission",
@@ -547,17 +547,17 @@
             },
             {
               "name": "Approval",
-              "color": "YELLOW",
-              "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
               "duration": "",
               "trackingApplicationStage": 2024,
-              "currentStageSet": true
+              "currentStageSet": false
             },
             {
               "name": "Approved",
-              "color": "RED",
-              "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+              "color": "GREEN",
+              "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
               "status": "",
               "duration": "",
               "trackingApplicationStage": 16,
@@ -4911,8 +4911,8 @@
       "appID": "517353",
       "name": "KASFOL FOODS AND CONFECTIONERIES BREAD",
       "product": "KASFOL FOODS AND CONFECTIONERIES BREAD",
-      "currentStatus": "Approval",
-      "currentStatusColor": "YELLOW",
+      "currentStatus": "Laboratory",
+      "currentStatusColor": "GREEN",
       "stages": [
         {
           "name": "Submission",
@@ -4988,17 +4988,17 @@
         },
         {
           "name": "Approval",
-          "color": "YELLOW",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": "",
           "trackingApplicationStage": 2024,
-          "currentStageSet": true
+          "currentStageSet": false
         },
         {
           "name": "Approved",
-          "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": "",
           "trackingApplicationStage": 16,
@@ -5355,8 +5355,8 @@
       "appID": "436040",
       "name": "BASMUZ WATER",
       "product": "BASMUZ WATER",
-      "currentStatus": "Approval",
-      "currentStatusColor": "YELLOW",
+      "currentStatus": "Laboratory",
+      "currentStatusColor": "GREEN",
       "stages": [
         {
           "name": "Submission",
@@ -5432,17 +5432,17 @@
         },
         {
           "name": "Approval",
-          "color": "YELLOW",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-warning m-2 mr-2 p-3 col-5",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": "",
           "trackingApplicationStage": 2024,
-          "currentStageSet": true
+          "currentStageSet": false
         },
         {
           "name": "Approved",
-          "color": "RED",
-          "napamsDescription": "text-white border-none badge rounded-pill bg-danger m-2 mr-2 p-3 col-5",
+          "color": "GREEN",
+          "napamsDescription": "text-white border-none badge rounded-pill bg-primary m-2 mr-2 p-3 col-5",
           "status": "",
           "duration": "",
           "trackingApplicationStage": 16,
