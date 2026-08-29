@@ -4,9 +4,15 @@
   "private": true,
   "scripts": {
     "monitor": "node monitor.js",
-    "test": "node --test"
+    "test": "node --test",
+    "lint": "eslint .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "playwright": "^1.55.0"
+  },
+  "devDependencies": {
+    "eslint": "^10.9.1",
+    "prettier": "^3.9.6"
   }
 }

@@ -126,7 +126,7 @@ function request(
             `TLS authorized: ${socket.authorized}`
           );
 
-        } catch (error) {
+        } catch {
 
           console.log(
             "TLS diagnostic information unavailable."
@@ -759,11 +759,12 @@ async function loginCompany(
         );
 
         await new Promise(
-          (resolve) =>
+          (resolve) => {
             setTimeout(
               resolve,
               delay
-            )
+            );
+          }
         );
 
         continue;
@@ -819,11 +820,12 @@ async function loginCompany(
         );
 
         await new Promise(
-          (resolve) =>
+          (resolve) => {
             setTimeout(
               resolve,
               3000
-            )
+            );
+          }
         );
 
         continue;
@@ -998,11 +1000,12 @@ async function loginCompany(
         );
 
         await new Promise(
-          (resolve) =>
+          (resolve) => {
             setTimeout(
               resolve,
               delay
-            )
+            );
+          }
         );
 
         continue;
@@ -1319,7 +1322,7 @@ async function processCompany(
           response.body
         );
 
-    } catch (error) {
+    } catch {
 
       console.log(
         "ERROR: Invalid JSON"

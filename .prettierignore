@@ -1,0 +1,4 @@
+node_modules/
+public/data.json
+public/index.html
+monitor.js

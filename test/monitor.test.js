@@ -69,10 +69,10 @@ test("extractSubmittedApplicationNumbers reads status rows, deduplicates, and no
     <tr><td>PEX-cd-98765</td><td>View Status</td></tr>
     <tr><td>NF-ZZ-5555</td><td>Draft</td></tr>`;
 
-  assert.deepEqual(
-    extractSubmittedApplicationNumbers(html),
-    ["NF-AB-1234", "PEX-CD-98765"]
-  );
+  assert.deepEqual(extractSubmittedApplicationNumbers(html), [
+    "NF-AB-1234",
+    "PEX-CD-98765"
+  ]);
 });
 
 test("extractSubmittedApplicationNumbers falls back when status rows have no match", () => {
@@ -90,10 +90,11 @@ test("extractApplicationIds returns input IDs in their numeric HTML order", () =
     <input id='appID_0' value='first-id'>
     <input id="appID_3" value="third-id">`;
 
-  assert.deepEqual(
-    extractApplicationIds(html),
-    ["first-id", "second-id", "third-id"]
-  );
+  assert.deepEqual(extractApplicationIds(html), [
+    "first-id",
+    "second-id",
+    "third-id"
+  ]);
 });
 
 test("extractApplicationIds ignores malformed or empty values", () => {
@@ -107,7 +108,10 @@ test("extractApplicationIds ignores malformed or empty values", () => {
 
 test("getStageColor maps current, warning, danger, primary, and unknown stages", () => {
   assert.equal(getStageColor({ currentStageSet: true }), "YELLOW");
-  assert.equal(getStageColor({ description: "<span class='bg-warning'>Waiting</span>" }), "YELLOW");
+  assert.equal(
+    getStageColor({ description: "<span class='bg-warning'>Waiting</span>" }),
+    "YELLOW"
+  );
   assert.equal(getStageColor({ description: "bg-danger" }), "RED");
   assert.equal(getStageColor({ description: "bg-primary" }), "GREEN");
   assert.equal(getStageColor({ description: "No recognized class" }), "RED");
