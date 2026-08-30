@@ -1,5 +1,9 @@
 name: NAPAMS Monitor
 
+# Live monitoring path.
+# This workflow is intentionally separate from CI validation and performs
+# the real NAPAMS network login/status checks against the production site.
+
 on:
   workflow_dispatch:
   schedule:
@@ -9,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  monitor:
+  live-monitor:
     runs-on: ubuntu-latest
 
     steps:
