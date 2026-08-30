@@ -9,6 +9,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "pino": "^10.3.1",
     "playwright": "^1.55.0"
   },
   "devDependencies": {

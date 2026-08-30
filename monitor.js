@@ -1,4 +1,5 @@
 const fs = require("fs");
+const logger = require("./src/logger");
 const { request } = require("./src/http-client");
 const {
   getCookies,
@@ -145,17 +146,7 @@ async function loginCompany(
   userAgent
 ) {
 
-  console.log(
-    "\n========================================"
-  );
-
-  console.log(
-    `COMPANY: ${company.name}`
-  );
-
-  console.log(
-    "========================================"
-  );
+  logger.info({ company: company.name }, "Company processing started");
 
 
   /*
@@ -184,8 +175,9 @@ async function loginCompany(
     loginAttempt++
   ) {
 
-    console.log(
-      `\nLOGIN ATTEMPT ${loginAttempt}/${MAX_LOGIN_ATTEMPTS}`
+    logger.info(
+      { company: company.name, loginAttempt, maxLoginAttempts: MAX_LOGIN_ATTEMPTS },
+      "Login attempt started"
     );
 
 
@@ -195,9 +187,7 @@ async function loginCompany(
      * ========================================================
      */
 
-    console.log(
-      "Fetching NAPAMS login page..."
-    );
+    logger.info({ company: company.name }, "Fetching NAPAMS login page");
 
     const loginPage =
       await request(
@@ -212,9 +202,9 @@ async function loginCompany(
         }
       );
 
-    console.log(
-      "LOGIN PAGE STATUS:",
-      loginPage.status
+    logger.info(
+      { company: company.name, statusCode: loginPage.status },
+      "Login page status"
     );
 
     if (
@@ -222,8 +212,9 @@ async function loginCompany(
       200
     ) {
 
-      console.log(
-        `Login page returned HTTP ${loginPage.status}`
+      logger.warn(
+        { company: company.name, statusCode: loginPage.status },
+        "Login page returned unexpected status"
       );
 
       if (
@@ -234,8 +225,9 @@ async function loginCompany(
         const delay =
           loginAttempt * 3000;
 
-        console.log(
-          `Refreshing again in ${delay / 1000} seconds...`
+        logger.warn(
+          { company: company.name, delayMs: delay },
+          "Refreshing login page before retry"
         );
 
         await new Promise(
@@ -286,17 +278,16 @@ async function loginCompany(
 
     if (!token) {
 
-      console.log(
-        "Antiforgery token was not found."
-      );
+      logger.warn({ company: company.name }, "Antiforgery token not found");
 
       if (
         loginAttempt <
         MAX_LOGIN_ATTEMPTS
       ) {
 
-        console.log(
-          "Refreshing login page to obtain a new token..."
+        logger.warn(
+          { company: company.name },
+          "Refreshing login page to obtain a new token"
         );
 
         await new Promise(
@@ -318,9 +309,7 @@ async function loginCompany(
 
     }
 
-    console.log(
-      "Fresh antiforgery token obtained."
-    );
+    logger.info({ company: company.name }, "Fresh antiforgery token obtained");
 
 
     /*
@@ -364,9 +353,7 @@ async function loginCompany(
      * ========================================================
      */
 
-    console.log(
-      "Submitting Admin login..."
-    );
+    logger.info({ company: company.name }, "Submitting admin login");
 
     const loginResponse =
       await request(
@@ -399,9 +386,9 @@ async function loginCompany(
         form.toString()
       );
 
-    console.log(
-      "LOGIN STATUS:",
-      loginResponse.status
+    logger.info(
+      { company: company.name, statusCode: loginResponse.status },
+      "Login response status"
     );
 
 
@@ -434,9 +421,7 @@ async function loginCompany(
 
       authenticated = true;
 
-      console.log(
-        "Authenticated session established."
-      );
+      logger.info({ company: company.name }, "Authenticated session established");
 
       break;
 
@@ -459,8 +444,9 @@ async function loginCompany(
       400
     ) {
 
-      console.log(
-        "NAPAMS returned HTTP 400 Bad Request."
+      logger.warn(
+        { company: company.name, statusCode: loginResponse.status },
+        "NAPAMS returned HTTP 400 Bad Request"
       );
 
       if (
@@ -471,12 +457,9 @@ async function loginCompany(
         const delay =
           loginAttempt * 3000;
 
-        console.log(
-          "Refreshing login page and generating a new session..."
-        );
-
-        console.log(
-          `Retrying login in ${delay / 1000} seconds...`
+        logger.warn(
+          { company: company.name, delayMs: delay },
+          "Refreshing login page and generating a new session"
         );
 
         await new Promise(
@@ -536,9 +519,7 @@ async function loginCompany(
    * ==========================================================
    */
 
-  console.log(
-    "Opening Applications..."
-  );
+  logger.info({ company: company.name }, "Opening applications page");
 
   const applicationsPage =
     await request(
@@ -556,9 +537,9 @@ async function loginCompany(
       }
     );
 
-  console.log(
-    "APPLICATIONS STATUS:",
-    applicationsPage.status
+  logger.info(
+    { company: company.name, statusCode: applicationsPage.status },
+    "Applications page status"
   );
 
   if (
@@ -590,9 +571,7 @@ async function loginCompany(
 
 function logStages(stages) {
 
-  console.log(
-    "Tracking stages:"
-  );
+  logger.info({ stageCount: stages.length }, "Tracking stages");
 
   stages.forEach(
     (stage, index) => {
@@ -607,21 +586,16 @@ function logStages(stages) {
           ? "🟡"
           : "🔴";
 
-      console.log(
-        `  ${index + 1}. ${emoji} ${normalizeStageName(
-          stage.trackingStageName
-        )}`
+      logger.info(
+        {
+          stageIndex: index + 1,
+          emoji,
+          stageName: normalizeStageName(stage.trackingStageName),
+          duration: stage.duration || null,
+          color
+        },
+        "Stage status"
       );
-
-      if (
-        stage.duration
-      ) {
-
-        console.log(
-          `     Duration: ${stage.duration}`
-        );
-
-      }
 
     }
   );
@@ -671,10 +645,9 @@ async function processCompany(
         )
       : null;
 
-  console.log(
-    "SUBMITTED APPLICATIONS:",
-    submittedCount ??
-      "Unknown"
+  logger.info(
+    { company: company.name, submittedApplications: submittedCount ?? "Unknown" },
+    "Submitted applications count"
   );
 
 
@@ -688,25 +661,21 @@ async function processCompany(
       html
     );
 
-  console.log(
-    "Application IDs found:",
-    appIDs.length
+  logger.info(
+    {
+      company: company.name,
+      applicationIdsFound: appIDs.length,
+      applicationNumbersFound: submittedApplicationNumbers.length
+    },
+    "Application discovery summary"
   );
 
-  console.log(
-    "Application numbers found:",
-    submittedApplicationNumbers.length
-  );
-
-  submittedApplicationNumbers.forEach(
-    (number, index) => {
-
-      console.log(
-        `${index + 1}. ${number}`
-      );
-
-    }
-  );
+  submittedApplicationNumbers.forEach((number, index) => {
+    logger.info(
+      { company: company.name, applicationIndex: index + 1, applicationNumber: number },
+      "Discovered submitted application number"
+    );
+  });
 
   if (
     appIDs.length === 0
@@ -740,13 +709,9 @@ async function processCompany(
       ] ||
       "Unknown";
 
-    console.log(
-      `\nChecking application ${index + 1}...`
-    );
-
-    console.log(
-      "Application Number:",
-      applicationNumber
+    logger.info(
+      { company: company.name, applicationIndex: index + 1, applicationNumber },
+      "Checking application"
     );
 
     let response;
@@ -762,21 +727,18 @@ async function processCompany(
 
     } catch (error) {
 
-      console.error(
-        `APPLICATION FAILED: ${applicationNumber}`
-      );
-
-      console.error(
-        error.message
+      logger.error(
+        { company: company.name, applicationNumber, error: { message: error.message } },
+        "Application status check failed"
       );
 
       continue;
 
     }
 
-    console.log(
-      "STATUS ENDPOINT HTTP:",
-      response.status
+    logger.info(
+      { company: company.name, applicationNumber, statusCode: response.status },
+      "Status endpoint HTTP response"
     );
 
     if (
@@ -784,9 +746,9 @@ async function processCompany(
       response.status >= 300
     ) {
 
-      console.log(
-        "ERROR:",
-        `HTTP ${response.status}`
+      logger.warn(
+        { company: company.name, applicationNumber, statusCode: response.status },
+        "Status endpoint returned non-2xx response"
       );
 
       continue;
@@ -804,8 +766,9 @@ async function processCompany(
 
     } catch {
 
-      console.log(
-        "ERROR: Invalid JSON"
+      logger.warn(
+        { company: company.name, applicationNumber },
+        "Status endpoint returned invalid JSON"
       );
 
       continue;
@@ -853,19 +816,15 @@ async function processCompany(
           )
         : "RED";
 
-    console.log(
-      "Product:",
-      product
-    );
-
-    console.log(
-      "CURRENT STATUS:",
-      currentStatus
-    );
-
-    console.log(
-      "CURRENT COLOR:",
-      currentStatusColor
+    logger.info(
+      {
+        company: company.name,
+        applicationNumber,
+        product,
+        currentStatus,
+        currentStatusColor
+      },
+      "Application status summary"
     );
 
     logStages(
@@ -1086,32 +1045,14 @@ function saveWebsiteData(
     "utf8"
   );
 
-  console.log(
-    "\n========================================"
-  );
-
-  console.log(
-    "WEBSITE DATA CREATED"
-  );
-
-  console.log(
-    "========================================"
-  );
-
-  console.log(
-    `Companies processed: ${companies.length}`
-  );
-
-  console.log(
-    `Applications saved: ${successfulResults.length}`
-  );
-
-  console.log(
-    "File: public/data.json"
-  );
-
-  console.log(
-    `Updated: ${data.updatedAt}`
+  logger.info(
+    {
+      companiesProcessed: companies.length,
+      applicationsSaved: successfulResults.length,
+      file: "public/data.json",
+      updatedAt: data.updatedAt
+    },
+    "Website data created"
   );
 
 }
@@ -1135,24 +1076,9 @@ async function main() {
 
   const allResults = [];
 
-  console.log(
-    "\n========================================"
-  );
-
-  console.log(
-    "NAPAMS MULTI-COMPANY MONITOR"
-  );
-
-  console.log(
-    "========================================"
-  );
-
-  console.log(
-    `Companies configured: ${companies.length}`
-  );
-
-  console.log(
-    `Node.js version: ${process.version}`
+  logger.info(
+    { companiesConfigured: companies.length, nodeVersion: process.version },
+    "NAPAMS multi-company monitor started"
   );
 
 
@@ -1164,9 +1090,7 @@ async function main() {
     const company of companies
   ) {
 
-    console.log(
-      `\nProcessing: ${company.name}`
-    );
+    logger.info({ company: company.name }, "Processing company");
 
     const tin =
       company.tinSecret
@@ -1187,13 +1111,7 @@ async function main() {
       !password
     ) {
 
-      console.log(
-        `SKIPPING ${company.name}`
-      );
-
-      console.log(
-        "Credentials have not been added yet."
-      );
+      logger.warn({ company: company.name }, "Skipping company because credentials are missing");
 
       continue;
 
@@ -1213,18 +1131,13 @@ async function main() {
         ...results
       );
 
-      console.log(
-        `Finished: ${company.name}`
-      );
+      logger.info({ company: company.name }, "Finished processing company");
 
     } catch (error) {
 
-      console.error(
-        `FAILED: ${company.name}`
-      );
-
-      console.error(
-        error.message
+      logger.error(
+        { company: company.name, error: { message: error.message } },
+        "Company processing failed"
       );
 
       continue;
@@ -1242,17 +1155,7 @@ async function main() {
     allResults
   );
 
-  console.log(
-    "\n========================================"
-  );
-
-  console.log(
-    "MONITOR COMPLETE"
-  );
-
-  console.log(
-    "========================================"
-  );
+  logger.info("Monitor complete");
 
 }
 
@@ -1262,13 +1165,7 @@ if (require.main === module) {
   main().catch(
     (error) => {
 
-      console.error(
-        "\nNAPAMS monitor failed:"
-      );
-
-      console.error(
-        error
-      );
+      logger.error({ error: { message: error.message, stack: error.stack } }, "NAPAMS monitor failed");
 
       process.exit(1);
 

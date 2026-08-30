@@ -1,4 +1,5 @@
 const https = require("https");
+const logger = require("./logger");
 
 const HOST = "registration.nafdac.gov.ng";
 
@@ -6,8 +7,11 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
   const MAX_ATTEMPTS = 3;
 
   return new Promise((resolve, reject) => {
-    console.log(`HTTP ${method} ${path} (attempt ${attempt}/${MAX_ATTEMPTS})`);
-    console.log(`Node.js version: ${process.version}`);
+    logger.info(
+      { method, path, attempt, maxAttempts: MAX_ATTEMPTS },
+      "HTTP request started"
+    );
+    logger.info({ nodeVersion: process.version }, "Runtime info");
 
     const req = https.request(
       {
@@ -21,8 +25,10 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
       (res) => {
         let data = "";
 
-        console.log(`HTTP RESPONSE: ${res.statusCode}`);
-        console.log(`HTTP VERSION: ${res.httpVersion}`);
+        logger.info(
+          { statusCode: res.statusCode, httpVersion: res.httpVersion },
+          "HTTP response received"
+        );
 
         res.setEncoding("utf8");
 
@@ -41,36 +47,57 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
     );
 
     req.on("socket", (socket) => {
-      console.log("Socket assigned.");
+      logger.info({ host: HOST }, "Socket assigned");
 
       socket.on("connect", () => {
-        console.log("TCP connection established.");
+        logger.info({ host: HOST }, "TCP connection established");
       });
 
       socket.on("secureConnect", () => {
-        console.log("TLS secure connection established.");
+        logger.info({ host: HOST }, "TLS secure connection established");
 
         try {
-          console.log(`TLS protocol: ${socket.getProtocol()}`);
-          console.log(`TLS cipher: ${socket.getCipher()?.name || "Unknown"}`);
-          console.log(`TLS authorized: ${socket.authorized}`);
+          logger.info(
+            {
+              host: HOST,
+              protocol: socket.getProtocol(),
+              cipher: socket.getCipher()?.name || "Unknown",
+              authorized: socket.authorized
+            },
+            "TLS diagnostics"
+          );
         } catch {
-          console.log("TLS diagnostic information unavailable.");
+          logger.warn({ host: HOST }, "TLS diagnostics unavailable");
         }
       });
 
       socket.on("error", (error) => {
-        console.error(`SOCKET ERROR: ${error.code || error.message}`);
+        logger.error(
+          { host: HOST, error: { code: error.code, message: error.message } },
+          "Socket error"
+        );
       });
     });
 
     req.on("error", (error) => {
-      console.error(`HTTP ERROR: ${error.code || error.message}`);
+      logger.error(
+        {
+          host: HOST,
+          method,
+          path,
+          attempt,
+          error: { code: error.code, message: error.message }
+        },
+        "HTTP request error"
+      );
 
       if (attempt < MAX_ATTEMPTS) {
         const delay = attempt * 3000;
 
-        console.log(`Retrying in ${delay / 1000} seconds...`);
+        logger.warn(
+          { host: HOST, method, path, attempt, delayMs: delay },
+          "Retrying HTTP request"
+        );
 
         setTimeout(() => {
           request(method, path, headers, body, attempt + 1)
@@ -85,7 +112,10 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
     });
 
     req.on("timeout", () => {
-      console.error("REQUEST TIMEOUT after 120 seconds");
+      logger.error(
+        { host: HOST, method, path, timeoutMs: 120000 },
+        "HTTP request timed out"
+      );
       req.destroy(new Error("NAPAMS request timed out after 120 seconds."));
     });
 
