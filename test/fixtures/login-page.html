@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NAPAMS Login</title>
+  </head>
+  <body>
+    <form method="post" action="/Applicant/Login">
+      <input
+        type="hidden"
+        name="__RequestVerificationToken"
+        value="login-token-abc123"
+      />
+      <input type="text" name="Username" />
+      <input type="password" name="Password" />
+      <button type="submit" name="buttonFunc" value="admin">Login</button>
+    </form>
+  </body>
+</html>
