@@ -1,6 +1,7 @@
 const fs = require("fs");
 const logger = require("./src/logger");
 const { request } = require("./src/http-client");
+const { companiesSchema, applicationStatusSchema } = require("./src/schemas");
 const {
   getCookies,
   getAntiforgeryToken,
@@ -96,28 +97,31 @@ function loadCompanies() {
   const parsed =
     JSON.parse(raw);
 
-  if (
+  const candidates =
     Array.isArray(parsed)
-  ) {
+      ? parsed
+      : parsed &&
+        Array.isArray(parsed.companies)
+      ? parsed.companies
+      : null;
 
-    return parsed;
-
+  if (!candidates) {
+    throw new Error(
+      "companies.json must contain a companies array."
+    );
   }
 
-  if (
-    parsed &&
-    Array.isArray(
-      parsed.companies
-    )
-  ) {
+  const result = companiesSchema.safeParse(candidates);
 
-    return parsed.companies;
-
+  if (!result.success) {
+    throw new Error(
+      `Invalid company configuration in ${COMPANIES_FILE}: ${result.error.issues
+        .map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`)
+        .join("; ")}`
+    );
   }
 
-  throw new Error(
-    "companies.json must contain a companies array."
-  );
+  return result.data;
 
 }
 
@@ -775,8 +779,78 @@ async function processCompany(
 
     }
 
+    const validation = applicationStatusSchema.safeParse(data);
+
+    if (!validation.success) {
+      logger.warn(
+        {
+          company: company.name,
+          applicationNumber,
+          issues: validation.error.issues.map(
+            (issue) => `${issue.path.join(".") || "root"}: ${issue.message}`
+          )
+        },
+        "Application status payload did not match expected structure"
+      );
+
+      const product =
+        data && typeof data.statusProductName === "string"
+          ? data.statusProductName
+          : "Unknown Product";
+
+      const stages =
+        Array.isArray(data?.trackingAppStageVMs)
+          ? data.trackingAppStageVMs
+          : [];
+
+      const currentStatus =
+        getCurrentStatus(stages);
+
+      const currentStage =
+        stages.find(
+          (stage) => stage?.currentStageSet === true
+        ) ||
+        stages.find(
+          (stage) => getStageColor(stage) === "YELLOW"
+        );
+
+      const currentStatusColor =
+        currentStage
+          ? getStageColor(currentStage)
+          : stages.length > 0
+          ? getStageColor(stages[stages.length - 1])
+          : "RED";
+
+      logger.info(
+        {
+          company: company.name,
+          applicationNumber,
+          product,
+          currentStatus,
+          currentStatusColor
+        },
+        "Application status summary recovered from partially valid payload"
+      );
+
+      logStages(stages);
+
+      results.push({
+        companyId: company.id,
+        companyName: company.name,
+        applicationNumber,
+        appID,
+        success: true,
+        product,
+        currentStatus,
+        currentStatusColor,
+        stages
+      });
+
+      continue;
+    }
+
     const product =
-      data.statusProductName ||
+      validation.data.statusProductName ||
       "Unknown Product";
 
     const stages =
