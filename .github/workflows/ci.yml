@@ -32,6 +32,9 @@ jobs:
       - name: Run tests with coverage gate
         run: npm test
 
+      - name: Run dependency audit
+        run: npm audit --audit-level=high
+
       - name: Run lint
         run: npm run lint
 
