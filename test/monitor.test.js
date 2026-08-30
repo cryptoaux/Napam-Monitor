@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { execFileSync } = require("node:child_process");
+const { EventEmitter } = require("node:events");
+const https = require("https");
+const { request } = require("../src/http-client");
 
 const {
   getCookies,
@@ -11,7 +14,7 @@ const {
   getStageColor,
   normalizeStageName,
   getCurrentStatus
-} = require("../monitor");
+} = require("../src/parsers");
 
 test("imports monitor helpers without starting the monitoring routine", () => {
   assert.equal(typeof getCookies, "function");
@@ -159,4 +162,109 @@ test("getCurrentStatus chooses warning, then first non-green, then final stage",
     ]),
     "Approved"
   );
+});
+
+test("request resolves successful HTTPS responses and emits socket diagnostics", async () => {
+  const socket = new EventEmitter();
+  socket.getProtocol = () => "TLSv1.3";
+  socket.getCipher = () => ({ name: "TLS_AES_256_GCM_SHA384" });
+  socket.authorized = true;
+
+  const req = new EventEmitter();
+  req.write = () => {};
+  req.end = () => {};
+  req.destroy = () => {};
+
+  const requestStub = test.mock.method(
+    https,
+    "request",
+    (options, callback) => {
+      const res = new EventEmitter();
+      res.statusCode = 200;
+      res.httpVersion = "1.1";
+      res.headers = { "content-type": "application/json" };
+      res.setEncoding = () => {};
+
+      process.nextTick(() => {
+        req.emit("socket", socket);
+        callback(res);
+        res.emit("data", '{"ok":true}');
+        res.emit("end");
+      });
+
+      return req;
+    }
+  );
+
+  try {
+    const response = await request("GET", "/test", {
+      "User-Agent": "NodeTest"
+    });
+
+    assert.deepEqual(response, {
+      status: 200,
+      headers: { "content-type": "application/json" },
+      body: '{"ok":true}'
+    });
+  } finally {
+    requestStub.mock.restore();
+  }
+});
+
+test("request retries transient errors before succeeding", async () => {
+  let attempts = 0;
+  const originalSetTimeout = global.setTimeout;
+  global.setTimeout = (fn) => {
+    fn();
+    return 0;
+  };
+
+  const requestStub = test.mock.method(
+    https,
+    "request",
+    (options, callback) => {
+      const req = new EventEmitter();
+      req.write = () => {};
+      req.end = () => {
+        process.nextTick(() => {
+          if (attempts === 0) {
+            attempts += 1;
+            req.emit(
+              "error",
+              Object.assign(new Error("ECONNRESET"), { code: "ECONNRESET" })
+            );
+            return;
+          }
+
+          const res = new EventEmitter();
+          res.statusCode = 202;
+          res.httpVersion = "1.1";
+          res.headers = {};
+          res.setEncoding = () => {};
+          callback(res);
+          res.emit("data", "retry-success");
+          res.emit("end");
+        });
+      };
+      req.destroy = () => {};
+
+      return req;
+    }
+  );
+
+  try {
+    const response = await request(
+      "POST",
+      "/retry",
+      { "Content-Type": "text/plain" },
+      "payload"
+    );
+
+    assert.equal(response.status, 202);
+    assert.equal(response.body, "retry-success");
+    assert.equal(attempts, 1);
+  } finally {
+    global.setTimeout = originalSetTimeout;
+    requestStub.mock.restore();
+  }
 });
