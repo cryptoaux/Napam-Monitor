@@ -29,23 +29,23 @@ const COMPANIES_FILE = "companies.json";
  * ============================================================
  */
 
-function loadCompanies() {
+function loadCompanies(filePath = COMPANIES_FILE) {
 
   if (
     !fs.existsSync(
-      COMPANIES_FILE
+      filePath
     )
   ) {
 
     throw new Error(
-      `Missing ${COMPANIES_FILE}`
+      `Missing ${filePath}`
     );
 
   }
 
   const raw =
     fs.readFileSync(
-      COMPANIES_FILE,
+      filePath,
       "utf8"
     );
 
@@ -453,7 +453,8 @@ async function processCompany(
  */
 
 function saveWebsiteData(
-  results
+  results,
+  outputPath = "public/data.json"
 ) {
 
   const successfulResults =
@@ -611,15 +612,17 @@ function saveWebsiteData(
 
   };
 
+  const resolvedOutputPath = outputPath || "public/data.json";
+
   fs.mkdirSync(
-    "public",
+    require("node:path").dirname(resolvedOutputPath),
     {
       recursive: true
     }
   );
 
   fs.writeFileSync(
-    "public/data.json",
+    resolvedOutputPath,
     JSON.stringify(
       data,
       null,
@@ -632,7 +635,7 @@ function saveWebsiteData(
     {
       companiesProcessed: companies.length,
       applicationsSaved: successfulResults.length,
-      file: "public/data.json",
+      file: resolvedOutputPath,
       updatedAt: data.updatedAt
     },
     "Website data created"
@@ -647,10 +650,10 @@ function saveWebsiteData(
  * ============================================================
  */
 
-async function main() {
+async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMPANIES_FILE, outputPath = process.env.MONITOR_OUTPUT_PATH || "public/data.json" } = {}) {
 
   const companies =
-    loadCompanies();
+    loadCompanies(companiesFile);
 
   const userAgent =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
@@ -735,7 +738,8 @@ async function main() {
    */
 
   saveWebsiteData(
-    allResults
+    allResults,
+    outputPath
   );
 
   logger.info("Monitor complete");
@@ -758,6 +762,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  loadCompanies,
+  processCompany,
+  saveWebsiteData,
+  main,
   getCookies,
   getAntiforgeryToken,
   cleanText,
