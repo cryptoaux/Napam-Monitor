@@ -1,5 +1,6 @@
 const https = require("https");
 const logger = require("./logger");
+const { NapamsHttpError } = require("./errors");
 
 const HOST = "registration.nafdac.gov.ng";
 
@@ -80,12 +81,21 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
     });
 
     req.on("error", (error) => {
+      const typedError =
+        error instanceof NapamsHttpError
+          ? error
+          : new NapamsHttpError("HTTP_REQUEST_FAILED", error.message, {
+              cause: error
+            });
+
       logger.error(
         {
           host: HOST,
           method,
           path,
           attempt,
+          errorCode: typedError.code,
+          err: typedError,
           error: { code: error.code, message: error.message }
         },
         "HTTP request error"
@@ -108,7 +118,7 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
         return;
       }
 
-      reject(error);
+      reject(typedError);
     });
 
     req.on("timeout", () => {
@@ -116,7 +126,13 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
         { host: HOST, method, path, timeoutMs: 120000 },
         "HTTP request timed out"
       );
-      req.destroy(new Error("NAPAMS request timed out after 120 seconds."));
+
+      const timeoutError = new NapamsHttpError(
+        "HTTP_TIMEOUT",
+        "NAPAMS request timed out after 120 seconds."
+      );
+
+      req.destroy(timeoutError);
     });
 
     if (body) {

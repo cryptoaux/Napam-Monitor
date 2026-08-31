@@ -1,5 +1,6 @@
 const fs = require("fs");
 const logger = require("./src/logger");
+const { NapamsConfigError, NapamsParseError } = require("./src/errors");
 const { loginCompany } = require("./src/login");
 const { checkApplicationStatus } = require("./src/status-checker");
 const { companiesSchema, applicationStatusSchema } = require("./src/schemas");
@@ -37,7 +38,8 @@ function loadCompanies(filePath = COMPANIES_FILE) {
     )
   ) {
 
-    throw new Error(
+    throw new NapamsConfigError(
+      "COMPANY_CONFIG_INVALID",
       `Missing ${filePath}`
     );
 
@@ -61,7 +63,8 @@ function loadCompanies(filePath = COMPANIES_FILE) {
       : null;
 
   if (!candidates) {
-    throw new Error(
+    throw new NapamsConfigError(
+      "CONFIG_SCHEMA_INVALID",
       "companies.json must contain a companies array."
     );
   }
@@ -69,8 +72,9 @@ function loadCompanies(filePath = COMPANIES_FILE) {
   const result = companiesSchema.safeParse(candidates);
 
   if (!result.success) {
-    throw new Error(
-      `Invalid company configuration in ${COMPANIES_FILE}: ${result.error.issues
+    throw new NapamsConfigError(
+      "CONFIG_SCHEMA_INVALID",
+      `Invalid company configuration in ${filePath}: ${result.error.issues
         .map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`)
         .join("; ")}`
     );
@@ -194,7 +198,8 @@ async function processCompany(
     appIDs.length === 0
   ) {
 
-    throw new Error(
+    throw new NapamsParseError(
+      "APPLICATION_ID_MISSING",
       "No appID values were found."
     );
 
@@ -241,7 +246,13 @@ async function processCompany(
     } catch (error) {
 
       logger.error(
-        { company: company.name, applicationNumber, error: { message: error.message } },
+        {
+          company: company.name,
+          applicationNumber,
+          errorCode: error?.code,
+          err: error,
+          error: { message: error?.message }
+        },
         "Application status check failed"
       );
 
@@ -722,7 +733,12 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
     } catch (error) {
 
       logger.error(
-        { company: company.name, error: { message: error.message } },
+        {
+          company: company.name,
+          errorCode: error?.code,
+          err: error,
+          error: { message: error?.message }
+        },
         "Company processing failed"
       );
 
@@ -752,7 +768,14 @@ if (require.main === module) {
   main().catch(
     (error) => {
 
-      logger.error({ error: { message: error.message, stack: error.stack } }, "NAPAMS monitor failed");
+      logger.error(
+        {
+          errorCode: error?.code,
+          err: error,
+          error: { message: error?.message, stack: error?.stack }
+        },
+        "NAPAMS monitor failed"
+      );
 
       process.exit(1);
 

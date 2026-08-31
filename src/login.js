@@ -1,5 +1,6 @@
 const logger = require("./logger");
 const httpClient = require("./http-client");
+const { NapamsHttpError, NapamsParseError } = require("./errors");
 const { getCookies, getAntiforgeryToken } = require("./parsers");
 
 const LOGIN_PATH = "/Applicant/Login";
@@ -60,7 +61,8 @@ async function loginCompany(company, tin, password, userAgent) {
         continue;
       }
 
-      throw new Error(
+      throw new NapamsHttpError(
+        "HTTP_STATUS_ERROR",
         `Could not load NAPAMS login page. HTTP ${loginPage.status}`
       );
     }
@@ -85,7 +87,8 @@ async function loginCompany(company, tin, password, userAgent) {
         continue;
       }
 
-      throw new Error(
+      throw new NapamsParseError(
+        "ANTIFORGERY_TOKEN_MISSING",
         "Antiforgery token was not found after multiple login page refreshes."
       );
     }
@@ -159,16 +162,23 @@ async function loginCompany(company, tin, password, userAgent) {
         continue;
       }
 
-      throw new Error(
+      throw new NapamsHttpError(
+        "HTTP_STATUS_ERROR",
         `NAPAMS login returned HTTP 400 after ${MAX_LOGIN_ATTEMPTS} fresh login attempts.`
       );
     }
 
-    throw new Error(`NAPAMS login failed. HTTP ${loginResponse.status}`);
+    throw new NapamsHttpError(
+      "HTTP_STATUS_ERROR",
+      `NAPAMS login failed. HTTP ${loginResponse.status}`
+    );
   }
 
   if (!authenticated || !cookies) {
-    throw new Error("NAPAMS login did not establish an authenticated session.");
+    throw new NapamsHttpError(
+      "HTTP_STATUS_ERROR",
+      "NAPAMS login did not establish an authenticated session."
+    );
   }
 
   logger.info({ company: company.name }, "Opening applications page");
@@ -189,7 +199,8 @@ async function loginCompany(company, tin, password, userAgent) {
   );
 
   if (applicationsPage.status !== 200) {
-    throw new Error(
+    throw new NapamsHttpError(
+      "HTTP_STATUS_ERROR",
       `Could not open Applications page. HTTP ${applicationsPage.status}`
     );
   }
