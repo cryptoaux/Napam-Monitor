@@ -7,7 +7,7 @@ This software and its source code, object code, documentation, and any associate
 
 ## Grant of License
 
-Subject to the payment of the agreed licensing fee and your acceptance of these terms, FRESH TECH grants you ("Licensee") a non-exclusive, non-transferable, perpetual (or [SPECIFY TERM, e.g., "1-year"]) license to use the Software for [SPECIFY USE, e.g., "internal business operations / production deployment"].
+Subject to the payment of the agreed licensing fee and your acceptance of these terms, FRESH TECH grants you ("Licensee") a non-exclusive, non-transferable, perpetual license to use the Software.
 
 ## Restrictions
 
