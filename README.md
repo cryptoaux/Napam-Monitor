@@ -114,11 +114,19 @@ This executes `node monitor.js` as defined in `package.json`.
 
 ## How to run the automated tests
 
+The repository includes a real automated test suite in the `test/` directory. The tests are stored as conventional Node test files such as `test/monitor.test.js`, `test/logger.test.js`, `test/schemas.test.js`, and `test/integration.test.js`.
+
 ```bash
 npm test
 ```
 
-This executes `node --test`.
+This executes the coverage-gated Node test runner against the files in `test/*.test.js`.
+
+For a direct, no-coverage run of the same suite:
+
+```bash
+npm run test:unit
+```
 
 ## How to run ESLint checks
 
