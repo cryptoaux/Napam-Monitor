@@ -1,7 +1,7 @@
 const fs = require("fs");
 const logger = require("./src/logger");
-const { request } = require("./src/http-client");
 const { loginCompany } = require("./src/login");
+const { checkApplicationStatus } = require("./src/status-checker");
 const { companiesSchema, applicationStatusSchema } = require("./src/schemas");
 const {
   getCookies,
@@ -21,47 +21,6 @@ const {
  */
 
 const COMPANIES_FILE = "companies.json";
-
-
-/*
- * ============================================================
- * CHECK APPLICATION STATUS
- * ============================================================
- */
-
-async function checkApplicationStatus(
-  appID,
-  cookies,
-  userAgent
-) {
-
-  const path =
-    `/Application/SubmittedApplication/CheckApplicationStatus?appID=${encodeURIComponent(
-      appID
-    )}`;
-
-  return request(
-    "POST",
-    path,
-    {
-      "User-Agent":
-        userAgent,
-
-      "Cookie":
-        cookies,
-
-      "Accept":
-        "application/json, text/plain, */*",
-
-      "Referer":
-        "https://registration.nafdac.gov.ng/Application/FormApplication/Applications",
-
-      "X-Requested-With":
-        "XMLHttpRequest"
-    }
-  );
-
-}
 
 
 /*
