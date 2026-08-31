@@ -128,6 +128,33 @@ For a direct, no-coverage run of the same suite:
 npm run test:unit
 ```
 
+## Reproducible Docker setup
+
+This repository includes a minimal Docker-based test environment for the mocked/offline validation suite. It is intended for reproducible local and CI-style execution of the existing Node test suite without touching the live NAPAMS monitoring flow.
+
+### Prerequisites
+
+- Docker Engine
+- Docker Compose v2
+
+### Build the image
+
+```bash
+docker compose build
+```
+
+### Run the test suite in Docker
+
+```bash
+docker compose run --rm app
+```
+
+This executes the repository's real test suite inside a Playwright-compatible container. The suite remains fully offline and mock-based; it does not contact the live NAPAMS website or require production credentials.
+
+> `npm run monitor` is the live NAPAMS monitoring path and is intentionally not part of the Docker validation environment.
+
+> Production monitoring still depends on the repository's existing workflow/secrets configuration in GitHub Actions and is separate from the simplified Docker test environment.
+
 ## How to run ESLint checks
 
 ```bash
