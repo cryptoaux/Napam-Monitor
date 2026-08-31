@@ -14,6 +14,8 @@ const {
   normalizeStageName,
   getCurrentStatus
 } = require("./src/parsers");
+const { buildOutputStructure } = require("./src/result-processor");
+const MonitorRun = require("./src/monitor-run");
 
 /*
  * ============================================================
@@ -467,161 +469,7 @@ function saveWebsiteData(
   results,
   outputPath = "public/data.json"
 ) {
-
-  const successfulResults =
-    results
-      .filter(
-        (result) =>
-          result.success
-      )
-      .map(
-        (result) => {
-
-          const stages =
-            Array.isArray(
-              result.stages
-            )
-              ? result.stages
-              : [];
-
-          return {
-
-            companyId:
-              result.companyId,
-
-            companyName:
-              result.companyName,
-
-            applicationNumber:
-              result.applicationNumber,
-
-            appID:
-              result.appID,
-
-            name:
-              result.product,
-
-            product:
-              result.product,
-
-            currentStatus:
-              result.currentStatus,
-
-            currentStatusColor:
-              result.currentStatusColor,
-
-            stages:
-              stages.map(
-                (stage) => ({
-
-                  name:
-                    normalizeStageName(
-                      stage.trackingStageName
-                    ),
-
-                  color:
-                    getStageColor(
-                      stage
-                    ),
-
-                  napamsDescription:
-                    stage.description ||
-                    "",
-
-                  status:
-                    stage.status ||
-                    stage.stageStatus ||
-                    stage.currentStatus ||
-                    "",
-
-                  duration:
-                    stage.duration ||
-                    "",
-
-                  trackingApplicationStage:
-                    stage.trackingApplicationStage,
-
-                  currentStageSet:
-                    stage.currentStageSet ===
-                    true
-
-                })
-              )
-
-          };
-
-        }
-      );
-
-
-  /*
-   * Group applications by company.
-   */
-
-  const companyMap =
-    new Map();
-
-  for (
-    const application of
-    successfulResults
-  ) {
-
-    const companyKey =
-      application.companyId ||
-      application.companyName;
-
-    if (
-      !companyMap.has(
-        companyKey
-      )
-    ) {
-
-      companyMap.set(
-        companyKey,
-        {
-          id:
-            application.companyId,
-
-          name:
-            application.companyName,
-
-          applications: []
-        }
-      );
-
-    }
-
-    companyMap
-      .get(companyKey)
-      .applications
-      .push(
-        application
-      );
-
-  }
-
-  const companies =
-    Array.from(
-      companyMap.values()
-    );
-
-  const data = {
-
-    updatedAt:
-      new Date().toISOString(),
-
-    totalCompanies:
-      companies.length,
-
-    totalApplications:
-      successfulResults.length,
-
-    companies,
-
-    applications:
-      successfulResults
-
-  };
+  const data = buildOutputStructure(results);
 
   const resolvedOutputPath = outputPath || "public/data.json";
 
@@ -644,8 +492,8 @@ function saveWebsiteData(
 
   logger.info(
     {
-      companiesProcessed: companies.length,
-      applicationsSaved: successfulResults.length,
+      companiesProcessed: data.totalCompanies,
+      applicationsSaved: data.totalApplications,
       file: resolvedOutputPath,
       updatedAt: data.updatedAt
     },
@@ -663,8 +511,12 @@ function saveWebsiteData(
 
 async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMPANIES_FILE, outputPath = process.env.MONITOR_OUTPUT_PATH || "public/data.json" } = {}) {
 
+  const run = new MonitorRun();
+
   const companies =
     loadCompanies(companiesFile);
+
+  run.companiesConfigured = companies.length;
 
   const userAgent =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
@@ -709,10 +561,13 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
     ) {
 
       logger.warn({ company: company.name }, "Skipping company because credentials are missing");
+      run.recordCompanySkipped(company.name);
 
       continue;
 
     }
+
+    run.companiesProcessed++;
 
     try {
 
@@ -723,6 +578,9 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
           password,
           userAgent
         );
+
+      run.recordApplicationsDiscovered(results.length);
+      run.recordCompanySuccess(company.name, results.length);
 
       allResults.push(
         ...results
@@ -742,6 +600,12 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
         "Company processing failed"
       );
 
+      run.recordCompanyFailure(
+        company.name,
+        error?.code || "UNKNOWN",
+        error?.message || "Unknown error"
+      );
+
       continue;
 
     }
@@ -759,6 +623,7 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
   );
 
   logger.info("Monitor complete");
+  run.finish();
 
 }
 
