@@ -1,8 +1,9 @@
 name: NAPAMS Monitor CI
 
-# CI validation / smoke path.
-# This workflow validates code quality and mocked test coverage only.
-# It must not perform live NAPAMS network calls or depend on production secrets.
+# Offline validation path for the repository.
+# This workflow validates the checked-in codebase with the existing
+# mocked test suite and static quality gates only.
+# It does not contact the live NAPAMS site or require production secrets.
 
 on:
   push:
@@ -13,27 +14,25 @@ on:
       - main
 
 jobs:
-  ci-validation:
+  validation:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies with npm ci
         run: npm ci
 
-      - name: Run tests with coverage gate
+      - name: Run tests with coverage thresholds
         run: npm test
-
-      - name: Run dependency audit
-        run: npm audit --audit-level=high
 
       - name: Run lint
         run: npm run lint
@@ -41,5 +40,8 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-      - name: Check monitor.js syntax
-        run: node --check monitor.js
+      - name: Validate JavaScript syntax
+        run: npm run check:syntax
+
+      - name: Run dependency audit
+        run: npm audit --audit-level=high

@@ -171,11 +171,15 @@ npm run format:check
 
 This runs `prettier --check .`.
 
-## How to run the Node syntax check
+## How to run the offline validation checks
+
+The repository includes a syntax validation script for the current source entrypoints and module files:
 
 ```bash
-node --check monitor.js
+npm run check:syntax
 ```
+
+This runs the Node parser against `monitor.js` and the files in `src/*.js` without contacting the live NAPAMS site or requiring production credentials.
 
 ## GitHub Actions CI behavior
 
@@ -195,9 +199,10 @@ It uses:
 - `npm test`
 - `npm run lint`
 - `npm run format:check`
-- `node --check monitor.js`
+- `npm run check:syntax`
+- `npm audit --audit-level=high`
 
-This workflow is intended to validate the project code and quality checks in CI.
+This workflow validates the repository in an offline, mocked/test-only mode and does not rely on live NAPAMS access or production secrets.
 
 ## Scheduled monitoring workflow
 
