@@ -34,6 +34,9 @@ jobs:
       - name: Run tests with coverage thresholds
         run: npm test
 
+      - name: Print coverage summary
+        run: npx c8 report --reporter=text --reporter=text-summary
+
       - name: Run lint
         run: npm run lint
 
