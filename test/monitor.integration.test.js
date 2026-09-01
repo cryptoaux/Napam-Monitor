@@ -7,6 +7,7 @@ const { EventEmitter } = require("node:events");
 const https = require("https");
 
 const monitor = require("../monitor");
+const { companiesSchema } = require("../src/schemas");
 
 const fixtureRoot = path.join(process.cwd(), "test", "fixtures");
 const loginPageFixture = fs.readFileSync(
@@ -315,8 +316,26 @@ test("monitor.main continues when a company processing error occurs", async () =
   }
 });
 
+test("synthetic companies sample fixture is valid for offline monitor smoke tests", () => {
+  const sampleConfigPath = path.join(fixtureRoot, "companies.sample.json");
+  const source = fs.readFileSync(sampleConfigPath, "utf8");
+  const parsed = JSON.parse(source);
+  const result = companiesSchema.safeParse(parsed);
+
+  assert.equal(result.success, true);
+  assert.equal(Array.isArray(parsed), true);
+  assert.equal(parsed.length, 2);
+  assert.equal(parsed[0].name, "Sample Company One");
+  assert.equal(parsed[1].name, "Sample Company Two");
+  assert.ok(
+    !/AKIA[0-9A-Z]{16}|BEGIN (RSA|EC|DSA|OPENSSH) PRIVATE KEY|gh[pousr]_|xox[baprs]-|AIza[0-9A-Za-z_-]{35}/.test(
+      source
+    )
+  );
+});
+
 test("monitor.main runs the orchestrated monitoring flow with mocked HTTPS responses", async () => {
-  const companiesFile = path.join(fixtureRoot, "companies.json");
+  const companiesFile = path.join(fixtureRoot, "companies.sample.json");
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "napams-monitor-"));
   const outputPath = path.join(tmpDir, "data.json");
 

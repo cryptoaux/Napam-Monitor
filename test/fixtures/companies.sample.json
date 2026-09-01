@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sample_company_01",
+    "name": "Sample Company One",
+    "tinSecret": "TEST_COMPANY_1_TIN",
+    "passwordSecret": "TEST_COMPANY_1_PASSWORD"
+  },
+  {
+    "id": "sample_company_02",
+    "name": "Sample Company Two",
+    "tinSecret": "TEST_COMPANY_2_TIN",
+    "passwordSecret": "TEST_COMPANY_2_PASSWORD"
+  }
+]
