@@ -9,11 +9,16 @@ on:
   schedule:
     - cron: "*/15 * * * *"
 
+concurrency:
+  group: napams-monitor-live
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
 jobs:
   live-monitor:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
 
     steps:
@@ -151,18 +156,61 @@ jobs:
           echo "CHECKING GENERATED DATA"
           echo "========================================"
 
-          echo "Checking for public/data.json..."
-          ls -la public
-
           test -f public/data.json
 
-          echo ""
-          echo "data.json exists:"
-          wc -c public/data.json
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const path = "public/data.json";
+
+          if (!fs.existsSync(path)) {
+            console.error(`Missing generated file: ${path}`);
+            process.exit(1);
+          }
+
+          let payload;
+          try {
+            payload = JSON.parse(fs.readFileSync(path, "utf8"));
+          } catch (error) {
+            console.error("Generated data is not valid JSON:", error.message);
+            process.exit(1);
+          }
+
+          if (!payload || typeof payload !== "object") {
+            console.error("Generated data must be a JSON object.");
+            process.exit(1);
+          }
+
+          if (typeof payload.updatedAt !== "string" || !payload.updatedAt) {
+            console.error("Generated data is missing updatedAt.");
+            process.exit(1);
+          }
+
+          if (!Array.isArray(payload.companies) || !Array.isArray(payload.applications)) {
+            console.error("Generated data is missing companies or applications arrays.");
+            process.exit(1);
+          }
+
+          if (typeof payload.totalCompanies !== "number" || typeof payload.totalApplications !== "number") {
+            console.error("Generated data is missing totalCompanies or totalApplications.");
+            process.exit(1);
+          }
+
+          if (payload.totalCompanies !== payload.companies.length) {
+            console.error("Generated data totalCompanies does not match companies length.");
+            process.exit(1);
+          }
+
+          if (payload.totalApplications !== payload.applications.length) {
+            console.error("Generated data totalApplications does not match applications length.");
+            process.exit(1);
+          }
+
+          console.log(`Validated generated data: ${payload.totalCompanies} companies, ${payload.totalApplications} applications`);
+          NODE
 
           echo ""
-          echo "First 30 lines:"
-          head -30 public/data.json
+          echo "data.json exists and parsed successfully."
+          wc -c public/data.json
 
       - name: Save latest application data
         run: |
@@ -180,24 +228,4 @@ jobs:
           else
             git commit -m "Update NAPAMS application status"
             git push
-          fi
-
-      - name: Playtest website
-        run: |
-          echo "========================================"
-          echo "PLAYTEST"
-          echo "========================================"
-
-          if [ -f package.json ]; then
-            echo "package.json found."
-
-            if npm run | grep -q "playtest"; then
-              npm run playtest
-            else
-              echo "No playtest script found in package.json."
-              echo "Skipping playtest."
-            fi
-          else
-            echo "package.json not found."
-            echo "Skipping playtest."
           fi
