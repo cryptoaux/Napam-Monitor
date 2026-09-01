@@ -1,132 +1,109 @@
 # Contributing to NAPAMS Monitor
 
-First off, thank you for considering contributing to NAPAMS Monitor! 🎉
+Thanks for contributing to the project. This repository is intentionally structured to keep the offline validation path separate from the live monitoring workflow, so contributors can validate code without touching production credentials or live NAPAMS traffic.
 
-We welcome all types of contributions, including bug reports, feature suggestions, documentation improvements, and code changes.
-
-## Code of Conduct
-
-This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to the contact address listed there.
-
-## How Can I Contribute?
-
-### Reporting Bugs or Requesting Features
-
-- **Check existing issues** first to avoid duplicates.
-- Use **clear, descriptive titles**.
-- For bugs, include:
-  - Steps to reproduce
-  - Expected vs. actual behavior
-  - Relevant log output or error messages
-  - Your environment (Node version, OS)
-- For features, explain the **use case** and how it benefits the monitoring workflow.
-
-### Submitting Code Changes (Pull Requests)
-
-1. **Fork the repository** and create your branch from `main`.
-2. **Install dependencies** with `npm ci` (ensures exact versions from the lockfile).
-3. **Make your changes** – keep them focused and well-documented.
-4. **Add or update tests** if your change affects parsing, status logic, or core monitoring behavior.
-5. **Run validation locally** (see "Development Setup" below).
-6. **Commit with a clear message** (e.g., `fix: correct status parsing for pending applications`).
-7. **Push and open a Pull Request** against the `main` branch.
-
-> **Important**: Please **do not** include real NAPAMS credentials, tokens, or any secrets in your commits, even in test files. The repository uses mocked tests for CI, so you do not need to use real credentials to validate changes.
-
----
-
-## Development Setup
+## Local setup
 
 ### Prerequisites
 
-- **Node.js 22** (matching the CI and scheduled workflow environment)
-- **npm** (comes with Node)
+- Node.js 22
+- npm
+- Docker and Docker Compose v2 for the container-based validation path
 
-### Installation
+### Install dependencies
 
 ```bash
 npm ci
 ```
 
-Environment Variables for Local Testing
+### Local environment files
 
-Copy the example environment file:
+Use a local untracked `.env` file only if you are intentionally running the live monitor. Do not commit it. The repository already ignores `.env` and `.env.*` files while allowing `.env.example` to remain tracked.
 
-```bash
-cp .env.example .env
-```
+## Required validation before a pull request
 
-The tests are fully mocked and do not require real credentials. However, if you want to run the live monitor locally, fill in real TIN/password values in .env (but never commit this file – it’s already in .gitignore).
-
-Running the Full Test Suite
+Run the following before opening or updating a PR:
 
 ```bash
 npm test
-```
-
-This runs the coverage-gated Node test runner. All tests must pass before a PR can be merged.
-
-Linting and Formatting
-
-We use ESLint and Prettier to keep code consistent.
-
-```bash
-# Check for linting errors
 npm run lint
-
-# Check formatting
 npm run format:check
-
-# Automatically fix formatting issues (if you have Prettier installed globally, or use npx)
-npx prettier --write .
+npm run check:syntax
+npm audit --audit-level=high
+git diff --check
 ```
 
-Syntax Validation
+For a full repo-level validation sequence, use:
 
 ```bash
-node --check monitor.js
+npm ci
+npm test -- --test-reporter=spec
+npm run lint
+npm run format:check
+npm run check:syntax
+npm audit --audit-level=high
+git diff --check
 ```
 
-The CI workflow will run all of the above checks automatically. Your PR must pass them to be reviewed.
+## Docker validation
 
----
+For the reproducible offline validation environment:
 
-Project Structure Overview
-
-To help you navigate the code:
-
-· monitor.js – Main monitoring logic, HTTP session handling, and status collection.
-· companies.json – Company configuration (TIN/password secret names referenced via process.env).
-· public/ – Static dashboard (index.html) and output data (data.json).
-· test/ – Node built-in test files (monitor.test.js, logger.test.js, etc.) for parsing and status logic.
-· .github/workflows/ – CI and scheduled monitoring GitHub Actions.
-· package.json – Scripts and dependencies.
-
----
-
-Testing Guidelines
-
-Since your changes might affect the monitoring flow:
-
-· Add tests for any new parsing or status-checking logic.
-· Ensure existing tests still pass (we aim for high coverage).
-· Run the integration tests (test/integration.test.js) to verify end-to-end behavior (offline/mocked).
-
----
-
-Security
-
-We take security seriously. If you discover a vulnerability, do not open a public issue. Instead, refer to our Security Policy for reporting instructions.
-
----
-
-Questions?
-
-If you're unsure about anything, feel free to open a Discussion or ask in the PR comments. We're happy to help!
-
-Thank you again for contributing to NAPAMS Monitor. 🙌
-
+```bash
+docker compose build
+docker compose run --rm app
 ```
 
----
+This path remains mocked and offline; it does not use live NAPAMS credentials or production traffic.
+
+## Development guidance
+
+Keep changes focused. In this project, the main validation path is the mocked/offline test suite, and the live monitoring workflow is intentionally separate.
+
+Contributors should not:
+
+- commit real NAPAMS passwords, TIN values, API keys, tokens, cookies, or session information
+- run the live monitor while developing tests unless they have explicitly configured a safe local environment
+- modify the dashboard UI or live monitoring behavior without a clear requirement
+
+## Project structure
+
+- `monitor.js` — main runtime entrypoint
+- `src/` — split modules for login, status checks, parsers, errors, schema validation, and output formatting
+- `test/` — mocked validation suite
+- `.github/workflows/ci.yml` — offline CI validation
+- `.github/workflows/monitor.yml` — live production monitoring workflow
+- `public/` — generated website data and static files
+
+## Commit discipline
+
+Keep each commit focused and reviewable.
+
+A good commit message is short and descriptive, for example:
+
+```bash
+git commit -m "fix: normalize application stage parsing"
 ```
+
+Do not add empty commits or broaden the scope of a change beyond the issue being fixed.
+
+## Security expectations
+
+- Do not commit real credentials
+- Do not paste tokens or cookies into test fixtures or documentation
+- Do not add live NAPAMS requests to CI or general validation steps
+- Treat the offline suite as the repository's default validation path
+
+## Pull requests
+
+Before requesting review, confirm that:
+
+- tests pass
+- lint passes
+- formatting passes
+- syntax checks pass
+- audit passes
+- the working tree is clean aside from the intended patch
+- no secrets or live-site requests were introduced
+
+If you are unsure whether a change touches the production monitor, prefer a narrow, documented change that leaves the live workflow untouched.

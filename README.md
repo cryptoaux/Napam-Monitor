@@ -1,200 +1,146 @@
 # NAPAMS Monitor
 
-## What this project does
+NAPAMS Monitor is a Node.js automation project for checking application status data from the NAFDAC NAPAMS portal using a configured set of company credentials. The repository keeps the live monitoring workflow separate from the offline validation suite so contributors can run tests, linting, and syntax checks without contacting the production site.
 
-This repository contains a Node.js monitor for the NAPAMS registration portal. It reads configured company credentials, signs in to the NAPAMS site, loads submitted applications, checks application status endpoints, and saves summarized status data to `public/data.json` for the dashboard in `public/index.html`.
+## What the project does
 
-The project is focused on the monitoring workflow and status collection logic in `monitor.js`.
+The repository loads company configuration from `companies.json`, authenticates through the NAPAMS login flow, inspects submitted application IDs, checks application status endpoints, and builds a structured JSON payload for the static dashboard in `public/`.
 
-## Project purpose
+The runtime flow is intentionally split into small modules so the login flow, HTTP transport, parsing logic, output assembly, and observability are easier to validate independently.
 
-The purpose of this repository is to automate repeated status checks for NAPAMS applications across a set of configured companies and write the resulting data to the local website output.
+## High-level architecture
+
+The actual runtime flow is:
+
+1. `monitor.js` loads and validates company configuration.
+2. `src/login.js` opens the login page, resolves the anti-forgery token, and establishes the authenticated session.
+3. `src/status-checker.js` calls the application-status endpoint for each discovered application ID.
+4. `src/parsers.js` extracts cookies, tokens, status rows, stage metadata, and normalized stage names.
+5. `src/result-processor.js` formats successful results into the final output structure.
+6. `src/monitor-run.js` records summary metrics and execution outcomes.
+7. `public/data.json` is generated for the static dashboard and website output.
+
+This structure matches the current code imports and module boundaries in the repository.
 
 ## Repository structure
 
-- `monitor.js` — main monitoring logic and HTTP/session handling
-- `companies.json` — company configuration, including the environment variable names used for TIN and password lookups
-- `.env.example` — placeholder environment variable examples for local setup
-- `.gitignore` — ignores local environment files
-- `public/` — generated website data and static dashboard files
-- `test/monitor.test.js` — Node built-in tests for parsing and status logic
-- `.github/workflows/monitor.yml` — scheduled NAPAMS monitoring workflow
-- `.github/workflows/ci.yml` — CI workflow for tests, linting, formatting, and syntax validation
-- `package.json` — project scripts and dependencies
+- `monitor.js` — orchestration entry for loading companies, running login/status checks, and writing output
+- `src/` — core monitoring logic split into focused modules
+  - `src/login.js` — login flow and session establishment
+  - `src/status-checker.js` — application status HTTP calls
+  - `src/http-client.js` — HTTPS request wrapper with retry/error handling
+  - `src/parsers.js` — cookie, form, and status parsing helpers
+  - `src/result-processor.js` — output formatting and grouping
+  - `src/monitor-run.js` — summary metrics and run tracking
+  - `src/errors.js` — typed application errors
+  - `src/schemas.js` — Zod validation for company config and application payloads
+  - `src/logger.js` — structured JSON logging
+- `test/` — mocked/offline test suite for the repository behavior
+- `companies.json` — configured company records and the environment-variable names used for live monitoring
+- `public/` — generated dashboard data and static web assets
+- `.github/workflows/ci.yml` — CI validation workflow for offline checks
+- `.github/workflows/monitor.yml` — separate live NAPAMS monitoring workflow
+- `Dockerfile` and `docker-compose.yml` — reproducible offline validation container
+- `package.json` — scripts and dependency definitions
+- `.env.example` — safe placeholder configuration for local usage
 
-## Prerequisites
+## Requirements
 
-- Node.js 22 (this is the version currently used by the repository workflows)
+- Node.js 22
 - npm
-- Access to the NAPAMS site with valid credentials for the configured companies
+- Docker and Docker Compose v2 for the reproducible offline container workflow
 
 ## Installation
 
-Install dependencies with the project lockfile:
+Install dependencies with the lockfile:
 
 ```bash
 npm ci
 ```
 
-## Configuration
+## Configuration and credentials
 
-The monitor uses environment variables whose names are defined in `companies.json`. Each company entry contains:
+The monitor reads credential environment variables from the names declared in `companies.json`.
+
+Each company entry includes:
 
 - `tinSecret`
 - `passwordSecret`
 
-Those values are read through `process.env[...]` in `monitor.js`.
+Those values are used by `monitor.js` through `process.env[...]` lookups.
 
-The repository includes `.env.example`, which is a safe placeholder file for local configuration. It is not a real credential file. Copy it to a local `.env` if you want to use environment variables in a local shell process, but keep the real values out of source control.
+The repository includes a safe stub file at `.env.example`. It contains placeholder values only and is intended for local shell setup. Do not commit real credentials.
 
-The actual environment variable names currently used by the project are:
+Example:
 
 ```env
 COMPANY_1_TIN=your-company-1-tin
 COMPANY_1_PASSWORD=your-company-1-password
-COMPANY_2_TIN=your-company-2-tin
-COMPANY_2_PASSWORD=your-company-2-password
-COMPANY_3_TIN=your-company-3-tin
-COMPANY_3_PASSWORD=your-company-3-password
-COMPANY_4_TIN=your-company-4-tin
-COMPANY_4_PASSWORD=your-company-4-password
-COMPANY_5_TIN=your-company-5-tin
-COMPANY_5_PASSWORD=your-company-5-password
-COMPANY_6_TIN=your-company-6-tin
-COMPANY_6_PASSWORD=your-company-6-password
-COMPANY_7_TIN=your-company-7-tin
-COMPANY_7_PASSWORD=your-company-7-password
-COMPANY_8_TIN=your-company-8-tin
-COMPANY_8_PASSWORD=your-company-8-password
-COMPANY_9_TIN=your-company-9-tin
-COMPANY_9_PASSWORD=your-company-9-password
-COMPANY_10_TIN=your-company-10-tin
-COMPANY_10_PASSWORD=your-company-10-password
-COMPANY_11_TIN=your-company-11-tin
-COMPANY_11_PASSWORD=your-company-11-password
-COMPANY_12_TIN=your-company-12-tin
-COMPANY_12_PASSWORD=your-company-12-password
-COMPANY_13_TIN=your-company-13-tin
-COMPANY_13_PASSWORD=your-company-13-password
-COMPANY_14_TIN=your-company-14-tin
-COMPANY_14_PASSWORD=your-company-14-password
-COMPANY_15_TIN=your-company-15-tin
-COMPANY_15_PASSWORD=your-company-15-password
-COMPANY_16_TIN=your-company-16-tin
-COMPANY_16_PASSWORD=your-company-16-password
-COMPANY_17_TIN=your-company-17-tin
-COMPANY_17_PASSWORD=your-company-17-password
-COMPANY_18_TIN=your-company-18-tin
-COMPANY_18_PASSWORD=your-company-18-password
-COMPANY_19_TIN=your-company-19-tin
-COMPANY_19_PASSWORD=your-company-19-password
-COMPANY_20_TIN=your-company-20-tin
-COMPANY_20_PASSWORD=your-company-20-password
-COMPANY_21_TIN=your-company-21-tin
-COMPANY_21_PASSWORD=your-company-21-password
-COMPANY_22_TIN=your-company-22-tin
-COMPANY_22_PASSWORD=your-company-22-password
-COMPANY_23_TIN=your-company-23-tin
-COMPANY_23_PASSWORD=your-company-23-password
-COMPANY_24_TIN=your-company-24-tin
-COMPANY_24_PASSWORD=your-company-24-password
 ```
 
-This matches the 24 configured company records in `companies.json`.
+The live monitoring workflow in `.github/workflows/monitor.yml` uses GitHub Secrets and keeps those values out of the repository. The CI workflow does not require production credentials.
 
-## How to run the monitor locally
+## Running the project locally
 
-Set the required environment variables for the companies you want to monitor, then run:
+For the live monitoring path, set the required company environment variables and run:
 
 ```bash
 npm run monitor
 ```
 
-This executes `node monitor.js` as defined in `package.json`.
+This executes the actual runtime entrypoint in `monitor.js`.
 
-## How to run the automated tests
+## Running the offline test suite
 
-The repository includes a real automated test suite in the `test/` directory. The tests are stored as conventional Node test files such as `test/monitor.test.js`, `test/logger.test.js`, `test/schemas.test.js`, and `test/integration.test.js`.
+The repository uses a mocked/offline Node test suite under `test/`.
 
 ```bash
 npm test
 ```
 
-This executes the coverage-gated Node test runner against the files in `test/*.test.js`.
+This runs the coverage-gated suite and enforces the configured thresholds.
 
-For a direct, no-coverage run of the same suite:
+A direct, no-coverage run is also available:
 
 ```bash
 npm run test:unit
 ```
 
-## Reproducible Docker setup
-
-This repository includes a minimal Docker-based test environment for the mocked/offline validation suite. It is intended for reproducible local and CI-style execution of the existing Node test suite without touching the live NAPAMS monitoring flow.
-
-### Prerequisites
-
-- Docker Engine
-- Docker Compose v2
-
-### Build the image
-
-```bash
-docker compose build
-```
-
-### Run the test suite in Docker
-
-```bash
-docker compose run --rm app
-```
-
-This executes the repository's real test suite inside a Playwright-compatible container. The suite remains fully offline and mock-based; it does not contact the live NAPAMS website or require production credentials.
-
-> `npm run monitor` is the live NAPAMS monitoring path and is intentionally not part of the Docker validation environment.
-
-> Production monitoring still depends on the repository's existing workflow/secrets configuration in GitHub Actions and is separate from the simplified Docker test environment.
-
-## How to run ESLint checks
+## Linting and formatting
 
 ```bash
 npm run lint
-```
-
-This runs `eslint .`.
-
-## How to run Prettier format checking
-
-```bash
 npm run format:check
 ```
 
-This runs `prettier --check .`.
+The project enforces ESLint and Prettier in CI and for local validation.
 
-## How to run the offline validation checks
-
-The repository includes a syntax validation script for the current source entrypoints and module files:
+## Security and syntax checks
 
 ```bash
+npm audit --audit-level=high
 npm run check:syntax
 ```
 
-This runs the Node parser against `monitor.js` and the files in `src/*.js` without contacting the live NAPAMS site or requiring production credentials.
+`check:syntax` validates the main runtime file and all modules in `src/*.js` using Node's parser without making live requests.
 
-## GitHub Actions CI behavior
+## Docker validation
 
-The repository has a separate CI workflow in `.github/workflows/ci.yml`.
+The repository contains a reproducible offline validation container:
 
-It runs on:
+```bash
+docker compose build
+docker compose run --rm app
+```
 
-- push to `main`
-- pull request targeting `main`
+This runs the repository's real mocked test suite in a containerized environment. It does not contact the production NAPAMS site and does not require production credentials.
 
-It uses:
+## CI behavior
 
-- Node.js 22
-- `actions/checkout@v4`
-- `actions/setup-node@v4`
+The CI workflow in `.github/workflows/ci.yml` runs on pushes to `main` and pull requests targeting `main`.
+
+It validates the repo with:
+
 - `npm ci`
 - `npm test`
 - `npm run lint`
@@ -202,31 +148,64 @@ It uses:
 - `npm run check:syntax`
 - `npm audit --audit-level=high`
 
-This workflow validates the repository in an offline, mocked/test-only mode and does not rely on live NAPAMS access or production secrets.
+This path is intentionally separate from the live monitor workflow and never depends on a production NAPAMS session.
 
-## Scheduled monitoring workflow
+## Live monitoring workflow
 
-The scheduled workflow is in `.github/workflows/monitor.yml`.
+The live monitoring workflow is in `.github/workflows/monitor.yml` and is separate from CI.
 
-It is a separate workflow from CI and is configured to run manually via `workflow_dispatch` and on a cron schedule (`*/15 * * * *`). It installs dependencies, installs Playwright Chromium, runs a connectivity check against the NAPAMS login page, then executes `npm run monitor` with repo secrets mapped to the company environment variables:
+It is intended to:
 
-- `COMPANY_1_TIN` / `COMPANY_1_PASSWORD`
-- `COMPANY_2_TIN` / `COMPANY_2_PASSWORD`
-- ...
-- `COMPANY_24_TIN` / `COMPANY_24_PASSWORD`
+- install the runtime dependencies
+- install Playwright Chromium
+- reach the live NAPAMS login page
+- execute the monitor with secret-backed environment variables
+- write the generated results to `public/data.json`
 
-This workflow is for live monitoring and updating public application data, not for the lint/test CI job.
+This workflow is not used for the offline CI validation path and should not be treated as a general test environment.
+
+## Output generation
+
+The live monitor writes the final application data to `public/data.json`. The static website in `public/` reads that structure to render the dashboard.
+
+The actual result assembly happens through the modules under `src/` and is finalized in `src/result-processor.js`.
+
+## Troubleshooting
+
+Common local issues:
+
+- `npm ci` fails because the lockfile and package manifest are out of sync
+- Coverage or tests fail because a mocked HTML or status case changed
+- Lint fails because a file is not formatted or contains an error
+- Syntax checks fail because a JavaScript file has a parse error
+- The live workflow is not relevant for local development unless production credentials and the live site are intentionally being used
+
+If a credential is required for a local live run, keep it in a local untracked `.env` file and never commit it.
+
+## Development workflow for contributors
+
+1. Clone the repository.
+2. Run `npm ci`.
+3. Run `npm test`.
+4. Run `npm run lint`.
+5. Run `npm run format:check`.
+6. Run `npm run check:syntax`.
+7. Run `npm audit --audit-level=high`.
+8. Use `git diff --check` before committing.
+
+Keep changes focused and avoid touching the live monitoring workflow or dashboard UI unless the change is directly required by the docs or maintenance work.
 
 ## Security guidance
 
-Important:
+- Never commit real NAPAMS credentials, passwords, tokens, cookies, or session data.
+- Keep local `.env` files untracked and outside version control.
+- Use GitHub repository secrets for any live production automation.
+- Treat the offline test suite as the default validation path for repository changes.
 
-- Never commit real NAPAMS credentials, passwords, tokens, cookies, or other secrets.
-- Use GitHub repository secrets for automated deployment/workflows.
-- Keep local `.env` values out of source control.
-- `.env.example` is intentionally a safe placeholder file containing example values only.
-- The repository `.gitignore` excludes `.env` and `.env.*` files while allowing `.env.example` to remain tracked.
+## Release and maintenance notes
+
+This repository does not claim a public release history beyond the existing git tags and repository state. Future releases should remain consistent with actual shipped code and existing versioning practices.
 
 ## Notes
 
-This documentation reflects the actual current project structure and scripts as defined in the repository. It intentionally avoids describing features or workflows that are not present in the current codebase.
+The project documentation reflects the actual current codebase and deliberately avoids describing features or workflows that are not present in the repository.
