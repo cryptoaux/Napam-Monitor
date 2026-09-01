@@ -60,25 +60,30 @@ npm ci
 
 ## Configuration and credentials
 
-The monitor reads credential environment variables from the names declared in `companies.json`.
+The monitor supports two safe credential-loading patterns:
+
+1. The legacy per-company environment variable pattern declared in `companies.json`.
+2. A single structured secret, `COMPANIES_CREDENTIALS_JSON`, which should contain a JSON array of objects with `id`, `tin`, and `password` fields.
 
 Each company entry includes:
 
 - `tinSecret`
 - `passwordSecret`
 
-Those values are used by `monitor.js` through `process.env[...]` lookups.
+Those values are used by `monitor.js` through `process.env[...]` lookups unless a matching entry is supplied via `COMPANIES_CREDENTIALS_JSON`.
 
 The repository includes a safe stub file at `.env.example`. It contains placeholder values only and is intended for local shell setup. Do not commit real credentials.
 
 Example:
 
 ```env
-COMPANY_1_TIN=your-company-1-tin
-COMPANY_1_PASSWORD=your-company-1-password
+LOG_LEVEL=info
+MONITOR_COMPANIES_FILE=companies.json
+MONITOR_OUTPUT_PATH=public/data.json
+COMPANIES_CREDENTIALS_JSON='[{"id":"company_01","tin":"example-company-tin","password":"example-company-password"}]'
 ```
 
-The live monitoring workflow in `.github/workflows/monitor.yml` uses GitHub Secrets and keeps those values out of the repository. The CI workflow does not require production credentials.
+The live monitoring workflow in `.github/workflows/monitor.yml` uses a single structured GitHub secret and keeps those values out of the repository. The CI workflow does not require production credentials.
 
 ## Running the project locally
 

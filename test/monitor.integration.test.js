@@ -177,6 +177,98 @@ test("monitor.main skips companies whose credentials are missing and writes an e
   }
 });
 
+test("monitor.main accepts a structured COMPANIES_CREDENTIALS_JSON secret payload", async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "napams-monitor-"));
+  const companiesFile = writeCompaniesFixture(tmpDir, [
+    {
+      id: "company_01",
+      name: "Structured Secret Company",
+      tinSecret: "TEST_COMPANY_1_TIN",
+      passwordSecret: "TEST_COMPANY_1_PASSWORD"
+    }
+  ]);
+  const outputPath = path.join(tmpDir, "data.json");
+
+  delete process.env.TEST_COMPANY_1_TIN;
+  delete process.env.TEST_COMPANY_1_PASSWORD;
+  process.env.COMPANIES_CREDENTIALS_JSON = JSON.stringify([
+    {
+      id: "company_01",
+      tin: "TIN-JSON-1",
+      password: "Password-JSON-1"
+    }
+  ]);
+
+  const responseSequence = [
+    {
+      status: 200,
+      headers: {
+        "set-cookie": [
+          ".AspNetCore.Antiforgery=login-cookie-1; path=/; secure",
+          "NAPAMS.Session=seed-session-1; path=/; HttpOnly"
+        ]
+      },
+      body: loginPageFixture
+    },
+    {
+      status: 302,
+      headers: {
+        "set-cookie": [
+          ".AspNetCore.Antiforgery=session-cookie-1; path=/; secure",
+          "NAPAMS.Auth=auth-token-1; path=/; secure"
+        ]
+      },
+      body: ""
+    },
+    {
+      status: 200,
+      headers: {},
+      body: applicationsPageFixture
+    },
+    {
+      status: 200,
+      headers: {},
+      body: JSON.stringify(
+        buildStatusPayload({
+          statusProductName: "Structured Product",
+          trackingAppStageVMs: [
+            {
+              trackingStageName: "Submitted",
+              description: "bg-primary",
+              duration: "1d",
+              currentStageSet: false
+            },
+            {
+              trackingStageName: "Final Review",
+              description: "bg-warning",
+              duration: "2d",
+              currentStageSet: true
+            }
+          ]
+        })
+      )
+    }
+  ];
+
+  const requestStub = buildMockRequest(responseSequence);
+
+  try {
+    await monitor.main({ companiesFile, outputPath });
+
+    const payload = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+    assert.equal(payload.totalCompanies, 1);
+    assert.equal(payload.totalApplications, 1);
+    assert.equal(payload.companies[0].name, "Structured Secret Company");
+    assert.equal(payload.applications[0].applicationNumber, "NF-AA-2024");
+    assert.equal(payload.applications[0].currentStatus, "Final Review");
+  } finally {
+    requestStub.requestStub.mock.restore();
+    delete process.env.COMPANIES_CREDENTIALS_JSON;
+    clearFakeCredentials();
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
 test("monitor.main continues when a company processing error occurs", async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "napams-monitor-"));
   const companiesFile = writeSingleCompanyFixture(tmpDir);

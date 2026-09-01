@@ -3,3 +3,5 @@
 !.env.example
 coverage/
 node_modules/
+.terraform/
+**/.terraform/

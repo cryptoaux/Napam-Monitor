@@ -45,3 +45,22 @@ jobs:
 
       - name: Run dependency audit
         run: npm audit --audit-level=high
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Validate Terraform formatting
+        run: terraform fmt -check -recursive terraform
+
+      - name: Initialize Terraform without a backend
+        run: terraform -chdir=terraform/environments/production init -backend=false
+
+      - name: Validate Terraform configuration
+        run: terraform -chdir=terraform/environments/production validate
+
+      - name: Scan Terraform with tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          working_directory: terraform

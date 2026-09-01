@@ -7,7 +7,14 @@ const companySchema = z.object({
   passwordSecret: z.string().min(1)
 });
 
+const companyCredentialSchema = z.object({
+  id: z.string().min(1),
+  tin: z.string().min(1),
+  password: z.string().min(1)
+});
+
 const companiesSchema = z.array(companySchema);
+const companyCredentialsSchema = z.array(companyCredentialSchema);
 
 const applicationStatusSchema = z.object({
   statusProductName: z.string().optional(),
@@ -31,6 +38,8 @@ const applicationStatusSchema = z.object({
 
 module.exports = {
   companySchema,
+  companyCredentialSchema,
+  companyCredentialsSchema,
   companiesSchema,
   applicationStatusSchema
 };
