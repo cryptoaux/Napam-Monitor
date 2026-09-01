@@ -35,6 +35,7 @@ function sanitizeForLogging(value) {
   return sanitized;
 }
 
+/** @type {string[]} */
 const capturedLogs = [];
 const stream = new Writable({
   write(chunk, _encoding, callback) {
@@ -58,6 +59,7 @@ const baseLogger = pino(
 
 const logger = {
   ...baseLogger,
+  __capturedLogs: capturedLogs,
   info: (...args) =>
     baseLogger.info(sanitizeForLogging(args[0]), ...args.slice(1)),
   warn: (...args) =>
@@ -68,7 +70,5 @@ const logger = {
     baseLogger.debug(sanitizeForLogging(args[0]), ...args.slice(1)),
   child: (bindings) => baseLogger.child(sanitizeForLogging(bindings))
 };
-
-logger.__capturedLogs = capturedLogs;
 
 module.exports = logger;

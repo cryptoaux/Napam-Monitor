@@ -1,6 +1,12 @@
 const httpClient = require("./http-client");
 const logger = require("./logger");
 
+/**
+ * @param {string} appID
+ * @param {string} cookies
+ * @param {string} userAgent
+ * @returns {Promise<{ status: number, body: string, headers: Record<string, string|string[]|undefined> }>}
+ */
 async function checkApplicationStatus(appID, cookies, userAgent) {
   const path = `/Application/SubmittedApplication/CheckApplicationStatus?appID=${encodeURIComponent(appID)}`;
 

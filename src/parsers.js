@@ -1,3 +1,11 @@
+/**
+ * @typedef {{ trackingStageName?: string, description?: string, currentStageSet?: boolean, status?: string, stageStatus?: string, currentStatus?: string, duration?: string | number | null }} StageInfo
+ */
+
+/**
+ * @param {string|string[]|undefined} setCookie
+ * @returns {string}
+ */
 function getCookies(setCookie) {
   if (!setCookie) {
     return "";
@@ -10,6 +18,10 @@ function getCookies(setCookie) {
   return setCookie.map((cookie) => cookie.split(";")[0]).join("; ");
 }
 
+/**
+ * @param {string} html
+ * @returns {string|null}
+ */
 function getAntiforgeryToken(html) {
   const match = html.match(
     /name=["']__RequestVerificationToken["'][^>]*value=["']([^"']+)["']/i
@@ -18,6 +30,10 @@ function getAntiforgeryToken(html) {
   return match ? match[1] : null;
 }
 
+/**
+ * @param {string|unknown} value
+ * @returns {string}
+ */
 function cleanText(value) {
   return String(value || "")
     .replace(/<[^>]+>/g, " ")
@@ -27,7 +43,12 @@ function cleanText(value) {
     .trim();
 }
 
+/**
+ * @param {string} html
+ * @returns {string[]}
+ */
 function extractSubmittedApplicationNumbers(html) {
+  /** @type {string[]} */
   const numbers = [];
   const rowRegex = /<tr[\s\S]*?<\/tr>/gi;
   const rows = html.match(rowRegex) || [];
@@ -63,7 +84,12 @@ function extractSubmittedApplicationNumbers(html) {
   return numbers;
 }
 
+/**
+ * @param {string} html
+ * @returns {string[]}
+ */
 function extractApplicationIds(html) {
+  /** @type {string[]} */
   const ids = [];
   const regex = /id=["']appID_(\d+)["'][^>]*value=["']([^"']+)["']/gi;
   let match;
@@ -80,6 +106,10 @@ function extractApplicationIds(html) {
   return ids.filter(Boolean);
 }
 
+/**
+ * @param {StageInfo | null | undefined} stage
+ * @returns {"GREEN" | "YELLOW" | "RED"}
+ */
 function getStageColor(stage) {
   const description = String(stage?.description || "").toLowerCase();
 
@@ -102,6 +132,10 @@ function getStageColor(stage) {
   return "RED";
 }
 
+/**
+ * @param {string | null | undefined} name
+ * @returns {string}
+ */
 function normalizeStageName(name) {
   const value = String(name || "").trim();
 
@@ -112,6 +146,10 @@ function normalizeStageName(name) {
   return value.replace(/\s+/g, " ").trim();
 }
 
+/**
+ * @param {StageInfo[] | undefined | null} stages
+ * @returns {string}
+ */
 function getCurrentStatus(stages) {
   if (!Array.isArray(stages) || stages.length === 0) {
     return "Unknown";

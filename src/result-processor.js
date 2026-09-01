@@ -2,9 +2,13 @@ const logger = require("./logger");
 const { normalizeStageName, getStageColor } = require("./parsers");
 
 /**
+ * @typedef {{ companyId?: string, companyName?: string, applicationNumber?: string, appID?: string, product?: string, currentStatus?: string, currentStatusColor?: string, success?: boolean, stages?: Array<{ trackingStageName?: string, description?: string, status?: string, stageStatus?: string, currentStatus?: string, duration?: string | number | null, trackingApplicationStage?: string | number | null, currentStageSet?: boolean }> }} ApplicationResult
+ */
+
+/**
  * Format a single application result with normalized stage information.
  *
- * @param {Object} result - Raw application result from processCompany
+ * @param {ApplicationResult} result - Raw application result from processCompany
  * @returns {Object} Formatted application for output
  */
 function formatApplicationResult(result) {
@@ -37,6 +41,10 @@ function formatApplicationResult(result) {
  * @param {Array} results - Array of results from processCompany
  * @returns {Array} Formatted successful results
  */
+/**
+ * @param {ApplicationResult[]} results
+ * @returns {Object[]}
+ */
 function filterAndFormatResults(results) {
   return results
     .filter((result) => result.success)
@@ -48,6 +56,10 @@ function filterAndFormatResults(results) {
  *
  * @param {Array} formattedResults - Array of formatted application results
  * @returns {Array} Array of company objects with their applications
+ */
+/**
+ * @param {Object[]} formattedResults
+ * @returns {Array<{ id?: string, name?: string, applications: Object[] }>}
  */
 function groupResultsByCompany(formattedResults) {
   const companyMap = new Map();

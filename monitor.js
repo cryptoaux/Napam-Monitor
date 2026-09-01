@@ -145,6 +145,9 @@ function loadCompanies(filePath = COMPANIES_FILE) {
 
 
 
+/**
+ * @param {Array<{ trackingStageName?: string, description?: string, status?: string, stageStatus?: string, currentStatus?: string, duration?: string | number | null, trackingApplicationStage?: string | number | null, currentStageSet?: boolean }>} stages
+ */
 function logStages(stages) {
 
   logger.info({ stageCount: stages.length }, "Tracking stages");
@@ -185,6 +188,13 @@ function logStages(stages) {
  * ============================================================
  */
 
+/**
+ * @param {{ id: string, name: string, tinSecret?: string, passwordSecret?: string }} company
+ * @param {string} tin
+ * @param {string} password
+ * @param {string} userAgent
+ * @returns {Promise<Array<{ companyId?: string, companyName?: string, applicationNumber?: string, appID?: string, success?: boolean, product?: string, currentStatus?: string, currentStatusColor?: string, stages?: Array<{ trackingStageName?: string, description?: string, status?: string, stageStatus?: string, currentStatus?: string, duration?: string | number | null, trackingApplicationStage?: string | number | null, currentStageSet?: boolean }> }>>}
+ */
 async function processCompany(
   company,
   tin,

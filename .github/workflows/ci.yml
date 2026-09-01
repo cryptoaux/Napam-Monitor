@@ -43,6 +43,9 @@ jobs:
       - name: Validate JavaScript syntax
         run: npm run check:syntax
 
+      - name: Run JavaScript typecheck
+        run: npm run typecheck
+
       - name: Run dependency audit
         run: npm audit --audit-level=high
 

@@ -6,15 +6,25 @@ const logger = require("./logger");
  */
 class MonitorRun {
   constructor() {
+    /** @type {Date} */
     this.startedAt = new Date();
+    /** @type {Date | null} */
     this.finishedAt = null;
+    /** @type {number} */
     this.companiesConfigured = 0;
+    /** @type {number} */
     this.companiesProcessed = 0;
+    /** @type {number} */
     this.companiesSucceeded = 0;
+    /** @type {number} */
     this.companiesFailed = 0;
+    /** @type {number} */
     this.companiesSkipped = 0;
+    /** @type {number} */
     this.applicationsFound = 0;
+    /** @type {number} */
     this.applicationsUpdated = 0;
+    /** @type {Array<{ companyName?: string, errorCode?: string, message?: string }>} */
     this.errors = [];
   }
 
@@ -23,7 +33,11 @@ class MonitorRun {
    */
   finish() {
     this.finishedAt = new Date();
-    const durationMs = this.finishedAt - this.startedAt;
+    const startedAt =
+      this.startedAt instanceof Date ? this.startedAt : new Date();
+    const finishedAt =
+      this.finishedAt instanceof Date ? this.finishedAt : new Date();
+    const durationMs = finishedAt.getTime() - startedAt.getTime();
 
     const summary = {
       runStartedAt: this.startedAt.toISOString(),

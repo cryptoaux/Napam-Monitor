@@ -50,6 +50,8 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
     req.on("socket", (socket) => {
       logger.info({ host: HOST }, "Socket assigned");
 
+      const tlsSocket = /** @type {import("node:tls").TLSSocket} */ (socket);
+
       socket.on("connect", () => {
         logger.info({ host: HOST }, "TCP connection established");
       });
@@ -61,9 +63,9 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
           logger.info(
             {
               host: HOST,
-              protocol: socket.getProtocol(),
-              cipher: socket.getCipher()?.name || "Unknown",
-              authorized: socket.authorized
+              protocol: tlsSocket.getProtocol(),
+              cipher: tlsSocket.getCipher()?.name || "Unknown",
+              authorized: tlsSocket.authorized
             },
             "TLS diagnostics"
           );
@@ -73,19 +75,28 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
       });
 
       socket.on("error", (error) => {
+        /** @type {Error & { code?: string }} */
+        const socketError = error;
+
         logger.error(
-          { host: HOST, error: { code: error.code, message: error.message } },
+          {
+            host: HOST,
+            error: { code: socketError.code, message: socketError.message }
+          },
           "Socket error"
         );
       });
     });
 
     req.on("error", (error) => {
+      /** @type {Error & { code?: string }} */
+      const requestError = error;
+
       const typedError =
-        error instanceof NapamsHttpError
-          ? error
-          : new NapamsHttpError("HTTP_REQUEST_FAILED", error.message, {
-              cause: error
+        requestError instanceof NapamsHttpError
+          ? requestError
+          : new NapamsHttpError("HTTP_REQUEST_FAILED", requestError.message, {
+              cause: requestError
             });
 
       logger.error(
@@ -96,7 +107,7 @@ function request(method, path, headers = {}, body = null, attempt = 1) {
           attempt,
           errorCode: typedError.code,
           err: typedError,
-          error: { code: error.code, message: error.message }
+          error: { code: requestError.code, message: requestError.message }
         },
         "HTTP request error"
       );
