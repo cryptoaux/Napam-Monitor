@@ -1,5 +1,10 @@
 const fs = require("fs");
 const logger = require("./src/logger");
+const {
+  initializeErrorTracking,
+  captureException,
+  flushErrorTracking
+} = require("./src/error-tracker");
 const { NapamsConfigError, NapamsParseError } = require("./src/errors");
 const { loginCompany } = require("./src/login");
 const { checkApplicationStatus } = require("./src/status-checker");
@@ -702,9 +707,28 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
 
 if (require.main === module) {
 
-  main().catch(
-    (error) => {
+  /**
+   * Top-level error boundary for the monitor process.
+   *
+   * This wraps the main monitor execution and ensures:
+   * 1. Errors are always logged through the structured logger
+   * 2. Errors are optionally captured by the configured error tracker
+   * 3. Pending tracking events are flushed before process exit
+   * 4. The process still exits with code 1 on any failure
+   */
+  (async () => {
 
+    try {
+
+      // Initialize optional error tracking
+      await initializeErrorTracking();
+
+      // Run the monitor
+      await main();
+
+    } catch (error) {
+
+      // Always log the error through the structured logger
       logger.error(
         {
           errorCode: error?.code,
@@ -714,10 +738,20 @@ if (require.main === module) {
         "NAPAMS monitor failed"
       );
 
-      process.exit(1);
+      // Capture error with the optional error tracker
+      captureException(error, {
+        stage: "monitor_execution"
+      });
+
+      // Flush pending tracking events before exit
+      await flushErrorTracking();
+
+      // Set non-zero exit code to signal failure
+      process.exitCode = 1;
 
     }
-  );
+
+  })();
 
 }
 
