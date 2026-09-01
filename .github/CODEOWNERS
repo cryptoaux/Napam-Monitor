@@ -1,0 +1,15 @@
+# Repository ownership and review routing
+# The project keeps a small, clear ownership model for operational and runtime files.
+
+* @cryptoaux
+
+.github/ @cryptoaux
+.github/workflows/ @cryptoaux
+
+monitor.js @cryptoaux
+src/ @cryptoaux
+public/ @cryptoaux
+companies.json @cryptoaux
+README.md @cryptoaux
+CONTRIBUTING.md @cryptoaux
+SECURITY.md @cryptoaux
