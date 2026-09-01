@@ -47,14 +47,27 @@ function loadCompanies(filePath = COMPANIES_FILE) {
 
   }
 
-  const raw =
-    fs.readFileSync(
-      filePath,
-      "utf8"
-    );
+  let raw;
 
-  const parsed =
-    JSON.parse(raw);
+  try {
+    raw = fs.readFileSync(filePath, "utf8");
+  } catch (error) {
+    throw new NapamsConfigError(
+      "COMPANY_CONFIG_INVALID",
+      `Could not read ${filePath}: ${error.message}`
+    );
+  }
+
+  let parsed;
+
+  try {
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    throw new NapamsConfigError(
+      "COMPANY_CONFIG_INVALID",
+      `Invalid JSON in ${filePath}: ${error.message}`
+    );
+  }
 
   const candidates =
     Array.isArray(parsed)
