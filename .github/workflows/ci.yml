@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies with npm ci
         run: npm ci
 
+      - name: Run project validation build
+        run: npm run build
+
       - name: Run tests with coverage thresholds
         run: npm test
 

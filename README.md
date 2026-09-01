@@ -47,20 +47,35 @@ This structure matches the current code imports and module boundaries in the rep
 ## Requirements
 
 - Node.js 22
-- npm
+- npm 10+
 - Docker and Docker Compose v2 for the reproducible offline container workflow
+- A local shell environment, but no NAPAMS production credentials are required for offline validation
 
-## Installation
+## Fresh clone workflow
 
-Install dependencies with the lockfile:
+1. Clone the repository.
+2. Change into the project directory.
+3. Install the exact dependency set from the lockfile:
 
 ```bash
 npm ci
 ```
 
+4. Run the local validation/build equivalent:
+
+```bash
+npm run build
+```
+
+5. Run the offline mock test suite:
+
+```bash
+npm test
+```
+
 ## Configuration and credentials
 
-The monitor supports two safe credential-loading patterns:
+The repository supports two safe credential-loading patterns for the live monitor only:
 
 1. The legacy per-company environment variable pattern declared in `companies.json`.
 2. A single structured secret, `COMPANIES_CREDENTIALS_JSON`, which should contain a JSON array of objects with `id`, `tin`, and `password` fields.
@@ -85,9 +100,11 @@ COMPANIES_CREDENTIALS_JSON='[{"id":"company_01","tin":"example-company-tin","pas
 
 The live monitoring workflow in `.github/workflows/monitor.yml` uses a single structured GitHub secret and keeps those values out of the repository. The CI workflow does not require production credentials.
 
+Production credentials must never be committed to the repository, even in `.env`, `companies.json`, logs, or generated output.
+
 ## Running the project locally
 
-For the live monitoring path, set the required company environment variables and run:
+For the live monitoring path, set the required company environment variables or `COMPANIES_CREDENTIALS_JSON`, then run:
 
 ```bash
 npm run monitor
@@ -111,23 +128,32 @@ A direct, no-coverage run is also available:
 npm run test:unit
 ```
 
-## Linting and formatting
+## Validation and build checks
+
+The repository does not bundle assets or compile a browser app; the honest validation equivalent is a static project check that verifies the Node.js files parse and the TypeScript configuration is valid.
+
+```bash
+npm run build
+```
+
+This command runs:
+
+- `npm run check:syntax`
+- `npm run typecheck`
+
+It is the project validation/build-equivalent used by CI.
+
+## Linting, formatting, and quality gates
 
 ```bash
 npm run lint
 npm run format:check
-```
-
-The project enforces ESLint and Prettier in CI and for local validation.
-
-## Security and syntax checks
-
-```bash
-npm audit --audit-level=high
 npm run check:syntax
+npm run typecheck
+npm audit --audit-level=high
 ```
 
-`check:syntax` validates the main runtime file and all modules in `src/*.js` using Node's parser without making live requests.
+The project enforces ESLint, Prettier, JavaScript syntax validation, TypeScript checking, and audit enforcement in CI and for local validation.
 
 ## Docker validation
 
@@ -147,11 +173,16 @@ The CI workflow in `.github/workflows/ci.yml` runs on pushes to `main` and pull 
 It validates the repo with:
 
 - `npm ci`
+- `npm run build`
 - `npm test`
+- `npx c8 report --reporter=text --reporter=text-summary`
 - `npm run lint`
 - `npm run format:check`
 - `npm run check:syntax`
+- `npm run typecheck`
 - `npm audit --audit-level=high`
+- Terraform format and validation checks
+- Terraform security scanning with `tfsec`
 
 This path is intentionally separate from the live monitor workflow and never depends on a production NAPAMS session.
 
@@ -169,11 +200,55 @@ It is intended to:
 
 This workflow is not used for the offline CI validation path and should not be treated as a general test environment.
 
+It requires real NAPAMS credentials and live access to the production site. Those values are not checked into the repository and must be supplied via GitHub secrets or a local untracked `.env` file.
+
 ## Output generation
 
 The live monitor writes the final application data to `public/data.json`. The static website in `public/` reads that structure to render the dashboard.
 
 The actual result assembly happens through the modules under `src/` and is finalized in `src/result-processor.js`.
+
+## Troubleshooting
+
+Common local issues:
+
+- `npm ci` fails because the lockfile and package manifest are out of sync
+- Coverage or tests fail because a mocked HTML or status case changed
+- Lint fails because a file is not formatted or contains an error
+- Syntax checks fail because a JavaScript file has a parse error
+- The live workflow is not relevant for local development unless production credentials and the live site are intentionally being used
+
+If a credential is required for a local live run, keep it in a local untracked `.env` file and never commit it.
+
+## Development workflow for contributors
+
+1. Clone the repository.
+2. Run `npm ci`.
+3. Run `npm run build`.
+4. Run `npm test`.
+5. Run `npm run lint`.
+6. Run `npm run format:check`.
+7. Run `npm run check:syntax`.
+8. Run `npm run typecheck`.
+9. Run `npm audit --audit-level=high`.
+10. Use `git diff --check` before committing.
+
+Keep changes focused and avoid touching the live monitoring workflow or dashboard UI unless the change is directly required by the docs or maintenance work.
+
+## Security guidance
+
+- Never commit real NAPAMS credentials, passwords, tokens, cookies, or session data.
+- Keep local `.env` files untracked and outside version control.
+- Use GitHub repository secrets for any live production automation.
+- Treat the offline test suite as the default validation path for repository changes.
+
+## Release and maintenance notes
+
+This repository does not claim a public release history beyond the existing git tags and repository state. Future releases should remain consistent with actual shipped code and existing versioning practices.
+
+## Notes
+
+The project documentation reflects the actual current codebase and deliberately avoids describing features or workflows that are not present in the repository.
 
 ## Troubleshooting
 
