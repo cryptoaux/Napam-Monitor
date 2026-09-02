@@ -44,6 +44,13 @@ This structure matches the current code imports and module boundaries in the rep
 - `package.json` — scripts and dependency definitions
 - `.env.example` — safe placeholder configuration for local usage
 
+The active production monitoring runtime in this repository is the scheduled
+`.github/workflows/monitor.yml` GitHub Actions workflow, which runs every 15
+minutes. The Terraform ECS configuration is an infrastructure and deployment
+scaffold; this repository currently does not build or publish a Docker image,
+deploy ECS, invoke EventBridge, or run `terraform apply`. Any future ECS
+deployment requires a separately reviewed deployment process.
+
 ## Requirements
 
 - Node.js 22

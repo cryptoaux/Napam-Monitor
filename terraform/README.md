@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `terraform/` directory contains the checked-in Terraform configuration for the monitor's AWS runtime footprint. It is separate from the Node.js monitoring code and does not load or manage NAPAMS application credentials.
+The `terraform/` directory contains the checked-in Terraform configuration for a possible monitor AWS runtime. It is separate from the Node.js monitoring code and does not load or manage NAPAMS application credentials. The active production monitoring runtime in this repository is the scheduled `.github/workflows/monitor.yml` GitHub Actions workflow. This Terraform ECS configuration is an infrastructure and deployment scaffold: this repository currently does not build or publish a Docker image, deploy ECS, invoke EventBridge, or run `terraform apply`. Any future ECS deployment requires a separately reviewed deployment process.
 
 ## Directory Structure
 
@@ -38,7 +38,7 @@ The production directory is the Terraform working directory used by CI. It has i
 
 ## Providers
 
-The environment requires Terraform `>= 1.6.0` and the `hashicorp/aws` provider constrained to `~> 5.70`. Provider installation is performed by `terraform init`; no provider lockfile is maintained as part of this stage.
+The environment requires Terraform `>= 1.6.0` and the `hashicorp/aws` provider constrained to `~> 5.70`. Provider installation is performed by `terraform init`; the production environment maintains provider selections and checksums in `environments/production/.terraform.lock.hcl`.
 
 ## Variables and Variable Sources
 
@@ -62,11 +62,11 @@ terraform -chdir=terraform/environments/production init \
 
 Do not put backend credentials in the repository or in `terraform.tfvars`. The AWS SDK credential chain, protected environment configuration, or an external secret manager must provide authentication.
 
-CI requires the protected `TF_STATE_BUCKET`, `TF_STATE_REGION`, and `TF_STATE_ROLE_ARN` values. `TF_STATE_ROLE_ARN` is assumed through GitHub's OIDC provider; no long-lived AWS access key is configured in the workflow.
+The repository's CI validation runs Terraform with `-backend=false` and does not require AWS credentials or remote state access. A separately reviewed deployment process may provide backend settings and AWS authentication when infrastructure deployment is intentionally introduced.
 
 ## State Management
 
-CI selects a run-specific workspace named `ci-${GITHUB_RUN_ID}` after initializing the S3 backend. This keeps validation state isolated between runs. The repository does not create the backend bucket or manage its lifecycle.
+The repository's current CI validation does not initialize the S3 backend or select a remote workspace. The repository does not create the backend bucket or manage its lifecycle.
 
 ## CI Validation
 
@@ -80,7 +80,7 @@ terraform -chdir=terraform/environments/production init -reconfigure \
 terraform -chdir=terraform/environments/production validate
 ```
 
-On pushes to `main`, CI obtains AWS credentials through GitHub OIDC and the protected `TF_STATE_ROLE_ARN`, `TF_STATE_BUCKET`, and `TF_STATE_REGION` secrets. It selects a run-specific `ci-${GITHUB_RUN_ID}` workspace. Pull requests use `-backend=false` because deployment credentials are not made available to untrusted pull-request code. CI also scans the Terraform directory with the existing `tfsec` action. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
+CI runs Terraform validation with `-backend=false` and does not obtain AWS credentials, access remote state, or select a remote workspace. Pull requests and pushes use the credential-free validation path. CI also scans the Terraform directory with the existing `tfsec` action. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
 
 ## Local Validation
 
