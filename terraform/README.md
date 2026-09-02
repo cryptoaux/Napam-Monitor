@@ -1,44 +1,82 @@
 # NAPAMS Monitor Terraform
 
-This Terraform configuration models the operational deployment footprint that supports the repository's scheduled monitoring workload in GitHub Actions.
+## Overview
 
-The repository is a Node.js application that runs on a schedule and writes dashboard data to `public/data.json`. This Terraform setup represents the supporting infrastructure needed to host and run a resilient deployment pipeline for that workload, while keeping the application configuration separate from the codebase.
+The `terraform/` directory contains the checked-in Terraform configuration for the monitor's AWS runtime footprint. It is separate from the Node.js monitoring code and does not load or manage NAPAMS application credentials.
 
-## Scope
+## Directory Structure
 
-This project intentionally models a reusable infrastructure module for a small scheduled monitor deployment, not the live NAPAMS application itself.
-
-It provides:
-
-- a reusable Terraform module for the runtime environment
-- an example production environment in `environments/production`
-- environment-level variables for project naming, region, tags, and application settings
-- safe output values for downstream automation
-
-## Real infrastructure represented
-
-The module provisions an AWS ECS Fargate service pair with an application load balancer and a CloudWatch log group. This is a legitimate deployment pattern for a small scheduled or continuously running application that should be run in a managed container environment and monitored centrally.
-
-## Files
-
-- `modules/monitor` — reusable infrastructure module
-- `environments/production` — example root configuration
-- `versions.tf` — Terraform and provider requirements
-
-## Usage
-
-```bash
-cd terraform/environments/production
-terraform init -backend=false
-terraform validate
+```text
+terraform/
+├── versions.tf
+├── environments/
+│   └── production/
+│       ├── main.tf
+│       ├── outputs.tf
+│       ├── variables.tf
+│       └── versions.tf
+└── modules/
+	└── monitor/
+		├── main.tf
+		├── outputs.tf
+		├── README.md
+		└── variables.tf
 ```
 
-## Inputs
+`terraform/` contains shared Terraform version and provider requirements. `terraform/environments/production/` is the environment root used for validation and composes the reusable module. `terraform/modules/` contains reusable infrastructure components; it currently contains the `monitor` module only.
 
-See the variables in `terraform/environments/production/variables.tf` and the module variables in `terraform/modules/monitor/variables.tf`.
+## Production Environment
 
-## Notes
+The production root in `environments/production/` passes environment values to `modules/monitor` and exposes the module's cluster, service, VPC, and log group names. The module currently models an AWS VPC with two public subnets, an internet gateway and route table, an ECS Fargate cluster and service, an ECS task definition, an IAM execution role and policy, and a CloudWatch log group. No application load balancer is defined.
 
-- Secrets are intentionally represented as variables, not committed values.
-- This repository does not require cloud access for local validation.
-- The Terraform configuration is designed to be valid offline without connecting to AWS.
+The production directory is the Terraform working directory used by CI. It has its own `versions.tf` so that its requirements are available when Terraform is run with `-chdir=terraform/environments/production`.
+
+## Modules
+
+`modules/monitor/` is a genuine reusable module for the monitor runtime. Its inputs cover naming, region, network CIDR, container sizing and image, desired task count, log retention, and resource tags. Its outputs expose identifiers useful to downstream automation. The current configuration is already split into an environment root and a reusable module, so no additional artificial module was added.
+
+## Providers
+
+The environment requires Terraform `>= 1.6.0` and the `hashicorp/aws` provider constrained to `~> 5.70`. Provider installation is performed by `terraform init`; no provider lockfile is maintained as part of this stage.
+
+## Variables and Variable Sources
+
+Environment defaults and input declarations are in `environments/production/variables.tf`. The production root passes those values to the module, whose declarations are in `modules/monitor/variables.tf`. Terraform values may be supplied using normal Terraform mechanisms such as `-var`, `-var-file`, `TF_VAR_*`, or environment-specific automation. No variable file containing production values is committed.
+
+The Terraform variables are infrastructure settings and are separate from the Node.js monitor's company configuration. Production credentials and secrets must come from external secret or configuration mechanisms, such as protected CI/environment variables or a secret manager, and must never be committed to this repository.
+
+## State Management
+
+No backend is configured in the checked-in Terraform configuration. Terraform state is therefore local by default when Terraform is run locally. CI uses `terraform init -backend=false` and does not create or access a remote state backend. Remote backend and state-management changes are outside this stage.
+
+## CI Validation
+
+`.github/workflows/ci.yml` sets up Terraform 1.6.6 and runs the following checks against the production root:
+
+```bash
+terraform fmt -check -recursive terraform
+terraform -chdir=terraform/environments/production init -backend=false
+terraform -chdir=terraform/environments/production validate
+```
+
+CI also scans the Terraform directory with the existing `tfsec` action. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
+
+## Local Validation
+
+From the repository root, with Terraform installed:
+
+```bash
+terraform fmt -check -recursive terraform
+terraform -chdir=terraform/environments/production init -backend=false
+terraform -chdir=terraform/environments/production validate
+```
+
+These commands do not deploy infrastructure. Provider installation may require network access during `init`; validation itself does not require AWS credentials for this configuration.
+
+## Security Notes
+
+- Never commit AWS credentials, account IDs, tokens, passwords, cookies, or other secrets.
+- Keep production values in protected external configuration or secret-management systems.
+- Review Terraform state and plan output for sensitive values before sharing them.
+- Do not run `terraform apply` from this repository without an intentional, separately reviewed deployment process.
+- The Terraform layer is independent of `COMPANIES_CREDENTIALS_JSON`; this stage does not change that handling.
