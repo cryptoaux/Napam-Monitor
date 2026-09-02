@@ -15,7 +15,8 @@
   "scripts": {
     "monitor": "node monitor.js",
     "build": "npm run check:syntax && npm run typecheck",
-    "test": "c8 --all --include \"src/**/*.js\" --include \"monitor.js\" --check-coverage --statements 80 --branches 75 --functions 80 --lines 80 node --test ./test/*.test.js",
+    "test": "node --test ./test/*.test.js",
+    "test:coverage": "c8 --all --include \"src/**/*.js\" --include \"monitor.js\" --check-coverage --statements 80 --branches 75 --functions 80 --lines 80 npm run test",
     "test:unit": "node --test ./test/*.test.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",

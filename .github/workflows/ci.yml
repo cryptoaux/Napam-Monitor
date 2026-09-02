@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage thresholds
-        run: npm test
+        run: npm run test:coverage
 
       - name: Print coverage summary
         run: npx c8 report --reporter=text --reporter=text-summary
