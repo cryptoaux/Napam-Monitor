@@ -13,6 +13,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   validation:
     runs-on: ubuntu-latest
@@ -63,7 +67,28 @@ jobs:
       - name: Validate Terraform formatting
         run: terraform fmt -check -recursive terraform
 
-      - name: Initialize Terraform without a backend
+      - name: Configure AWS credentials for Terraform state
+        if: github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.TF_STATE_ROLE_ARN }}
+          aws-region: ${{ secrets.TF_STATE_REGION }}
+
+      - name: Initialize Terraform with encrypted remote state
+        if: github.event_name == 'push'
+        env:
+          TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
+          TF_STATE_REGION: ${{ secrets.TF_STATE_REGION }}
+        run: |
+          test -n "$TF_STATE_BUCKET"
+          test -n "$TF_STATE_REGION"
+          terraform -chdir=terraform/environments/production init -reconfigure \
+            -backend-config="bucket=$TF_STATE_BUCKET" \
+            -backend-config="region=$TF_STATE_REGION"
+          terraform -chdir=terraform/environments/production workspace select -or-create="ci-${GITHUB_RUN_ID}"
+
+      - name: Initialize Terraform without a backend for pull requests
+        if: github.event_name == 'pull_request'
         run: terraform -chdir=terraform/environments/production init -backend=false
 
       - name: Validate Terraform configuration

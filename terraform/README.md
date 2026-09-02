@@ -12,6 +12,7 @@ terraform/
 ├── environments/
 │   └── production/
 │       ├── main.tf
+│       ├── backend.tf
 │       ├── outputs.tf
 │       ├── variables.tf
 │       └── versions.tf
@@ -45,9 +46,27 @@ Environment defaults and input declarations are in `environments/production/vari
 
 The Terraform variables are infrastructure settings and are separate from the Node.js monitor's company configuration. Production credentials and secrets must come from external secret or configuration mechanisms, such as protected CI/environment variables or a secret manager, and must never be committed to this repository.
 
+## Backend Setup
+
+The production root configures an S3 backend in `environments/production/backend.tf`. The state key is `napams-monitor/production/terraform.tfstate` and `encrypt = true` enables server-side encryption for state objects. The backend intentionally leaves the bucket and region to initialization-time configuration so no account-specific infrastructure name is committed.
+
+The backend bucket must be created and secured through a separately managed AWS process. That process should enable versioning, restrict access to the Terraform automation role, and apply the organization's required KMS and retention controls. This repository does not create the bucket or configure a remote backend resource.
+
+For local use, supply the backend settings through an untracked backend configuration file or command-line arguments:
+
+```bash
+terraform -chdir=terraform/environments/production init \
+	-backend-config="bucket=$TF_STATE_BUCKET" \
+	-backend-config="region=$TF_STATE_REGION"
+```
+
+Do not put backend credentials in the repository or in `terraform.tfvars`. The AWS SDK credential chain, protected environment configuration, or an external secret manager must provide authentication.
+
+CI requires the protected `TF_STATE_BUCKET`, `TF_STATE_REGION`, and `TF_STATE_ROLE_ARN` values. `TF_STATE_ROLE_ARN` is assumed through GitHub's OIDC provider; no long-lived AWS access key is configured in the workflow.
+
 ## State Management
 
-No backend is configured in the checked-in Terraform configuration. Terraform state is therefore local by default when Terraform is run locally. CI uses `terraform init -backend=false` and does not create or access a remote state backend. Remote backend and state-management changes are outside this stage.
+CI selects a run-specific workspace named `ci-${GITHUB_RUN_ID}` after initializing the S3 backend. This keeps validation state isolated between runs. The repository does not create the backend bucket or manage its lifecycle.
 
 ## CI Validation
 
@@ -55,11 +74,13 @@ No backend is configured in the checked-in Terraform configuration. Terraform st
 
 ```bash
 terraform fmt -check -recursive terraform
-terraform -chdir=terraform/environments/production init -backend=false
+terraform -chdir=terraform/environments/production init -reconfigure \
+	-backend-config="bucket=$TF_STATE_BUCKET" \
+	-backend-config="region=$TF_STATE_REGION"
 terraform -chdir=terraform/environments/production validate
 ```
 
-CI also scans the Terraform directory with the existing `tfsec` action. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
+On pushes to `main`, CI obtains AWS credentials through GitHub OIDC and the protected `TF_STATE_ROLE_ARN`, `TF_STATE_BUCKET`, and `TF_STATE_REGION` secrets. It selects a run-specific `ci-${GITHUB_RUN_ID}` workspace. Pull requests use `-backend=false` because deployment credentials are not made available to untrusted pull-request code. CI also scans the Terraform directory with the existing `tfsec` action. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
 
 ## Local Validation
 
@@ -67,11 +88,13 @@ From the repository root, with Terraform installed:
 
 ```bash
 terraform fmt -check -recursive terraform
-terraform -chdir=terraform/environments/production init -backend=false
+terraform -chdir=terraform/environments/production init \
+	-backend-config="bucket=$TF_STATE_BUCKET" \
+	-backend-config="region=$TF_STATE_REGION"
 terraform -chdir=terraform/environments/production validate
 ```
 
-These commands do not deploy infrastructure. Provider installation may require network access during `init`; validation itself does not require AWS credentials for this configuration.
+These commands do not deploy infrastructure. Provider and backend access may require network access during `init`; validation itself does not create AWS resources. Use `-backend=false` for offline validation when remote backend access is intentionally unavailable.
 
 ## Security Notes
 
