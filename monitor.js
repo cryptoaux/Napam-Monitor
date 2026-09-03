@@ -537,7 +537,12 @@ function saveWebsiteData(
  * ============================================================
  */
 
-async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMPANIES_FILE, outputPath = process.env.MONITOR_OUTPUT_PATH || "public/data.json" } = {}) {
+async function main({
+  companiesFile = process.env.MONITOR_COMPANIES_FILE || COMPANIES_FILE,
+  outputPath = process.env.MONITOR_OUTPUT_PATH || "public/data.json",
+  companyProcessor = processCompany,
+  saveData = saveWebsiteData
+} = {}) {
 
   const run = new MonitorRun();
 
@@ -605,7 +610,7 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
     try {
 
       const results =
-        await processCompany(
+        await companyProcessor(
           company,
           tin,
           password,
@@ -650,13 +655,22 @@ async function main({ companiesFile = process.env.MONITOR_COMPANIES_FILE || COMP
    * Save combined website data.
    */
 
-  saveWebsiteData(
+  saveData(
     allResults,
     outputPath
   );
 
-  logger.info("Monitor complete");
-  run.finish();
+  const summary = run.finish();
+
+  logger.info(
+    {
+      outputPath,
+      summary
+    },
+    "NAPAMS monitor completed successfully"
+  );
+
+  return summary;
 
 }
 
@@ -680,7 +694,14 @@ if (require.main === module) {
       await initializeErrorTracking();
 
       // Run the monitor
-      await main();
+      const summary = await main();
+
+      logger.info(
+        {
+          summary
+        },
+        "NAPAMS monitor run finished"
+      );
 
     } catch (error) {
 

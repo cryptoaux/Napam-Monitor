@@ -1,9 +1,13 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { execFileSync } = require("node:child_process");
+const { execFileSync, spawnSync } = require("node:child_process");
 const { EventEmitter } = require("node:events");
+const fs = require("node:fs");
+const path = require("node:path");
+const os = require("node:os");
 const https = require("https");
 const { request } = require("../src/http-client");
+const { main } = require("../monitor");
 
 const {
   getCookies,
@@ -27,6 +31,84 @@ test("imports monitor helpers without starting the monitoring routine", () => {
     ),
     "imported\n"
   );
+});
+
+test("main returns a structured summary when the monitor completes", async () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "napams-monitor-"));
+  const companiesPath = path.join(tempDir, "companies.json");
+  const outputPath = path.join(tempDir, "out", "data.json");
+
+  fs.writeFileSync(
+    companiesPath,
+    JSON.stringify([
+      {
+        id: "company-1",
+        name: "Example Company",
+        tinSecret: "COMPANY_1_TIN",
+        passwordSecret: "COMPANY_1_PASSWORD"
+      }
+    ])
+  );
+
+  process.env.COMPANY_1_TIN = "tin-1";
+  process.env.COMPANY_1_PASSWORD = "pass-1";
+
+  try {
+    const summary = await main({
+      companiesFile: companiesPath,
+      outputPath,
+      companyProcessor: async (company) => [
+        {
+          companyId: company.id,
+          companyName: company.name,
+          applicationNumber: "NF-AB-0001",
+          appID: "app-1",
+          success: true,
+          product: "Sample Product",
+          currentStatus: "Approved",
+          currentStatusColor: "GREEN",
+          stages: []
+        }
+      ]
+    });
+
+    assert.equal(summary.companiesConfigured, 1);
+    assert.equal(summary.companiesProcessed, 1);
+    assert.equal(summary.companiesSucceeded, 1);
+    assert.equal(summary.errorCount, 0);
+    assert(summary.runStartedAt);
+    assert(summary.runFinishedAt);
+    assert.equal(typeof summary.durationMs, "number");
+    assert(fs.existsSync(outputPath));
+  } finally {
+    delete process.env.COMPANY_1_TIN;
+    delete process.env.COMPANY_1_PASSWORD;
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("monitor entrypoint exits non-zero on fatal startup failures", () => {
+  const tempDir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "napams-monitor-fail-")
+  );
+  const missingConfig = path.join(tempDir, "missing-companies.json");
+
+  const projectRoot = process.cwd();
+
+  const result = spawnSync(process.execPath, ["monitor.js"], {
+    cwd: projectRoot,
+    env: {
+      ...process.env,
+      MONITOR_COMPANIES_FILE: missingConfig,
+      MONITOR_OUTPUT_PATH: path.join(tempDir, "out", "data.json")
+    },
+    encoding: "utf8"
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stdout + result.stderr, /NAPAMS monitor failed|Missing/);
+
+  fs.rmSync(tempDir, { recursive: true, force: true });
 });
 
 test("getCookies extracts cookie values from one or several Set-Cookie headers", () => {
