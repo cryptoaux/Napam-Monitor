@@ -192,6 +192,7 @@ It validates the repo with:
 - Terraform security scanning with `tfsec`
 
 This path is intentionally separate from the live monitor workflow and never depends on a production NAPAMS session.
+The Terraform checks validate configuration and security statically; they do not authenticate to AWS, run `terraform plan` or `terraform apply`, or deploy the ECS scaffold.
 
 ## Live monitoring workflow
 
