@@ -37,5 +37,5 @@ variable "desired_count" {
 variable "log_retention_days" {
   description = "CloudWatch log retention in days."
   type        = number
-  default     = 30
+  default     = 365
 }

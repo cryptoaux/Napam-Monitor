@@ -4,4 +4,4 @@ aws_region         = "us-east-1"
 vpc_cidr           = "10.20.0.0/16"
 container_image    = "example-registry/napams-monitor:latest"
 desired_count      = 1
-log_retention_days = 30
+log_retention_days = 365

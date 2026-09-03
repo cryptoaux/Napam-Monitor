@@ -28,13 +28,13 @@ terraform/
 
 ## Production Environment
 
-The production root in `environments/production/` passes environment values to `modules/monitor` and exposes the module's cluster, service, VPC, and log group names. The module currently models an AWS VPC with two public subnets, an internet gateway and route table, an ECS Fargate cluster and service, an ECS task definition, an IAM execution role and policy, and a CloudWatch log group. No application load balancer is defined.
+The production root in `environments/production/` passes environment values to `modules/monitor` and exposes the module's cluster, service, VPC, and log group names. The module models an AWS VPC with private ECS subnets, public NAT gateway subnets, an internet gateway and private route table, an ECS Fargate cluster and service, an ECS task definition, least-privilege IAM roles and policies, VPC flow logs, and KMS-encrypted CloudWatch log groups. No application load balancer is defined.
 
 The production directory is the Terraform working directory used by CI. It has its own `versions.tf` so that its requirements are available when Terraform is run with `-chdir=terraform/environments/production`.
 
 ## Modules
 
-`modules/monitor/` is a genuine reusable module for the monitor runtime. Its inputs cover naming, region, network CIDR, container sizing and image, desired task count, log retention, and resource tags. Its outputs expose identifiers useful to downstream automation. The current configuration is already split into an environment root and a reusable module, so no additional artificial module was added.
+`modules/monitor/` is a genuine reusable module for the monitor runtime. Its inputs cover naming, region, network CIDR, container sizing and image, secure log retention, desired task count, and resource tags. Its outputs expose identifiers useful to downstream automation. The current configuration is already split into an environment root and a reusable module, so no additional artificial module was added.
 
 ## Providers
 
