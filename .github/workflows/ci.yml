@@ -78,3 +78,10 @@ jobs:
           working_directory: terraform
           additional_args: --minimum-severity HIGH
           soft_fail: false
+
+      - name: Scan Terraform with Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: false
