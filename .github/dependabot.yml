@@ -4,7 +4,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
   - package-ecosystem: "terraform"
     directory: "/terraform/environments/production"
     schedule:
       interval: "weekly"
+    groups:
+      terraform-updates:
+        patterns:
+          - "*"
