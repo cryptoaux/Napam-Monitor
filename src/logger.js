@@ -2,7 +2,7 @@ const { Writable } = require("node:stream");
 const pino = require("pino");
 
 const SENSITIVE_KEY_PATTERN =
-  /password|passphrase|secret|token|cookie|tin|authorization|auth/i;
+  /password|passphrase|secret|token|cookie|tin|authorization|auth|apikey|api[-_]?key|sessionid|session[-_]?id|session|credential|clientsecret|client[-_]?secret/i;
 
 function sanitizeForLogging(value) {
   if (value === null || value === undefined) {
@@ -39,7 +39,9 @@ function sanitizeForLogging(value) {
 const capturedLogs = [];
 const stream = new Writable({
   write(chunk, _encoding, callback) {
-    capturedLogs.push(chunk.toString());
+    const logLine = chunk.toString();
+    capturedLogs.push(logLine);
+    process.stderr.write(logLine);
     callback();
   }
 });

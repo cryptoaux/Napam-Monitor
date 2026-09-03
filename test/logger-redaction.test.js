@@ -11,6 +11,9 @@ test("logger redacts sensitive fields before emitting structured logs", () => {
       password: "super-secret",
       tin: "ABC123",
       token: "abc-token",
+      apiKey: "api-key-123",
+      authorization: "Bearer token-value",
+      sessionId: "session-xyz",
       nested: { cookie: "session-xyz", safe: "visible" }
     },
     "status update"
@@ -24,6 +27,9 @@ test("logger redacts sensitive fields before emitting structured logs", () => {
   assert.equal(line.password, "[REDACTED]");
   assert.equal(line.tin, "[REDACTED]");
   assert.equal(line.token, "[REDACTED]");
+  assert.equal(line.apiKey, "[REDACTED]");
+  assert.equal(line.authorization, "[REDACTED]");
+  assert.equal(line.sessionId, "[REDACTED]");
   assert.equal(line.nested.cookie, "[REDACTED]");
   assert.equal(line.nested.safe, "visible");
   assert.equal(line.msg, "status update");
