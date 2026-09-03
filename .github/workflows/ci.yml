@@ -76,3 +76,5 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
           working_directory: terraform
+          additional_args: --minimum-severity HIGH
+          soft_fail: false
