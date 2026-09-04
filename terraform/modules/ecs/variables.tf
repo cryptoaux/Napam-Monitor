@@ -1,29 +1,26 @@
 variable "project_name" {
-  description = "Name prefix for the monitoring deployment resources."
+  description = "Name prefix for the ECS resources."
   type        = string
-
-  validation {
-    condition     = length(trimspace(var.project_name)) > 0
-    error_message = "project_name must not be empty."
-  }
 }
 
 variable "environment" {
   description = "Deployment environment name."
   type        = string
-  default     = "production"
 }
 
 variable "aws_region" {
-  description = "AWS region for the monitor deployment."
+  description = "AWS region for ECS and CloudWatch resources."
   type        = string
-  default     = "us-east-1"
 }
 
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC used by the platform."
-  type        = string
-  default     = "10.10.0.0/16"
+variable "subnet_ids" {
+  description = "Private subnet IDs where ECS tasks run."
+  type        = list(string)
+}
+
+variable "security_group_ids" {
+  description = "Security group IDs attached to the ECS service network interface."
+  type        = list(string)
 }
 
 variable "container_image" {
@@ -61,12 +58,12 @@ variable "log_retention_days" {
 
   validation {
     condition     = var.log_retention_days >= 365 && contains([365, 400, 545, 731, 1827, 3653], var.log_retention_days)
-    error_message = "log_retention_days must be a valid CloudWatch retention value."
+    error_message = "log_retention_days must be a valid retention value of at least 365 days."
   }
 }
 
 variable "tags" {
-  description = "Map of resource tags applied to created resources."
+  description = "Map of resource tags applied to ECS resources."
   type        = map(string)
   default     = {}
 }
