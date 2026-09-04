@@ -30,6 +30,8 @@ The environment exposes:
 
 The environment uses an encrypted S3 backend with the state key `napams-monitor/production/terraform.tfstate` and `encrypt = true`. The S3 bucket and backend region are supplied externally during initialization; they are not defined in this repository.
 
+The backend bucket, AWS account, access policy, and any KMS or retention controls are external bootstrap prerequisites. This repository does not create the bucket or manage its lifecycle. Initialize a real backend only with approved, authenticated AWS access and untracked values such as `-backend-config="bucket=$TF_STATE_BUCKET" -backend-config="region=$TF_STATE_REGION"`.
+
 ## CI Validation
 
 CI currently runs these Terraform checks:
@@ -42,4 +44,4 @@ terraform -chdir=terraform/environments/production validate
 
 CI scans the Terraform directory with the `aquasecurity/tfsec-action@v1.0.0` action and the Checkov Terraform framework. Both scanners fail CI on findings.
 
-CI does not run `terraform plan` or `terraform apply`. A real Terraform plan requires AWS credentials and access to the configured backend. Terraform is currently an infrastructure scaffold and is not applied or deployed by this repository.
+CI does not run `terraform plan` or `terraform apply`. A real Terraform plan requires an approved AWS sandbox or development account, access to the configured backend, and a configured authentication path such as GitHub Actions OIDC to an approved IAM role. No such AWS/OIDC environment is configured in this repository, so the credential-free validation path remains intentional. Terraform is currently an infrastructure scaffold and is not applied or deployed by this repository.

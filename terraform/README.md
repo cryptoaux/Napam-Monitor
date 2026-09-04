@@ -57,7 +57,7 @@ The Terraform variables are infrastructure settings and are separate from the No
 
 The production root configures an S3 backend in `environments/production/backend.tf`. The state key is `napams-monitor/production/terraform.tfstate` and `encrypt = true` enables server-side encryption for state objects. The backend intentionally leaves the bucket and region to initialization-time configuration so no account-specific infrastructure name is committed.
 
-The backend bucket must be created and secured through a separately managed AWS process. That process should enable versioning, restrict access to the Terraform automation role, and apply the organization's required KMS and retention controls. This repository does not create the bucket or configure a remote backend resource.
+This is an existing remote-state configuration, not a backend resource managed by this repository. The backend bucket must already be created and secured through a separately managed AWS bootstrap process. That process should enable versioning, restrict access to the Terraform automation role, and apply the organization's required KMS and retention controls. This repository does not create or verify the bucket, AWS account, backend role, or remote workspace.
 
 For local use, supply the backend settings through an untracked backend configuration file or command-line arguments:
 
@@ -69,7 +69,7 @@ terraform -chdir=terraform/environments/production init \
 
 Do not put backend credentials in the repository or in `terraform.tfvars`. The AWS SDK credential chain, protected environment configuration, or an external secret manager must provide authentication.
 
-The repository's CI validation runs Terraform with `-backend=false` and does not require AWS credentials or remote state access. A separately reviewed deployment process may provide backend settings and AWS authentication when infrastructure deployment is intentionally introduced.
+The repository's CI validation runs Terraform with `-backend=false` and does not require AWS credentials or remote state access. A real backend initialization requires the pre-existing bucket, its region, and authenticated access to it. A separately reviewed deployment process may provide those settings and AWS authentication when infrastructure deployment is intentionally introduced.
 
 ## State Management
 
@@ -81,13 +81,15 @@ The repository's current CI validation does not initialize the S3 backend or sel
 
 ```bash
 terraform fmt -check -recursive terraform
-terraform -chdir=terraform/environments/production init -reconfigure \
-	-backend-config="bucket=$TF_STATE_BUCKET" \
-	-backend-config="region=$TF_STATE_REGION"
+terraform -chdir=terraform/environments/production init -backend=false -input=false
 terraform -chdir=terraform/environments/production validate
 ```
 
-CI runs Terraform validation with `-backend=false` and does not obtain AWS credentials, access remote state, or select a remote workspace. Pull requests and pushes use the credential-free validation path. CI also scans the Terraform directory with the existing `tfsec` action. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
+CI runs Terraform validation with `-backend=false` and does not obtain AWS credentials, access remote state, or select a remote workspace. Pull requests and pushes use this credential-free validation path. CI also scans the Terraform directory with the existing `tfsec` action and Checkov. The workflow is validation-only; it does not run `terraform plan` or `terraform apply`.
+
+## Real Plan Requirements
+
+A genuine plan requires an approved AWS sandbox or development account, an existing encrypted backend bucket, and a GitHub Actions authentication path such as OIDC to an approved IAM role. The role must have the minimum permissions needed to read the backend and query the AWS data sources used by the modules. This repository currently contains none of those account-specific or role-specific references, and CI has only `contents: read` permissions, so a real AWS-backed plan cannot be enabled here without external approval and configuration. Do not replace it with fake credentials, LocalStack, or a fabricated plan.
 
 ## Local Validation
 
