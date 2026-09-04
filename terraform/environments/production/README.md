@@ -1,10 +1,10 @@
 # Production Terraform Environment
 
-This directory is the production Terraform environment root. It calls the reusable monitor module from `../../modules/monitor`.
+This directory is the production Terraform environment root. It composes the reusable networking and ECS modules from `../../modules/networking` and `../../modules/ecs`.
 
 ## Module Inputs
 
-The production root passes these inputs to the monitor module:
+The production root passes network inputs to the networking module and runtime inputs to the ECS module:
 
 - `project_name`
 - `environment`
@@ -15,7 +15,7 @@ The production root passes these inputs to the monitor module:
 - `log_retention_days`
 - `tags`
 
-The default values are declared in `variables.tf`. The module creates private ECS networking with NAT gateway egress, an ECS cluster and service, task definition, least-privilege IAM roles and policies, VPC flow logs, and KMS-encrypted CloudWatch log groups described by those inputs.
+The default values are declared in `variables.tf`. The networking module creates private ECS networking with NAT gateway egress, VPC flow logs, and a restricted default security group. The ECS module creates the cluster, service, task definition, least-privilege IAM roles and policies, and KMS-encrypted CloudWatch log groups described by those inputs.
 
 ## Outputs
 

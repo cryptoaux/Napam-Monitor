@@ -17,24 +17,31 @@ terraform/
 │       ├── variables.tf
 │       └── versions.tf
 └── modules/
-	└── monitor/
-		├── main.tf
-		├── outputs.tf
-		├── README.md
-		└── variables.tf
+    ├── networking/
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   ├── README.md
+    │   ├── variables.tf
+    │   └── versions.tf
+    └── ecs/
+        ├── main.tf
+        ├── outputs.tf
+        ├── README.md
+        ├── variables.tf
+        └── versions.tf
 ```
 
-`terraform/` contains shared Terraform version and provider requirements. `terraform/environments/production/` is the environment root used for validation and composes the reusable module. `terraform/modules/` contains reusable infrastructure components; it currently contains the `monitor` module only.
+`terraform/` contains shared Terraform version and provider requirements. `terraform/environments/production/` is the environment root used for validation and composes the reusable networking and ECS modules. `terraform/modules/` contains the reusable infrastructure components for the VPC and Fargate runtime.
 
 ## Production Environment
 
-The production root in `environments/production/` passes environment values to `modules/monitor` and exposes the module's cluster, service, VPC, and log group names. The module models an AWS VPC with private ECS subnets, public NAT gateway subnets, an internet gateway and private route table, an ECS Fargate cluster and service, an ECS task definition, least-privilege IAM roles and policies, VPC flow logs, and KMS-encrypted CloudWatch log groups. No application load balancer is defined.
+The production root in `environments/production/` wires together `modules/networking` and `modules/ecs` and exposes the resulting cluster, service, VPC, and log group names. The networking module provisions the VPC, private subnets, NAT gateway, restricted default security group, and KMS-encrypted VPC flow logs. The ECS module provisions the cluster, Fargate service, task definition, execution role, and KMS-encrypted application logs. No application load balancer is defined.
 
 The production directory is the Terraform working directory used by CI. It has its own `versions.tf` so that its requirements are available when Terraform is run with `-chdir=terraform/environments/production`.
 
 ## Modules
 
-`modules/monitor/` is a genuine reusable module for the monitor runtime. Its inputs cover naming, region, network CIDR, container sizing and image, secure log retention, desired task count, and resource tags. Its outputs expose identifiers useful to downstream automation. The current configuration is already split into an environment root and a reusable module, so no additional artificial module was added.
+`modules/networking/` and `modules/ecs/` are the reusable Terraform modules for the monitor runtime. The networking module covers VPC CIDR, region, log retention, and resource tags; the ECS module covers container sizing, image, desired task count, subnet and security-group inputs, and resource tags. Their outputs expose the identifiers used by the production root and downstream automation.
 
 ## Providers
 
@@ -42,7 +49,7 @@ The environment requires Terraform `>= 1.6.0` and the `hashicorp/aws` provider c
 
 ## Variables and Variable Sources
 
-Environment defaults and input declarations are in `environments/production/variables.tf`. The production root passes those values to the module, whose declarations are in `modules/monitor/variables.tf`. Terraform values may be supplied using normal Terraform mechanisms such as `-var`, `-var-file`, `TF_VAR_*`, or environment-specific automation. No variable file containing production values is committed.
+Environment defaults and input declarations are in `environments/production/variables.tf`. The production root passes those values to the networking and ECS modules declared in `modules/networking/variables.tf` and `modules/ecs/variables.tf`. Terraform values may be supplied using normal Terraform mechanisms such as `-var`, `-var-file`, `TF_VAR_*`, or environment-specific automation. No variable file containing production values is committed.
 
 The Terraform variables are infrastructure settings and are separate from the Node.js monitor's company configuration. Production credentials and secrets must come from external secret or configuration mechanisms, such as protected CI/environment variables or a secret manager, and must never be committed to this repository.
 
